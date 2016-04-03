@@ -22,11 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="TryJump" />
+        <module name="UnitCreator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="TryJump" target="1.5" />
+      <module name="UnitCreator" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
