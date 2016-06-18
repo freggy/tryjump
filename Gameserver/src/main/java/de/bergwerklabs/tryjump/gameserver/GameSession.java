@@ -89,6 +89,8 @@ public class GameSession {
     private HashMap<Integer,JSONUnit> extreme_units = new HashMap<Integer, JSONUnit>();
     private HashMap<Integer,JSONUnit> extreme_lite_units = new HashMap<Integer, JSONUnit>();
 
+    private Location spawnShift = null;
+
     /**
      * loads random units into the hashmaps over there
      */
@@ -189,6 +191,11 @@ public class GameSession {
 
     }
 
+    public void setSpawnShift(Location loc)
+    {
+        this.spawnShift = loc;
+    }
+
     /**
      * calculates the percentage of a number in the jump part
      * @param amount
@@ -267,10 +274,12 @@ public class GameSession {
             {
                 Player p = TryJump.getInstance().getServer().getPlayer(uuid);
                 Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
-                loc.getBlock().setType(Material.DIAMOND_BLOCK);
+                //loc.getBlock().setType(Material.DIAMOND_BLOCK);
+                /*
                 loc.clone().add(1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
                 loc.clone().add(0,0,1).getBlock().setType(Material.QUARTZ_BLOCK);
                 loc.clone().add(-1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
+                */
                 p.teleport(loc.clone().add(0, 1, 0));
                 p.playSound(p.getEyeLocation(), Sound.LEVEL_UP,100,10);
                 p.getInventory().clear();
@@ -283,7 +292,8 @@ public class GameSession {
                 p.getInventory().setItem(4, instaDeath);
 
                 PlayerJumpSession session = new PlayerJumpSession(uuid);
-                session.currentCheckpointLocation = loc;
+                //session.currentCheckpointLocation = loc;
+                session.currentCheckpointLocation = loc.clone().add(spawnShift);
                 playerJumpSessions.put(uuid, session);
 
                 p.setScoreboard(scoreboard);
@@ -481,6 +491,28 @@ public class GameSession {
 
                 // time managment
                 timeleft--;
+
+                if(timeleft == 5)
+                {
+                    for(Player p : Bukkit.getOnlinePlayers())
+                    {
+                        for(Player pl : Bukkit.getOnlinePlayers())
+                        {
+                            p.hidePlayer(pl);
+                        }
+                    }
+                }
+
+                if(timeleft == 3)
+                {
+                    for(Player p : Bukkit.getOnlinePlayers())
+                    {
+                        for(Player pl : Bukkit.getOnlinePlayers())
+                        {
+                            p.showPlayer(pl);
+                        }
+                    }
+                }
 
                 if(timeleft <= 5)
                 {
@@ -1124,9 +1156,14 @@ public class GameSession {
         DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
         String value = group.getValue("tryjump.wins", "0");
         int vlue = Integer.parseInt(value);
-        group.setValue("tryjump.wins",String.valueOf(vlue +1));
+        group.setValue("tryjump.wins", String.valueOf(vlue + 1));
 
-        TryJump.getInstance().end();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                TryJump.getInstance().end();
+            }
+        }, 100L);
     }
 
     /**

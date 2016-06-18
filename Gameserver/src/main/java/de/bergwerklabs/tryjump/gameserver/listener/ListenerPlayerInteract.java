@@ -4,6 +4,7 @@ import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.util.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -125,6 +126,21 @@ public class ListenerPlayerInteract implements Listener {
                             TryJump.getInstance().getGameSession().getItemShop().enchant(p.getItemInHand(), p);
                         }
                     }
+                }
+            }
+        }
+
+        // case cake upstacking
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK)
+        {
+            if(e.getClickedBlock().getType() == Material.CAKE_BLOCK)
+            {
+                if(p.getItemInHand().getType() == Material.CAKE)
+                {
+                    e.setCancelled(true);
+                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du darfst keine Kuchen stapeln!");
+                    p.playSound(p.getEyeLocation(), Sound.NOTE_BASS,50,1);
+                    p.updateInventory();
                 }
             }
         }

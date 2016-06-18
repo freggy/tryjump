@@ -52,7 +52,14 @@ public class ListenerPlayerJoin implements Listener {
             }.runTaskLater(TryJump.getInstance(), 2L);
         } else
         {
-            e.setJoinMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!");
+            if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+            {
+                e.setJoinMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!");
+            }else
+            {
+                e.setJoinMessage("");
+            }
+
         }
 
         p.setFoodLevel(20);

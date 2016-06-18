@@ -1,11 +1,15 @@
 package de.bergwerklabs.tryjump.gameserver;
 
+import com.google.gson.Gson;
 import de.bergwerklabs.chat.Chat;
 import de.bergwerklabs.tryjump.gameserver.command.SkipCommand;
 import de.bergwerklabs.tryjump.gameserver.command.StatsCommand;
+import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
+import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
 import de.bergwerklabs.tryjump.gameserver.listener.*;
 import de.bergwerklabs.tryjump.gameserver.util.DMMap;
 import de.bergwerklabs.tryjump.gameserver.util.JumpStartHandler;
+import de.bergwerklabs.tryjump.gameserver.util.Stoplag;
 import de.bergwerklabs.util.ComponentRegistry;
 import de.bergwerklabs.util.GameState;
 import de.bergwerklabs.util.GameStateManager;
@@ -24,6 +28,9 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -69,6 +76,8 @@ public class TryJump extends LABSGameMode {
 
         getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
 
+
+
         for(World w : getServer().getWorlds())
         {
             // remove mobs
@@ -86,8 +95,9 @@ public class TryJump extends LABSGameMode {
             w.setStorm(false);
             w.setThundering(false);
         }
+        buildSpawns(Bukkit.getWorld("jump"));
 
-        Bukkit.getWorld("spawn").setSpawnLocation(-30,108,-22);
+        Bukkit.getWorld("spawn").setSpawnLocation(-30, 108, -22);
 
         getServer().getPluginManager().registerEvents(new ListenerCancelStuff(), this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerJoin(), this);
@@ -96,10 +106,15 @@ public class TryJump extends LABSGameMode {
         getServer().getPluginManager().registerEvents(new ListenerEntityDamage(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerMove(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerDeath(),this);
-        getServer().getPluginManager().registerEvents(new ListenerPlayerRespawn(),this);
+        getServer().getPluginManager().registerEvents(new ListenerPlayerRespawn(), this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerQuit(),this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryClick(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerLogin(),this);
+
+        Stoplag stoplag = new Stoplag();
+        getServer().getPluginManager().registerEvents(stoplag,this);
+        stoplag.setActive(true,Bukkit.getWorld("jump"));
+
         timer = new StartTimer(this,2,getServer().getMaxPlayers(),new JumpStartHandler());
         getCommand("start").setExecutor(new CommandStart(this,timer));
         getCommand("stats").setExecutor(new StatsCommand());
@@ -340,6 +355,72 @@ public class TryJump extends LABSGameMode {
             DataRegistry.DataSet sset = TryJump.getInstance().getUtil().getDataRegistry().getSet(p.getUniqueId());
             System.out.println("Speichere Stats von " + p.getUniqueId());
             sset.save();
+        }
+    }
+
+    private void buildSpawns(World world)
+    {
+        File spawnFile = new File("spawn.unit");
+        boolean spawnUnit;
+        if(spawnFile.exists())
+        {
+            spawnUnit = true;
+        }else
+        {
+            spawnUnit = false;
+        }
+
+        if(spawnUnit)
+        {
+            Gson gson = new Gson();
+            JSONUnit spawn = gson.fromJson(readFile(spawnFile),JSONUnit.class);
+            getGameSession().setSpawnShift(new Location(Bukkit.getWorld("jump"),spawn.getEndLocX(),spawn.getEndLocY(),spawn.getEndLocZ()));
+            for(int x = 0; x < 500; x+= 50)
+            {
+                Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
+                build(spawn,loc);
+            }
+        }else
+        {
+            getGameSession().setSpawnShift(new Location(Bukkit.getWorld("jump"), 0, 0, 0));
+            for(int x = 0; x < 500; x+= 50)
+            {
+                Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
+                loc.clone().add(1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
+                loc.clone().add(0,0,1).getBlock().setType(Material.QUARTZ_BLOCK);
+                loc.clone().add(-1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
+            }
+        }
+
+        System.out.println("Built SPAWNS!!!!!!");
+    }
+    private String readFile(File file)
+    {
+        try {
+            byte[] encoded = Files.readAllBytes(Paths.get(file.getPath()));
+            return new String(encoded, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void build(JSONUnit unit,Location loca)
+    {
+        ArrayList<JSONBlock> blocklist = new ArrayList<JSONBlock>();
+
+        for(JSONBlock block : unit.getBlocklist())
+        {
+            blocklist.add(block);
+        }
+
+        while(!blocklist.isEmpty())
+        {
+            JSONBlock block = blocklist.get(0);
+            Location loc = loca.clone().add(block.getX(), block.getY(), block.getZ());
+            loc.getBlock().setType(block.getMaterial());
+            loc.getBlock().setData(block.getData());
+            blocklist.remove(0);
         }
     }
 
