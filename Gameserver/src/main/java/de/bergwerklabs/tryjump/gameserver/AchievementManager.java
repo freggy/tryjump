@@ -169,27 +169,36 @@ public class AchievementManager {
      */
     public void openOverview(Player p)
     {
+
         int size = achievementList().size();
         if(size <= 9)
         {
-            size = 9;
+            size = 27;
         }else if(size <= 18)
         {
-            size = 18;
+            size = 36;
         }else if(size <= 27)
         {
-            size = 27;
+            size = 45;
         }else if(size <= 36)
         {
-            size = 36;
+            size = 54;
         }
 
         Inventory i = Bukkit.createInventory(p,size, ChatColor.AQUA + "Errungenschaften");
+        for(int x = 0; x <= 9; x++)
+        {
+            i.setItem(x, new ItemStack(Material.STAINED_GLASS_PANE,1,(short)15));
+        }
+        for(int x = 17; x < 27; x++)
+        {
+            i.setItem(x, new ItemStack(Material.STAINED_GLASS_PANE,1,(short)15));
+        }
         for(String s : achievementList())
         {
             if(hasAchivement(p.getUniqueId(),s))
             {
-                ItemStack is = new ItemStack(Material.STAINED_GLASS_PANE,1, (short) 5);
+                ItemStack is = new ItemStack(Material.WOOL,1, (short) 5);
                 ItemMeta im = is.getItemMeta();
                 im.setDisplayName(ChatColor.GREEN + getTitle(s));
                 List<String> lore = new ArrayList<String>();
@@ -199,7 +208,7 @@ public class AchievementManager {
                 i.addItem(is);
             }else
             {
-                ItemStack is = new ItemStack(Material.STAINED_GLASS_PANE,1, (short) 14);
+                ItemStack is = new ItemStack(Material.WOOL,1, (short) 14);
                 ItemMeta im = is.getItemMeta();
                 im.setDisplayName(ChatColor.DARK_RED + getTitle(s));
                 List<String> lore = new ArrayList<String>();

@@ -53,6 +53,14 @@ public class ListenerPlayerDeath implements Listener {
             vlue = Integer.parseInt(value);
             group.setValue("tryjump.points", String.valueOf(vlue + 15));
 
+            // add network coins
+            DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
+            value = coins_group.getValue("network.coins","0");
+            vlue = Integer.parseInt(value);
+            coins_group.setValue("network.coins",String.valueOf((vlue +1)));
+            killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "1 " + ChatColor.AQUA + "Coin!");
+
+
             // achievement
             TryJump.getInstance().getAchievementManager().checkFirstKill(killer);
             TryJump.getInstance().getAchievementManager().checkKillstreak(killer);
@@ -65,7 +73,7 @@ public class ListenerPlayerDeath implements Listener {
             e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getName() + ChatColor.GRAY + " ist gestorben!");
         }
 
-        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH)
+        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH && (!TryJump.getInstance().getGameSession().isGrace()))
         {
             Score score = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p);
             score.setScore(score.getScore() - 1);
@@ -83,7 +91,6 @@ public class ListenerPlayerDeath implements Listener {
                     }
                 },10L);
             }
-            e.setDeathMessage("");
         }
 
 

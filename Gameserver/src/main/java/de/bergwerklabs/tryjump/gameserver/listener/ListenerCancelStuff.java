@@ -189,9 +189,11 @@ public class ListenerCancelStuff implements Listener {
         if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING)
         {
             e.setCancelled(true);
+            e.getPlayer().updateInventory();
         }else if(TryJump.getInstance().getGameStateManager().getState() == GameState.WAITING)
         {
             e.setCancelled(true);
+            e.getPlayer().updateInventory();
         }
     }
 

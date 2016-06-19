@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.gameserver.listener;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,7 +38,20 @@ public class ListenerInventoryClick implements Listener {
                 e.setCancelled(true);
             }
         }
+        try
+        {
+            if(e.getInventory().getItem(e.getSlot()).getType() == Material.CHEST)
+            {
+                e.setCancelled(true);
+            }
+            if(e.getInventory().getItem(e.getSlot()).getType() == Material.NETHER_STAR)
+            {
+                e.setCancelled(true);
+            }
+        }catch(Exception ex)
+        {
 
+        }
     }
 
 

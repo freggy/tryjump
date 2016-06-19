@@ -47,7 +47,11 @@ public class ListenerPlayerJoin implements Listener {
                 @Override
                 public void run()
                 {
-                    TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!"); //TODO
+                    if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+                    {
+                        TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!"); //TODO
+                    }
+
                 }
             }.runTaskLater(TryJump.getInstance(), 2L);
         } else

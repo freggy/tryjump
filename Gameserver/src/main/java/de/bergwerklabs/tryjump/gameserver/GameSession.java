@@ -70,6 +70,8 @@ public class GameSession {
 
     private boolean teams_allowed = false;
 
+    private long grace = 0;
+
     private int jump_part_length_z = 0; // for percent calculation
 
     private HashMap<UUID,Long> instant_tod_cooldown = new HashMap<UUID,Long>();
@@ -638,6 +640,7 @@ public class GameSession {
         TryJump.getInstance().getGameStateManager().setState(GameState.RUNNING_DEATHMATCH);
         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "DEATHMATCH!");
         ArrayList<Location> spawns = TryJump.getInstance().getDmSession().getSpawns();
+        grace = System.currentTimeMillis();
         for (UUID uuid : ingame_players) {
             Player p = Bukkit.getPlayer(uuid);
             updateLevelBar(p);
@@ -689,6 +692,11 @@ public class GameSession {
             }
         }.runTaskTimer(TryJump.getInstance(), 20L, 20L);
 
+    }
+
+    public boolean isGrace()
+    {
+        return (grace + 2000 > System.currentTimeMillis());
     }
 
     public void stopThreads()
@@ -745,6 +753,7 @@ public class GameSession {
             int vlue = Integer.parseInt(value);
             group.setValue("tryjump.units", String.valueOf(vlue + 1));
 
+
             // add points to stats
             value = group.getValue("tryjump.points", "0");
             vlue = Integer.parseInt(value);
@@ -767,6 +776,9 @@ public class GameSession {
                 value = group.getValue("tryjump.goals", "0");
                 vlue = Integer.parseInt(value);
                 group.setValue("tryjump.goals", String.valueOf(vlue + 1));
+
+
+
                 return;
             }
 
@@ -1157,6 +1169,15 @@ public class GameSession {
         String value = group.getValue("tryjump.wins", "0");
         int vlue = Integer.parseInt(value);
         group.setValue("tryjump.wins", String.valueOf(vlue + 1));
+
+        // add network coins
+        DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
+        value = coins_group.getValue("network.coins","0");
+        vlue = Integer.parseInt(value);
+        coins_group.setValue("network.coins",String.valueOf((vlue +10)));
+        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "10 " + ChatColor.AQUA + "Coins für das Gewinnen dieser Runde!");
+
+
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
             @Override
