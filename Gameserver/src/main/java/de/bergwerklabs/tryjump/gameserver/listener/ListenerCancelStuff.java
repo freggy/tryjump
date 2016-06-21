@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.gameserver.listener;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.util.GameState;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -189,11 +190,22 @@ public class ListenerCancelStuff implements Listener {
         if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING)
         {
             e.setCancelled(true);
-            e.getPlayer().updateInventory();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    e.getPlayer().updateInventory();
+                }
+            },2L);
+
         }else if(TryJump.getInstance().getGameStateManager().getState() == GameState.WAITING)
         {
             e.setCancelled(true);
-            e.getPlayer().updateInventory();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    e.getPlayer().updateInventory();
+                }
+            }, 2L);
         }
     }
 

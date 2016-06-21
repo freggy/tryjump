@@ -4,6 +4,7 @@ import de.bergwerklabs.chat.Chat;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.util.GameState;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -65,6 +66,16 @@ public class ListenerPlayerJoin implements Listener {
             }
 
         }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                for(Player pl : Bukkit.getOnlinePlayers())
+                {
+                    pl.showPlayer(p);
+                }
+            }
+        },40L);
 
         p.setFoodLevel(20);
         p.setHealth(20.0);

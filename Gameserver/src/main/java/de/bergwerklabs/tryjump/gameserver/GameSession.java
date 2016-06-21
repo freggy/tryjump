@@ -468,6 +468,7 @@ public class GameSession {
         for(UUID uuid : ingame_players)
         {
             Player p = Bukkit.getPlayer(uuid);
+            p.getInventory().clear();
             p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
             p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du kannst mit " + ChatColor.AQUA + "/skip" + ChatColor.GRAY + " die Wartezeit verkürzen, falls du schnell fertig bist.");
             ItemStack is = new ItemStack(Material.CHEST);
@@ -479,7 +480,10 @@ public class GameSession {
         for(UUID uuid : specators)
         {
             Player p = Bukkit.getPlayer(uuid);
-            p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
+            if(p != null)
+            {
+                p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
+            }
         }
 
         // start new scoreboardupdater
@@ -586,7 +590,7 @@ public class GameSession {
         deathmatch_lives_objective.setDisplayName(".");
         deathmatch_lives_objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        timeleft = 300;
+        timeleft = 600;
         sbUpdater = new BukkitRunnable() {
             @Override
             public void run() {
@@ -770,6 +774,11 @@ public class GameSession {
                 if(timeleft > 10)
                 {
                     timeleft = 10;
+                }
+
+                for(Player pl : Bukkit.getOnlinePlayers())
+                {
+                    pl.getInventory().clear();
                 }
 
                 // add goals to stats
