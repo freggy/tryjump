@@ -356,7 +356,7 @@ public class ItemShop {
         {
             if(is.getItemMeta().hasEnchants())
             {
-                price = 500;
+                price = 400;
             }
         }
 
@@ -377,7 +377,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für dein " + ChatColor.AQUA + "Schwert " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "500 Tokens" + ChatColor.GRAY + "!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für dein " + ChatColor.AQUA + "Schwert " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case bow
@@ -388,7 +388,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für deinen " + ChatColor.AQUA + "Bogen " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "500 Tokens" + ChatColor.GRAY + "!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für deinen " + ChatColor.AQUA + "Bogen " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case helmet
