@@ -14,10 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by nexotekHD on 16.04.2016.
@@ -87,6 +84,7 @@ public class ItemShop {
     private ItemStack[] page_nahrung;
     private ItemStack[] page_traenke;
     private ItemStack[] page_spezial;
+
 
 
     public ItemShop()
@@ -352,13 +350,23 @@ public class ItemShop {
     {
         // check balance
         int price = 250;
+
+        // check if special conditions may apply
+        if(is.getType() == Material.WOOD_SWORD || is.getType() == Material.STONE_SWORD || is.getType() == Material.IRON_SWORD || is.getType() == Material.BOW)
+        {
+            if(is.getItemMeta().hasEnchants())
+            {
+                price = 500;
+            }
+        }
+
         Score balance = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p);
         if(balance.getScore() >= price)
         {
         }else
         {
             p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu kaufen!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu verzaubern!");
             return;
         }
         // case sword
@@ -369,6 +377,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für dein " + ChatColor.AQUA + "Schwert " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "500 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case bow
@@ -379,6 +388,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für deinen " + ChatColor.AQUA + "Bogen " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "500 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case helmet
@@ -760,7 +770,7 @@ public class ItemShop {
         }
 
         rnd = new Random().nextInt(10);
-        // 60% power
+        // 60% knockback
         if(rnd < 6)
         {
             int before = 0;
@@ -789,6 +799,7 @@ public class ItemShop {
             }
         }
 
+        /*
         rnd = new Random().nextInt(10);
         // 20% flame
         if(rnd < 2)
@@ -803,6 +814,7 @@ public class ItemShop {
                 is.addEnchantment(Enchantment.ARROW_FIRE,before +1);
             }
         }
+        */
 
     }
 
@@ -824,6 +836,7 @@ public class ItemShop {
         }
 
 
+        /*
         rnd = new Random().nextInt(10);
         // 10% fire aspect
         if(rnd < 2)
@@ -838,6 +851,7 @@ public class ItemShop {
                 is.addEnchantment(Enchantment.FIRE_ASPECT, before + 1);
             }
         }
+        */
         rnd = new Random().nextInt(10);
         // 40% Knockback
         if(rnd < 4)
@@ -852,6 +866,7 @@ public class ItemShop {
                 is.addEnchantment(Enchantment.KNOCKBACK, before + 1);
             }
         }
+        /*
         rnd = new Random().nextInt(10);
         // 60% Smite
         if(rnd < 6)
@@ -867,7 +882,9 @@ public class ItemShop {
             }
         }
 
+        */
 
+        /*
         rnd = new Random().nextInt(10);
         // 60% Bane of Arthropods
         if(rnd < 6)
@@ -882,6 +899,7 @@ public class ItemShop {
                 is.addEnchantment(Enchantment.DAMAGE_ARTHROPODS, before + 1);
             }
         }
+        */
 
     }
 
