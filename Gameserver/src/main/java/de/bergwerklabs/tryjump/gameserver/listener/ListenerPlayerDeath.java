@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
+import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
 import de.bergwerklabs.util.GameState;
 import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
@@ -35,6 +36,12 @@ public class ListenerPlayerDeath implements Listener {
         int vlue = Integer.parseInt(value);
         group.setValue("tryjump.deaths", String.valueOf(vlue + 1));
 
+        RoundStats deathStats = TryJump.getInstance().getGameSession().getRoundStats(p.getUniqueId());
+        if(deathStats != null)
+        {
+            deathStats.setDeaths(deathStats.getDeaths() +1);
+        }
+
 
         // achievement
         TryJump.getInstance().getAchievementManager().checkFirstBlood(p);
@@ -53,13 +60,27 @@ public class ListenerPlayerDeath implements Listener {
             vlue = Integer.parseInt(value);
             group.setValue("tryjump.points", String.valueOf(vlue + 15));
 
+            RoundStats killerStats = TryJump.getInstance().getGameSession().getRoundStats(killer.getUniqueId());
+            if(killerStats != null)
+            {
+                killerStats.setKills(killerStats.getKills() +1);
+                killerStats.setPoints(killerStats.getPoints() + 15);
+            }
+
             // add network coins
             DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
-            value = coins_group.getValue("network.coins","0");
+            value = coins_group.getValue("network.coins", "0");
             vlue = Integer.parseInt(value);
-            coins_group.setValue("network.coins",String.valueOf((vlue +1)));
-            killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "1 " + ChatColor.AQUA + "Coin!");
 
+            killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "5 " + ChatColor.AQUA + "Coin!");
+            if(killer.hasPermission("bergwerklabs.full-join"))
+            {
+                coins_group.setValue("network.coins",String.valueOf((vlue +10)));
+                killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.GOLD + "+ " + ChatColor.YELLOW + "5 Coins " + ChatColor.GOLD + "(Premium Boost)");
+            }else
+            {
+                coins_group.setValue("network.coins",String.valueOf((vlue +5)));
+            }
 
             // achievement
             TryJump.getInstance().getAchievementManager().checkFirstKill(killer);

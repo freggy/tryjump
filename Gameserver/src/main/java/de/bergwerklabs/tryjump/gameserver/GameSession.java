@@ -7,6 +7,7 @@ import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
 import de.bergwerklabs.tryjump.gameserver.util.ItemShop;
 import de.bergwerklabs.tryjump.gameserver.util.PlayerJumpSession;
+import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
 import de.bergwerklabs.util.GameState;
 import de.bergwerklabs.util.Util;
 import de.bergwerklabs.util.effect.HoverText;
@@ -92,6 +93,8 @@ public class GameSession {
     private HashMap<Integer,JSONUnit> extreme_lite_units = new HashMap<Integer, JSONUnit>();
 
     private Location spawnShift = null;
+
+    private HashMap<UUID,RoundStats> roundStats = new HashMap<UUID,RoundStats>();
 
     /**
      * loads random units into the hashmaps over there
@@ -191,6 +194,15 @@ public class GameSession {
         }
 
 
+    }
+
+    public RoundStats getRoundStats(UUID uuid)
+    {
+        if(roundStats.containsKey(uuid))
+        {
+            return roundStats.get(uuid);
+        }
+        return null;
     }
 
     public void setSpawnShift(Location loc)
@@ -307,7 +319,15 @@ public class GameSession {
                 DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
                 String value = group.getValue("tryjump.played", "0");
                 int vlue = Integer.parseInt(value);
-                group.setValue("tryjump.played",String.valueOf(vlue+1));
+                group.setValue("tryjump.played", String.valueOf(vlue + 1));
+
+                RoundStats stats = new RoundStats();
+                stats.setJump_fails(0);
+                stats.setUnits(0);
+                stats.setDeaths(0);
+                stats.setKills(0);
+                stats.setPoints(0);
+                roundStats.put(uuid,stats);
 
             }
 
@@ -396,6 +416,14 @@ public class GameSession {
                 }
                 if(timeleft <= 0)
                 {
+                    for(UUID uuid : ingame_players)
+                    {
+                        RoundStats stats = getRoundStats(uuid);
+                        if(stats != null)
+                        {
+                            stats.setJump_fails(playerJumpSessions.get(uuid).fails);
+                        }
+                    }
                     buyPhase();
                     cancel();
                     return;
@@ -717,6 +745,7 @@ public class GameSession {
      */
     public void checkpointReached(Player p, Block checkpoint)
     {
+
         PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
         //checkpoint.setType(Material.WOOD_STAIRS);
         if(session.currentCheckpointLocation.distanceSquared(checkpoint.getLocation()) > 1) //TODO: find a better option
@@ -762,6 +791,13 @@ public class GameSession {
             value = group.getValue("tryjump.points", "0");
             vlue = Integer.parseInt(value);
             group.setValue("tryjump.points", String.valueOf(vlue + 10));
+
+            RoundStats stats = getRoundStats(p.getUniqueId());
+            if(stats != null)
+            {
+                stats.setUnits(stats.getUnits() +1);
+                stats.setPoints(stats.getPoints() + 10);
+            }
 
             if(session.currentunit >= 10)
             {
@@ -1161,6 +1197,7 @@ public class GameSession {
         TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
         finished = true;
         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Der Server startet in 10 Sekunden neu.");
+
         new BukkitRunnable()
         {
             @Override
@@ -1181,10 +1218,41 @@ public class GameSession {
 
         // add network coins
         DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
-        value = coins_group.getValue("network.coins","0");
+        value = coins_group.getValue("network.coins", "0");
         vlue = Integer.parseInt(value);
-        coins_group.setValue("network.coins",String.valueOf((vlue +10)));
-        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "10 " + ChatColor.AQUA + "Coins für das Gewinnen dieser Runde!");
+
+        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "20 " + ChatColor.AQUA + "Coins für das Gewinnen dieser Runde!");
+
+        if(p.hasPermission("bergwerklabs.full-join"))
+        {
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.GOLD + "+ " + ChatColor.YELLOW + "20 Coins " + ChatColor.GOLD + "(Premium Boost)");
+            coins_group.setValue("network.coins",String.valueOf((vlue +40)));
+        }else
+        {
+            coins_group.setValue("network.coins",String.valueOf((vlue +20)));
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                for(Player player : Bukkit.getOnlinePlayers())
+                {
+                        if(player != null && player.isOnline())
+                        {
+                            RoundStats stats = getRoundStats(player.getUniqueId());
+                            if(stats != null)
+                            {
+                                player.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Rundenstatistik:");
+                                player.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.WHITE + "\u25A0 " + ChatColor.GRAY + "Punkte: " + ChatColor.AQUA + stats.getPoints());
+                                player.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.WHITE + "\u25A0 " + ChatColor.GRAY + "Kills: " + ChatColor.GREEN + stats.getKills());
+                                player.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.WHITE + "\u25A0 " + ChatColor.GRAY + "Tode: " + ChatColor.RED + stats.getDeaths());
+                                player.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.WHITE + "\u25A0 " + ChatColor.GRAY + "Units geschafft: " + ChatColor.AQUA + stats.getUnits());
+                            }
+                        }
+
+                }
+            }
+        },20L);
 
 
 
