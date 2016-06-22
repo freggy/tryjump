@@ -821,8 +821,8 @@ public class ItemShop {
     private void enchSword(ItemStack is)
     {
         int rnd = new Random().nextInt(10);
-        // 80% sharpness
-        if(rnd < 8)
+        // 100% sharpness
+        if(rnd < 10)
         {
             int before = 0;
             if(is.getEnchantments().containsKey(Enchantment.DAMAGE_ALL))
