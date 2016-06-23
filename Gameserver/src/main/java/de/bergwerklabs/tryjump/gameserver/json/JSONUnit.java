@@ -17,6 +17,8 @@ public class JSONUnit {
     private double endLocY;
     private double endLocZ;
 
+    private String name;
+
     private int difficulty; // 1 = easy; 2 = medium; 3 = hard; 4 = extreme
 
     public ArrayList<JSONBlock> getBlocklist() {
@@ -87,4 +89,11 @@ public class JSONUnit {
         this.endLocZ = endLocZ;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

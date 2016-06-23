@@ -96,6 +96,7 @@ public class GameSession {
 
     private HashMap<UUID,RoundStats> roundStats = new HashMap<UUID,RoundStats>();
 
+
     /**
      * loads random units into the hashmaps over there
      */
@@ -149,6 +150,8 @@ public class GameSession {
             {
                 // read unit
                 JSONUnit instance = gson.fromJson(readFile(unit),JSONUnit.class);
+                instance.setName(unit.getName());
+                lite.setName(unit.getName());
                 switch (instance.getDifficulty())
                 {
                     case 1:
@@ -195,6 +198,7 @@ public class GameSession {
 
 
     }
+
 
     public RoundStats getRoundStats(UUID uuid)
     {
@@ -937,7 +941,27 @@ public class GameSession {
         {
             maxtrys = "";
         }
-        HoverText.sendHoverTextUpdate(Bukkit.getPlayer(uuid), ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + ChatColor.YELLOW + ChatColor.BOLD + "Aktuell: " + ChatColor.GREEN + ChatColor.BOLD + "Unit " + currentunit + lite + ChatColor.GOLD + ChatColor.BOLD + " | " + difficulty + ChatColor.GOLD + ChatColor.BOLD + " << ");
+
+
+
+        //String name = unitNameList[currentunit -1];
+        String name = null; // stupid
+        try {
+            name = getUnit(currentunit,false).getName();
+            name = name.split(".unit",-1)[0];
+        }catch(Exception e)
+        {
+
+        }
+        if(name == null)
+        {
+            HoverText.sendHoverTextUpdate(Bukkit.getPlayer(uuid), ChatColor.GOLD + "" + ChatColor.BOLD + ">> " +ChatColor.YELLOW + ChatColor.BOLD + "Aktuell: " + ChatColor.GREEN + ChatColor.BOLD + "Unit " + currentunit + lite  +  ChatColor.GOLD + ChatColor.BOLD + " | " + difficulty + ChatColor.GOLD + ChatColor.BOLD + " << ");
+        }else
+        {
+            HoverText.sendHoverTextUpdate(Bukkit.getPlayer(uuid), ChatColor.GOLD + "" + ChatColor.BOLD + ">> "  + ChatColor.GREEN + ChatColor.BOLD + "Unit " + currentunit + lite +": " +ChatColor.YELLOW + ChatColor.BOLD + name +   ChatColor.GOLD + ChatColor.BOLD + " | " + difficulty + ChatColor.GOLD + ChatColor.BOLD + " << ");
+        }
+
+
     }
 
 
