@@ -311,7 +311,7 @@ public class GameSession {
                 playerJumpSessions.put(uuid, session);
 
                 p.setScoreboard(scoreboard);
-                x+= 50;
+                x+= 35;
 
 
                 // add played games to stats

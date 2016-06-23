@@ -375,7 +375,7 @@ public class TryJump extends LABSGameMode {
             Gson gson = new Gson();
             JSONUnit spawn = gson.fromJson(readFile(spawnFile),JSONUnit.class);
             getGameSession().setSpawnShift(new Location(Bukkit.getWorld("jump"),spawn.getEndLocX(),spawn.getEndLocY(),spawn.getEndLocZ()));
-            for(int x = 0; x < 500; x+= 50)
+            for(int x = 0; x < 350; x+= 35)
             {
                 Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
                 build(spawn,loc);
@@ -383,7 +383,7 @@ public class TryJump extends LABSGameMode {
         }else
         {
             getGameSession().setSpawnShift(new Location(Bukkit.getWorld("jump"), 0, 0, 0));
-            for(int x = 0; x < 500; x+= 50)
+            for(int x = 0; x < 350; x+= 35)
             {
                 Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
                 loc.clone().add(1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
