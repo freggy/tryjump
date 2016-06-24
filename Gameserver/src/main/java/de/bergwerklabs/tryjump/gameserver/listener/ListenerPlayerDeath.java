@@ -3,6 +3,7 @@ package de.bergwerklabs.tryjump.gameserver.listener;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
 import de.bergwerklabs.util.GameState;
+import de.bergwerklabs.util.playerdata.Currency;
 import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -59,6 +60,7 @@ public class ListenerPlayerDeath implements Listener {
             value = group.getValue("tryjump.points", "0");
             vlue = Integer.parseInt(value);
             group.setValue("tryjump.points", String.valueOf(vlue + 15));
+            killer.sendMessage(TryJump.getInstance().getChatPrefix() + "+ 15 Ranking Punkte");
 
             RoundStats killerStats = TryJump.getInstance().getGameSession().getRoundStats(killer.getUniqueId());
             if(killerStats != null)
@@ -68,6 +70,7 @@ public class ListenerPlayerDeath implements Listener {
             }
 
             // add network coins
+            /*
             DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
             value = coins_group.getValue("network.coins", "0");
             vlue = Integer.parseInt(value);
@@ -81,6 +84,9 @@ public class ListenerPlayerDeath implements Listener {
             {
                 coins_group.setValue("network.coins",String.valueOf((vlue +5)));
             }
+            */
+
+            Currency.addCoinsWithPremiumAmplifier(killer,5);
 
             // achievement
             TryJump.getInstance().getAchievementManager().checkFirstKill(killer);

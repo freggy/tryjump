@@ -13,6 +13,7 @@ import de.bergwerklabs.util.Util;
 import de.bergwerklabs.util.effect.HoverText;
 import de.bergwerklabs.util.effect.TitleBuilder;
 import de.bergwerklabs.util.entity.Marker;
+import de.bergwerklabs.util.playerdata.Currency;
 import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -795,6 +796,7 @@ public class GameSession {
             value = group.getValue("tryjump.points", "0");
             vlue = Integer.parseInt(value);
             group.setValue("tryjump.points", String.valueOf(vlue + 10));
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "+ 10 Ranking Punkte");
 
             RoundStats stats = getRoundStats(p.getUniqueId());
             if(stats != null)
@@ -1241,6 +1243,7 @@ public class GameSession {
         group.setValue("tryjump.wins", String.valueOf(vlue + 1));
 
         // add network coins
+        /*
         DataRegistry.DataGroup coins_group = set.getGroup("network.currency");
         value = coins_group.getValue("network.coins", "0");
         vlue = Integer.parseInt(value);
@@ -1255,6 +1258,9 @@ public class GameSession {
         {
             coins_group.setValue("network.coins",String.valueOf((vlue +20)));
         }
+
+*/
+        Currency.addCoinsWithPremiumAmplifier(p,20);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
             @Override
