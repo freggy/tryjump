@@ -648,6 +648,7 @@ public class GameSession {
                 {
                     Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Diese Runde hat keinen Gewinner!");
                     Bukkit.broadcastMessage(ChatColor.RED + "Der Server startet in 10 Sekunden neu!");
+                    finished = true;
                     TryJump.getInstance().end();
                     Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
                         @Override
