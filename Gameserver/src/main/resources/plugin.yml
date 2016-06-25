@@ -15,3 +15,6 @@ commands:
      skip:
           description: Skip
           usage: /skip
+     fix:
+          description: Fix
+          usage: /fix

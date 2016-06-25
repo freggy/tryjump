@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.gameserver;
 
 import com.google.gson.Gson;
 import de.bergwerklabs.chat.Chat;
+import de.bergwerklabs.tryjump.gameserver.command.FixCommand;
 import de.bergwerklabs.tryjump.gameserver.command.SkipCommand;
 import de.bergwerklabs.tryjump.gameserver.command.StatsCommand;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
@@ -113,12 +114,13 @@ public class TryJump extends LABSGameMode {
 
         Stoplag stoplag = new Stoplag();
         getServer().getPluginManager().registerEvents(stoplag,this);
-        stoplag.setActive(true,Bukkit.getWorld("jump"));
+        stoplag.setActive(true, Bukkit.getWorld("jump"));
 
         timer = new StartTimer(this,2,getServer().getMaxPlayers(),new JumpStartHandler());
         getCommand("start").setExecutor(new CommandStart(this,timer));
         getCommand("stats").setExecutor(new StatsCommand());
         getCommand("skip").setExecutor(new SkipCommand());
+        getCommand("fix").setExecutor(new FixCommand());
 
 
         timer.launch();
