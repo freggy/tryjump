@@ -3,6 +3,7 @@ package de.bergwerklabs.tryjump.unitcreator;
 import de.bergwerklabs.tryjump.unitcreator.command.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.defaults.ListCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,6 +38,8 @@ public class UnitCreator extends JavaPlugin implements Listener {
         this.getCommand("pos2").setExecutor(new Pos2LocCommand());
         this.getCommand("submit").setExecutor(new SubmitCommand2());
         this.getCommand("load").setExecutor(new LoadCommand());
+        this.getCommand("list").setExecutor(new ListsCommand());
+        this.getCommand("delete").setExecutor(new DeleteCommand());
 
         getServer().getPluginManager().registerEvents(this,this);
 

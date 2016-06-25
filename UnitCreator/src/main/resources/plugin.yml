@@ -22,3 +22,9 @@ commands:
      load:
           description: Load
           usage: /load
+     list:
+          description: List
+          usage: /list
+     delete:
+          description: Delete
+          usage: /delete
