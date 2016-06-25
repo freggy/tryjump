@@ -130,7 +130,7 @@ public class TryJump extends LABSGameMode {
 
         getGameStateManager().setState(GameState.WAITING);
 
-    }
+    }//
 
     public Chat getChat() {
         return chat;
