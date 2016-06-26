@@ -59,7 +59,7 @@ public class TryJump extends LABSGameMode {
 
     @Override
     public void labsEnable() {
-        instance = this;
+        instance = this;//
         getLogger().info("Enabling TryJump ...");
         getServer().setDefaultGameMode(GameMode.ADVENTURE);
         gameSession = new GameSession();
