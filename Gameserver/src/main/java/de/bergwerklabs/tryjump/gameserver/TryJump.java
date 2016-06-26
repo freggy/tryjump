@@ -381,7 +381,19 @@ public class TryJump extends LABSGameMode {
             {
                 Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
                 build(spawn,loc);
+
+                /*
+                System.out.println("preloading chunks for jump line x =" +x);
+                // preload chunks
+                for(int z = 0; z <= 480; z+= 16)
+                {
+                    Location c = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,z);
+                    Chunk chunk = c.getChunk();
+                    chunk.load();
+                }
+                */
             }
+
         }else
         {
             getGameSession().setSpawnShift(new Location(Bukkit.getWorld("jump"), 0, 0, 0));
@@ -391,6 +403,17 @@ public class TryJump extends LABSGameMode {
                 loc.clone().add(1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
                 loc.clone().add(0,0,1).getBlock().setType(Material.QUARTZ_BLOCK);
                 loc.clone().add(-1,0,0).getBlock().setType(Material.QUARTZ_BLOCK);
+
+                /*
+                System.out.println("preloading chunks for jump line x =" +x);
+                // preload chunks
+                for(int z = 0; z <= 480; z+= 16)
+                {
+                    Location c = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,z);
+                    Chunk chunk = c.getChunk();
+                    chunk.load();
+                }
+                */
             }
         }
 

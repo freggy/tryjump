@@ -1,8 +1,13 @@
 package de.bergwerklabs.tryjump.gameserver.command;
 
+import de.bergwerklabs.tryjump.gameserver.TryJump;
+import de.bergwerklabs.util.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -63,7 +68,42 @@ public class FixCommand implements CommandExecutor {
             p.showPlayer(pl);
         }
 
-        p.teleport(loc);
+        Block b = p.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        Material before = b.getType();
+        byte data = b.getData();
+        b.setType(Material.BEDROCK);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                b.setType(before);
+                b.setData(data);
+            }
+        }, 2L);
+
+        b.getChunk().load();
+
+        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING && !(TryJump.getInstance().getGameSession().isBuyphase()) && !(TryJump.getInstance().getGameSession().isDeathmatch()))
+        {
+            TryJump.getInstance().getGameSession().fix(p);
+
+            Location loci = p.getLocation().clone();
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
+                }
+            },4L);
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    p.teleport(loci);
+                }
+            },11L);
+        }//////
+
 
         p.sendMessage("Done!");
 

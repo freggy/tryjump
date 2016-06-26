@@ -200,6 +200,15 @@ public class GameSession {
 
     }
 
+    public void fix(Player p)
+    {
+        UUID uuid = p.getUniqueId();
+        PlayerJumpSession session = playerJumpSessions.get(uuid);
+        session.currentCheckpointLocation.getChunk().unload();
+        session.currentCheckpointLocation.getChunk().load();
+        build(session.currentCheckpointLocation.clone(), getUnit(session.currentunit, session.lite), Bukkit.getPlayer(uuid), session.blocklist);
+    }
+
 
     public RoundStats getRoundStats(UUID uuid)
     {
@@ -590,6 +599,11 @@ public class GameSession {
 
 
 
+    }
+
+    public boolean isDeathmatch()
+    {
+        return deathmatch;
     }
 
     private void spawnEnchanterHologram(Player p)
