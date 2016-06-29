@@ -443,8 +443,7 @@ public class TryJump extends LABSGameMode {
         {
             JSONBlock block = blocklist.get(0);
             Location loc = loca.clone().add(block.getX(), block.getY(), block.getZ());
-            loc.getBlock().setType(block.getMaterial());
-            loc.getBlock().setData(block.getData());
+            loc.getBlock().setTypeIdAndData(block.getMaterial().getId(), block.getData(), true);
             blocklist.remove(0);
         }
     }
