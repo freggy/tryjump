@@ -1048,8 +1048,7 @@ public class GameSession {
         {
             JSONBlock block = blocklist.get(0);
             Location loc = loca.clone().add(block.getX(), block.getY(), block.getZ());
-            loc.getBlock().setType(block.getMaterial());
-            loc.getBlock().setData(block.getData());
+            loc.getBlock().setTypeIdAndData(block.getMaterial().getId(),block.getData(),true);
             logBlockList.add(loc.getBlock());
             if(blocklist.size() == 1)
             {
