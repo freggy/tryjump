@@ -1461,12 +1461,15 @@ public class GameSession {
 
         }
 
-        if(p.getScoreboard() != null)
+        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING && !(buyphase))
         {
-            Scoreboard sb = p.getScoreboard();
-            Team underlined = sb.registerNewTeam("t_" + p.getName());
-            underlined.setPrefix("" + ChatColor.UNDERLINE);
-            underlined.addPlayer(p);
+            if(p.getScoreboard() != null)
+            {
+                Scoreboard sb = p.getScoreboard();
+                Team underlined = sb.registerNewTeam("t_" + p.getName());
+                underlined.setPrefix("" + ChatColor.UNDERLINE);
+                underlined.addPlayer(p);
+            }
         }
     }
 
