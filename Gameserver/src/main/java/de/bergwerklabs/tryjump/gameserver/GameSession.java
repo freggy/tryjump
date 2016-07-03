@@ -28,6 +28,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class GameSession {
     private BukkitTask hoverUpdater = null;
     private BukkitTask sbUpdater = null; // scoreboard updater + time countdown
 
-    private Scoreboard scoreboard = null;
+    private Scoreboard scoreboard = null; // main scoreboard used in buyphase and deathmatch
     private Objective jumpprogress_objective = null;
     private Objective token_objective = null;
     private Objective deathmatch_lives_objective = null;
@@ -67,6 +68,8 @@ public class GameSession {
     private boolean buyphase = false;
     private boolean deathmatch = false;
     private ItemShop itemShop = null;
+
+    private HashMap<UUID,Integer> cachedTokens = new HashMap<UUID,Integer>();
 
     private boolean finished = false;
 
@@ -200,6 +203,45 @@ public class GameSession {
 
     }
 
+    private void updateTokensInJumpScoreboard(Player p)
+    {
+        Scoreboard sb = p.getScoreboard();
+        if(sb != null)
+        {
+            if(!cachedTokens.containsKey(p.getUniqueId()))
+            {
+                cachedTokens.put(p.getUniqueId(),0);
+            }
+            if(cachedTokens.containsKey(p.getUniqueId()))
+            {
+                int before = cachedTokens.get(p.getUniqueId());
+                sb.resetScores(ChatColor.GRAY + "" + ChatColor.BOLD + before);
+                Objective o = sb.getObjective(DisplaySlot.SIDEBAR);
+                PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
+                cachedTokens.put(p.getUniqueId(),session.tokens);
+                if(o != null)
+                {
+                    o.getScore(ChatColor.GRAY + "" + ChatColor.BOLD + session.tokens).setScore(102);
+                }
+            }
+        }
+        // update tokens in tablist
+        for(UUID uuid : ingame_players)
+        {
+            Player pl = Bukkit.getPlayer(uuid);
+            Scoreboard scoreb = pl.getScoreboard();
+            if(scoreb != null)
+            {
+                Objective o = scoreb.getObjective(DisplaySlot.PLAYER_LIST);
+                if(o != null)
+                {
+                    PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
+                    o.getScore(p).setScore(session.tokens);
+                }
+            }
+        }
+    }
+
     public void fix(Player p)
     {
         UUID uuid = p.getUniqueId();
@@ -324,7 +366,24 @@ public class GameSession {
                 session.currentCheckpointLocation = loc.clone().add(spawnShift);
                 playerJumpSessions.put(uuid, session);
 
-                p.setScoreboard(scoreboard);
+
+                // create special scoreboard
+                Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+                Objective sidebar = sb.registerNewObjective("sidebar", "dummy");
+                sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+                sidebar.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Tokens:").setScore(103);
+                sidebar.getScore(ChatColor.YELLOW + "  ").setScore(101);
+
+                Objective belownames = sb.registerNewObjective("belownames", "dummy");
+                belownames.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+
+                Team underlined = sb.registerNewTeam("underlined");
+                underlined.setPrefix("" +ChatColor.UNDERLINE);
+                underlined.addPlayer(p);
+
+
+                p.setScoreboard(sb);
+                updateTokensInJumpScoreboard(p);
                 x+= 35;
 
 
@@ -444,6 +503,7 @@ public class GameSession {
                 }
 
                 // DisplayName
+                // care for main scoreboard (no longer used in the jump phase [only in dm and buyphase])
                 String displayName = "Fehler";
                 int minutes = timeleft / 60;
                 int seconds = timeleft % 60;
@@ -457,6 +517,22 @@ public class GameSession {
                 {
                     Player p = Bukkit.getPlayer(uuid);
                     jumpprogress_objective.getScore(p).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
+                }
+
+                // now care for the players' scoreboard
+                for(UUID uuid : ingame_players)
+                {
+                    Player p = Bukkit.getPlayer(uuid);
+                    Scoreboard sb = p.getScoreboard();
+                    if(sb != null)
+                    {
+                        sb.getObjective(DisplaySlot.SIDEBAR).setDisplayName(displayName);
+                        for(UUID uuid1 : ingame_players)
+                        {
+                            Player pl = Bukkit.getPlayer(uuid1);
+                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percentOfJumpPart(pl.getLocation().getBlockZ()));
+                        }
+                    }
                 }
 
             }
@@ -512,6 +588,7 @@ public class GameSession {
             Player p = Bukkit.getPlayer(uuid);
             p.getInventory().clear();
             p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
+            p.setScoreboard(scoreboard);
             p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du kannst mit " + ChatColor.AQUA + "/skip" + ChatColor.GRAY + " die Wartezeit verkürzen, falls du schnell fertig bist.");
             ItemStack is = new ItemStack(Material.CHEST);
             ItemMeta im = is.getItemMeta();
@@ -699,6 +776,7 @@ public class GameSession {
             if (ingame_players.contains(p.getUniqueId())) {
                 Location location = TryJump.getInstance().getDmSession().getRandomSpawnAndRemove();
                 p.teleport(location);
+                p.setSaturation(20);
                 deathmatch_lives_objective.getScore(p).setScore(3);
                 ItemStack is = new ItemStack(Material.CHEST);
                 ItemMeta im = is.getItemMeta();
@@ -791,6 +869,7 @@ public class GameSession {
             }
             session.tokens += addtokens;
             token_objective.getScore(p).setScore(session.tokens);
+            updateTokensInJumpScoreboard(p);
             p.playSound(p.getEyeLocation(), Sound.LEVEL_UP, 100, 10);
             String lite = "";
             if(session.lite)
@@ -1337,6 +1416,23 @@ public class GameSession {
         {
             int i = token_objective.getScore(e.getOldName()).getScore();
             token_objective.getScore(e.getNewName()).setScore(i);
+
+            for(Player pl : Bukkit.getOnlinePlayers())
+            {
+                Scoreboard sb = pl.getScoreboard();
+                if(sb != null)
+                {
+                    Objective o = sb.getObjective(DisplaySlot.SIDEBAR);
+                    if(o != null)
+                    {
+                        int j = o.getScore(e.getOldName()).getScore();
+                        o.getScore(e.getNewName()).setScore(j);
+                    }
+                }
+            }
+
+
+
         }catch(Exception ex)
         {
 
@@ -1352,9 +1448,25 @@ public class GameSession {
         try
         {
             scoreboard.resetScores(e.getOldName());
+            for(Player pl : Bukkit.getOnlinePlayers())
+            {
+                Scoreboard sb = pl.getScoreboard();
+                if(sb != null)
+                {
+                    sb.resetScores(e.getOldName());
+                }
+            }
         }catch(Exception ex)
         {
 
+        }
+
+        if(p.getScoreboard() != null)
+        {
+            Scoreboard sb = p.getScoreboard();
+            Team underlined = sb.registerNewTeam("t_" + p.getName());
+            underlined.setPrefix("" + ChatColor.UNDERLINE);
+            underlined.addPlayer(p);
         }
     }
 
