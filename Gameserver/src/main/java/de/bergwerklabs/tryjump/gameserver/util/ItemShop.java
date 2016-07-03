@@ -28,6 +28,7 @@ public class ItemShop {
     // Kategorieen
     private ItemStack waffen;
     private ItemStack lederruestung;
+    private ItemStack kettenruestung;
     private ItemStack eisenruestung;
     private ItemStack diamantruestung;
     private ItemStack erfahrung;
@@ -50,6 +51,11 @@ public class ItemShop {
     private ItemStack leather_pants;
     private ItemStack leather_boots;
     private ItemStack leather_tunic;
+
+    private ItemStack chain_helmet;
+    private ItemStack chain_leggings;
+    private ItemStack chain_boots;
+    private ItemStack chain_chestplate;
 
     private ItemStack iron_helmet;
     private ItemStack iron_leggings;
@@ -77,6 +83,7 @@ public class ItemShop {
 
     private ItemStack[] page_waffen;
     private ItemStack[] page_lederruestung;
+    private ItemStack[] page_kettenruestung;
     private ItemStack[] page_eisenruestung;
     private ItemStack[] page_diamantruestung;
     private ItemStack[] page_erfahrung;
@@ -92,6 +99,7 @@ public class ItemShop {
         // init categories
         waffen = stack(new ItemStack(Material.GOLD_SWORD), ChatColor.AQUA + "Waffen");
         lederruestung = stack(new ItemStack(Material.LEATHER_CHESTPLATE), ChatColor.AQUA + "Lederrüstung");
+        kettenruestung = stack(new ItemStack(Material.CHAINMAIL_CHESTPLATE), ChatColor.AQUA + "Kettenrüstung");
         eisenruestung = stack(new ItemStack(Material.IRON_CHESTPLATE), ChatColor.AQUA + "Eisenrüstung");
         diamantruestung = stack(new ItemStack(Material.DIAMOND_CHESTPLATE), ChatColor.AQUA + "Diamantrüstung");
         erfahrung = stack(new ItemStack(Material.EXP_BOTTLE), ChatColor.AQUA + "Erfahrung");
@@ -113,6 +121,11 @@ public class ItemShop {
         leather_pants = price(Material.LEATHER_LEGGINGS,48);
         leather_boots = price(Material.LEATHER_BOOTS,40);
         leather_tunic = price(Material.LEATHER_CHESTPLATE,60);
+
+        chain_helmet = price(Material.CHAINMAIL_HELMET,100);
+        chain_leggings = price(Material.CHAINMAIL_LEGGINGS,120);
+        chain_boots = price(Material.CHAINMAIL_BOOTS,100);
+        chain_chestplate = price(Material.CHAINMAIL_CHESTPLATE,150);
 
         iron_helmet = price(Material.IRON_HELMET,200);
         iron_leggings = price(Material.IRON_LEGGINGS,200);
@@ -151,6 +164,15 @@ public class ItemShop {
         inv_lederruestung.setItem(13,leather_boots);
         inv_lederruestung.setItem(14, leather_tunic);
         page_lederruestung = inv_lederruestung.getContents();
+
+        //kettenrüstung
+        Inventory inv_kettenruestung = Bukkit.createInventory(null,18);
+        addNavigationBar(inv_kettenruestung);
+        inv_kettenruestung.setItem(11, chain_helmet);
+        inv_kettenruestung.setItem(12, chain_leggings);
+        inv_kettenruestung.setItem(13,chain_boots);
+        inv_kettenruestung.setItem(14, chain_chestplate);
+        page_kettenruestung = inv_kettenruestung.getContents();
 
         // eisenrüstung
         Inventory inv_eisenruestung = Bukkit.createInventory(null,18);
@@ -220,7 +242,8 @@ public class ItemShop {
     {
         inv.setItem(0, waffen);
         inv.setItem(1,lederruestung);
-        inv.setItem(2, eisenruestung);
+        inv.setItem(2,kettenruestung);
+        inv.setItem(3, eisenruestung);
         //inv.setItem(3, diamantruestung);
         //inv.setItem(4,erfahrung);
         //inv.setItem(5, verzaubern);
@@ -320,6 +343,9 @@ public class ItemShop {
                     break;
                 case LEATHER_CHESTPLATE:
                     e.getInventory().setContents(page_lederruestung);
+                    break;
+                case CHAINMAIL_CHESTPLATE:
+                    e.getInventory().setContents(page_kettenruestung);
                     break;
                 case IRON_CHESTPLATE:
                     e.getInventory().setContents(page_eisenruestung);
