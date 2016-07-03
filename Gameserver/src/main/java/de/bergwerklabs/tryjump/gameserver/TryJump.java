@@ -105,6 +105,7 @@ public class TryJump extends LABSGameMode {
         getServer().getPluginManager().registerEvents(new ListenerPlayerInteract(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerNick(),this);
         getServer().getPluginManager().registerEvents(new ListenerEntityDamage(),this);
+        getServer().getPluginManager().registerEvents(new ListenerEntityDamageByEntity(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerMove(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerDeath(),this);
         getServer().getPluginManager().registerEvents(new ListenerPlayerRespawn(), this);
