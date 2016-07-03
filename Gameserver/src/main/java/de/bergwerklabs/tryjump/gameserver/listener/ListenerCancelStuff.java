@@ -144,6 +144,28 @@ public class ListenerCancelStuff implements Listener {
         e.blockList().clear();
     }
 
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e)
+    {
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
+        {
+            Player p = e.getPlayer();
+            if(p.getItemInHand() != null)
+            {
+                if(p.getItemInHand().getType() == Material.POTION && TryJump.getInstance().getCurrentState() != GameState.RUNNING_DEATHMATCH)
+                {
+                    e.setCancelled(true);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                        @Override
+                        public void run() {
+                            p.updateInventory();
+                        }
+                    },2L);
+                }
+            }
+        }
+    }
+
     /*
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e)

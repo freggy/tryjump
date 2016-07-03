@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 
@@ -23,7 +24,7 @@ public class ItemShop {
 
     // Preisliste
     private HashMap<Material,Integer> pricelist = new HashMap<Material,Integer>();
-
+    private HashMap<Short, Integer> potionPricelist = new HashMap<Short,Integer>();
 
     // Kategorieen
     private ItemStack waffen;
@@ -81,6 +82,11 @@ public class ItemShop {
     private ItemStack cake;
     private ItemStack gapple;
 
+    private ItemStack splashpotion_of_healing;
+    private ItemStack splashpotion_of_healing_ii;
+    private ItemStack splashpotion_of_harming;
+    private ItemStack splashpotion_of_harming_ii;
+
     private ItemStack[] page_waffen;
     private ItemStack[] page_lederruestung;
     private ItemStack[] page_kettenruestung;
@@ -104,8 +110,10 @@ public class ItemShop {
         diamantruestung = stack(new ItemStack(Material.DIAMOND_CHESTPLATE), ChatColor.AQUA + "Diamantrüstung");
         erfahrung = stack(new ItemStack(Material.EXP_BOTTLE), ChatColor.AQUA + "Erfahrung");
         nahrung = stack(new ItemStack(Material.CAKE), ChatColor.AQUA + "Nahrung");
-        traenke = stack(new ItemStack(Material.GLASS_BOTTLE), ChatColor.AQUA + "Tränke");
+        traenke = stack(new ItemStack(Material.getMaterial(373)), ChatColor.AQUA + "Tränke");
         spezial = stack(new ItemStack(Material.EMERALD), ChatColor.AQUA + "Spezial");
+
+
 
         // init contents
         wood_sword = price(Material.WOOD_SWORD, 40);
@@ -142,6 +150,10 @@ public class ItemShop {
         cake = price(Material.CAKE,8);
         gapple = price(Material.GOLDEN_APPLE,100);
 
+        splashpotion_of_harming = potion(16460, 180,1);
+        splashpotion_of_harming_ii = potion(16428, 250,1);
+        splashpotion_of_healing = potion(16453,140,3);
+        splashpotion_of_healing_ii = potion(16421,200,2);
 
         // build shop pages
         // waffen
@@ -201,6 +213,15 @@ public class ItemShop {
         inv_nahrung.setItem(15, gapple);
         page_nahrung = inv_nahrung.getContents();
 
+        // tränke
+        Inventory inv_traenke = Bukkit.createInventory(null,18);
+        addNavigationBar(inv_traenke);
+        inv_traenke.setItem(10, splashpotion_of_healing);
+        inv_traenke.setItem(11,splashpotion_of_healing_ii);
+        inv_traenke.setItem(15,splashpotion_of_harming);
+        inv_traenke.setItem(16,splashpotion_of_harming_ii);
+        page_traenke = inv_traenke.getContents();
+
         //special
         Inventory inv_special = Bukkit.createInventory(null, 18);
         addNavigationBar(inv_special);
@@ -238,6 +259,20 @@ public class ItemShop {
         return is;
     }
 
+    private ItemStack potion(int datavalue, int price, int amount)
+    {
+
+        ItemStack is = new ItemStack(Material.POTION,amount, (short) datavalue);
+        potionPricelist.put((short)datavalue,price);
+        List<String> lore = new ArrayList<String>();
+        lore.add("");
+        lore.add("" + ChatColor.GOLD + price + " Tokens");
+        ItemMeta im = is.getItemMeta();
+        im.setLore(lore);
+        is.setItemMeta(im);
+        return is;
+    }
+
     private void addNavigationBar(Inventory inv)
     {
         inv.setItem(0, waffen);
@@ -247,8 +282,8 @@ public class ItemShop {
         //inv.setItem(3, diamantruestung);
         //inv.setItem(4,erfahrung);
         //inv.setItem(5, verzaubern);
-        inv.setItem(6, nahrung);
-        //inv.setItem(7, traenke);
+        inv.setItem(5, nahrung);
+        inv.setItem(6, traenke);
         inv.setItem(8, spezial);
     }
 
@@ -303,7 +338,25 @@ public class ItemShop {
                 return;
             }
 
-
+            // case potion
+            if(item.getType() == Material.POTION)
+            {
+                int price = potionPricelist.get(item.getDurability());
+                Score balance  = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p);
+                if(balance.getScore() >= price)
+                {
+                    // buy
+                    balance.setScore(balance.getScore()-price);
+                    TryJump.getInstance().getGameSession().updateLevelBar(p);
+                    p.getInventory().addItem(new ItemStack(item.getType(), item.getAmount(), item.getDurability()));
+                    p.playSound(p.getEyeLocation(),Sound.ITEM_PICKUP, 100,1);
+                }else
+                {
+                    p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
+                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu kaufen!");
+                }
+                return;
+            }
 
             // case normal buy
             int price = pricelist.get(item.getType());
@@ -362,7 +415,7 @@ public class ItemShop {
                 case CAKE:
                     e.getInventory().setContents(page_nahrung);
                     break;
-                case GLASS_BOTTLE:
+                case POTION:
                     e.getInventory().setContents(page_traenke);
                     break;
                 case EMERALD:
