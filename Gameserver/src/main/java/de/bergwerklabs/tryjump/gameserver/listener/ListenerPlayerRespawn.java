@@ -33,6 +33,12 @@ public class ListenerPlayerRespawn implements Listener {
                     p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du hast 3 Sekunden Spawn-Schutz!");
                 }
             }, 5L);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    p.teleport(loc);
+                }
+            },1L);
 
         }
     }
