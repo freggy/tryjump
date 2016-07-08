@@ -126,7 +126,6 @@ public class TryJump extends LABSGameMode {
 
         timer.launch();
 
-        gameSession.buildWholeJumpPart();
 
         prepareTop10();
 

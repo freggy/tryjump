@@ -203,24 +203,6 @@ public class GameSession {
 
     }
 
-    public void buildWholeJumpPart()
-    {
-        for(int x = 0; x < 350; x+= 35)
-        {
-            Location loc = new Location(TryJump.getInstance().getServer().getWorld("jump"),x + 0.5,6,0.5);
-            Location buildPoint = loc.clone().add(spawnShift);
-            for(int i = 1; i < 11; i++)
-            {
-                ArrayList<Block> logBlockList = new ArrayList<Block>();
-                JSONUnit unit = getUnit(i,false);
-                buildHard(buildPoint,unit,null,logBlockList);
-                Location endLoc = new Location(Bukkit.getWorld("jump"),unit.getEndLocX(),unit.getEndLocY(),unit.getEndLocZ());
-                buildPoint = buildPoint.clone().add(endLoc);
-            }
-        }
-        System.out.println("Built all units!");
-    }
-
     private void updateTokensInJumpScoreboard(Player p)
     {
         Scoreboard sb = p.getScoreboard();
@@ -984,13 +966,7 @@ public class GameSession {
             session.lite = false;
             session.fails_current_unit = 0;
             session.blocklist.clear();
-            /*
             build(session.currentCheckpointLocation.clone(), getUnit(session.currentunit, session.lite), Bukkit.getPlayer(uuid), session.blocklist);
-            */
-            // just in case we need the blocklist for resetting the unit to build a lite unit at the place
-            session.blocklist = convertJSONBlocklistToBlocklist(getUnit(session.currentunit,session.lite).getBlocklist(),session.currentCheckpointLocation.getWorld());
-
-
         }else
         {
             session.fails_current_unit++;
@@ -1146,10 +1122,7 @@ public class GameSession {
         {
             blocklist.add(block);
         }
-        if(soundPlayer != null)
-        {
-            soundPlayer.playSound(soundPlayer.getEyeLocation(), Sound.ITEM_PICKUP, 100, 1);
-        }
+        soundPlayer.playSound(soundPlayer.getEyeLocation(), Sound.ITEM_PICKUP, 100, 1);
         while(!blocklist.isEmpty())
         {
             JSONBlock block = blocklist.get(0);
@@ -1168,16 +1141,6 @@ public class GameSession {
             }
             blocklist.remove(0);
         }
-    }
-
-    private ArrayList<Block> convertJSONBlocklistToBlocklist(ArrayList<JSONBlock> list,World w)
-    {
-        ArrayList<Block> blocklist = new ArrayList<Block>();
-        for(JSONBlock block : list)
-        {
-            blocklist.add(new Location(w,block.getX(),block.getY(),block.getZ()).getBlock());
-        }
-        return blocklist;
     }
 
     /**
