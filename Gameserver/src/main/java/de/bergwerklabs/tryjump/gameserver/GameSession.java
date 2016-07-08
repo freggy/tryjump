@@ -1122,6 +1122,21 @@ public class GameSession {
         {
             blocklist.add(block);
         }
+
+        // try to preload the chunk
+        try
+        {
+            JSONBlock b0 = blocklist.get(0);
+            Block b = Bukkit.getWorld("jump").getBlockAt(b0.getX(),b0.getY(),b0.getZ());
+            b.getChunk().load();
+            b = Bukkit.getWorld("jump").getBlockAt((int)unit.getEndLocX(),(int)unit.getEndLocY(),(int)unit.getEndLocZ());
+            b.getChunk().load();
+
+        }catch(Exception e)
+        {
+
+        }
+
         soundPlayer.playSound(soundPlayer.getEyeLocation(), Sound.ITEM_PICKUP, 100, 1);
         while(!blocklist.isEmpty())
         {
@@ -1141,6 +1156,7 @@ public class GameSession {
             }
             blocklist.remove(0);
         }
+
     }
 
     /**
