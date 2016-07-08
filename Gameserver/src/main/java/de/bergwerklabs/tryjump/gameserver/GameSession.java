@@ -1124,6 +1124,7 @@ public class GameSession {
         }
 
         // try to preload the chunk
+        /*
         try
         {
             JSONBlock b0 = blocklist.get(0);
@@ -1136,6 +1137,7 @@ public class GameSession {
         {
 
         }
+        */
 
         soundPlayer.playSound(soundPlayer.getEyeLocation(), Sound.ITEM_PICKUP, 100, 1);
         while(!blocklist.isEmpty())
