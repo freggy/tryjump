@@ -246,7 +246,7 @@ public class GameSession {
     {
         UUID uuid = p.getUniqueId();
         PlayerJumpSession session = playerJumpSessions.get(uuid);
-        if(session.currentunit == 10)
+        if(session.currentunit >= 10)
         {
             return;
         }
