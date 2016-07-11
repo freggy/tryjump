@@ -246,6 +246,10 @@ public class GameSession {
     {
         UUID uuid = p.getUniqueId();
         PlayerJumpSession session = playerJumpSessions.get(uuid);
+        if(session.currentunit == 10)
+        {
+            return;
+        }
         session.currentCheckpointLocation.getChunk().unload();
         session.currentCheckpointLocation.getChunk().load();
         build(session.currentCheckpointLocation.clone(), getUnit(session.currentunit, session.lite), Bukkit.getPlayer(uuid), session.blocklist);
