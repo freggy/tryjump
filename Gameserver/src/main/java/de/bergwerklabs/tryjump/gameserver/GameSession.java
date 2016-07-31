@@ -570,7 +570,7 @@ public class GameSession {
                 {
                     if(!deathmatch)
                     {
-                        HoverText.sendHoverTextUpdate(p, ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + ChatColor.YELLOW + ChatColor.BOLD + "Ausr¸sten");
+                        HoverText.sendHoverTextUpdate(p, ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + ChatColor.YELLOW + ChatColor.BOLD + "Ausr√ºsten");
                     }else
                     {
                         if(teams_allowed)
@@ -593,7 +593,7 @@ public class GameSession {
             p.getInventory().clear();
             p.teleport(Bukkit.getWorld("spawn").getSpawnLocation());
             p.setScoreboard(scoreboard);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du kannst mit " + ChatColor.AQUA + "/skip" + ChatColor.GRAY + " die Wartezeit verk¸rzen, falls du schnell fertig bist.");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du kannst mit " + ChatColor.AQUA + "/skip" + ChatColor.GRAY + " die Wartezeit verk√ºrzen, falls du schnell fertig bist.");
             ItemStack is = new ItemStack(Material.CHEST);
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(""+ChatColor.GOLD + ChatColor.BOLD + ">> " + ChatColor.YELLOW + "TryJump Shop");
@@ -880,7 +880,7 @@ public class GameSession {
             {
                 lite = " Lite";
             }
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du hast " + ChatColor.AQUA + "Unit " + session.currentunit + lite + ChatColor.GRAY + " geschafft! Du erh‰ltst " + ChatColor.GREEN + addtokens +  " Tokens" + ChatColor.GRAY + ".");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du hast " + ChatColor.AQUA + "Unit " + session.currentunit + lite + ChatColor.GRAY + " geschafft! Du erh√§ltst " + ChatColor.GREEN + addtokens +  " Tokens" + ChatColor.GRAY + ".");
 
             // add unit to stats
             DataRegistry.DataSet set = TryJump.getInstance().getUtil().getDataRegistry().getSet(p);
@@ -1363,7 +1363,7 @@ public class GameSession {
         value = coins_group.getValue("network.coins", "0");
         vlue = Integer.parseInt(value);
 
-        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erh‰ltst " + ChatColor.GREEN + "20 " + ChatColor.AQUA + "Coins f¸r das Gewinnen dieser Runde!");
+        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erh√§ltst " + ChatColor.GREEN + "20 " + ChatColor.AQUA + "Coins f√ºr das Gewinnen dieser Runde!");
 
         if(p.hasPermission("bergwerklabs.full-join"))
         {

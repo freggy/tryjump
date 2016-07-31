@@ -104,13 +104,13 @@ public class ItemShop {
     {
         // init categories
         waffen = stack(new ItemStack(Material.GOLD_SWORD), ChatColor.AQUA + "Waffen");
-        lederruestung = stack(new ItemStack(Material.LEATHER_CHESTPLATE), ChatColor.AQUA + "Lederrüstung");
-        kettenruestung = stack(new ItemStack(Material.CHAINMAIL_CHESTPLATE), ChatColor.AQUA + "Kettenrüstung");
-        eisenruestung = stack(new ItemStack(Material.IRON_CHESTPLATE), ChatColor.AQUA + "Eisenrüstung");
-        diamantruestung = stack(new ItemStack(Material.DIAMOND_CHESTPLATE), ChatColor.AQUA + "Diamantrüstung");
+        lederruestung = stack(new ItemStack(Material.LEATHER_CHESTPLATE), ChatColor.AQUA + "LederrÃ¼stung");
+        kettenruestung = stack(new ItemStack(Material.CHAINMAIL_CHESTPLATE), ChatColor.AQUA + "KettenrÃ¼stung");
+        eisenruestung = stack(new ItemStack(Material.IRON_CHESTPLATE), ChatColor.AQUA + "EisenrÃ¼stung");
+        diamantruestung = stack(new ItemStack(Material.DIAMOND_CHESTPLATE), ChatColor.AQUA + "DiamantrÃ¼stung");
         erfahrung = stack(new ItemStack(Material.EXP_BOTTLE), ChatColor.AQUA + "Erfahrung");
         nahrung = stack(new ItemStack(Material.CAKE), ChatColor.AQUA + "Nahrung");
-        traenke = stack(new ItemStack(Material.getMaterial(373)), ChatColor.AQUA + "Tränke");
+        traenke = stack(new ItemStack(Material.getMaterial(373)), ChatColor.AQUA + "TrÃ¤nke");
         spezial = stack(new ItemStack(Material.EMERALD), ChatColor.AQUA + "Spezial");
 
 
@@ -168,7 +168,7 @@ public class ItemShop {
         inv_waffen.setItem(17,tnt);
         page_waffen = inv_waffen.getContents();
 
-        // lederrüstung
+        // lederrÃ¼stung
         Inventory inv_lederruestung = Bukkit.createInventory(null,18);
         addNavigationBar(inv_lederruestung);
         inv_lederruestung.setItem(11, leather_cap);
@@ -177,7 +177,7 @@ public class ItemShop {
         inv_lederruestung.setItem(14, leather_tunic);
         page_lederruestung = inv_lederruestung.getContents();
 
-        //kettenrüstung
+        //kettenrÃ¼stung
         Inventory inv_kettenruestung = Bukkit.createInventory(null,18);
         addNavigationBar(inv_kettenruestung);
         inv_kettenruestung.setItem(11, chain_helmet);
@@ -186,7 +186,7 @@ public class ItemShop {
         inv_kettenruestung.setItem(14, chain_chestplate);
         page_kettenruestung = inv_kettenruestung.getContents();
 
-        // eisenrüstung
+        // eisenrÃ¼stung
         Inventory inv_eisenruestung = Bukkit.createInventory(null,18);
         addNavigationBar(inv_eisenruestung);
         inv_eisenruestung.setItem(11, iron_helmet);
@@ -195,7 +195,7 @@ public class ItemShop {
         inv_eisenruestung.setItem(14, iron_chestplate);
         page_eisenruestung = inv_eisenruestung.getContents();
 
-        // diamantrüstung
+        // diamantrÃ¼stung
         Inventory inv_diamantruestung = Bukkit.createInventory(null,18);
         addNavigationBar(inv_diamantruestung);
         inv_diamantruestung.setItem(11, diamond_helmet);
@@ -213,7 +213,7 @@ public class ItemShop {
         inv_nahrung.setItem(15, gapple);
         page_nahrung = inv_nahrung.getContents();
 
-        // tränke
+        // trÃ¤nke
         Inventory inv_traenke = Bukkit.createInventory(null,18);
         addNavigationBar(inv_traenke);
         inv_traenke.setItem(10, splashpotion_of_healing);
@@ -333,7 +333,7 @@ public class ItemShop {
                 }else
                 {
                     p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
-                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu kaufen!");
+                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genÃ¼gend Tokens, um dieses Item zu kaufen!");
                 }
                 return;
             }
@@ -353,7 +353,7 @@ public class ItemShop {
                 }else
                 {
                     p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
-                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu kaufen!");
+                    p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genÃ¼gend Tokens, um dieses Item zu kaufen!");
                 }
                 return;
             }
@@ -382,7 +382,7 @@ public class ItemShop {
             }else
             {
                 p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
-                p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu kaufen!");
+                p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genÃ¼gend Tokens, um dieses Item zu kaufen!");
             }
 
         }else
@@ -445,7 +445,7 @@ public class ItemShop {
         }else
         {
             p.playSound(p.getEyeLocation(),Sound.NOTE_BASS,100,1);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genügend Tokens, um dieses Item zu verzaubern!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast nicht genÃ¼gend Tokens, um dieses Item zu verzaubern!");
             return;
         }
         // case sword
@@ -456,7 +456,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für dein " + ChatColor.AQUA + "Schwert " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nÃ¤chste Verzauberungsstufe fÃ¼r dein " + ChatColor.AQUA + "Schwert " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case bow
@@ -467,7 +467,7 @@ public class ItemShop {
             p.updateInventory();
             balance.setScore(balance.getScore() - price);
             TryJump.getInstance().getGameSession().updateLevelBar(p);
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nächste Verzauberungsstufe für deinen " + ChatColor.AQUA + "Bogen " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + "Die nÃ¤chste Verzauberungsstufe fÃ¼r deinen " + ChatColor.AQUA + "Bogen " + ChatColor.GRAY +"kostet dich: " + ChatColor.RED + "400 Tokens" + ChatColor.GRAY + "!");
         }
 
         // case helmet

@@ -75,7 +75,7 @@ public class ListenerPlayerDeath implements Listener {
             value = coins_group.getValue("network.coins", "0");
             vlue = Integer.parseInt(value);
 
-            killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "5 " + ChatColor.AQUA + "Coin!");
+            killer.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhÃ¤ltst " + ChatColor.GREEN + "5 " + ChatColor.AQUA + "Coin!");
             if(killer.hasPermission("bergwerklabs.full-join"))
             {
                 coins_group.setValue("network.coins",String.valueOf((vlue +10)));
@@ -94,7 +94,7 @@ public class ListenerPlayerDeath implements Listener {
 
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 1));
             killer.playSound(killer.getEyeLocation(), Sound.LEVEL_UP,100,10);
-            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getName() + ChatColor.GRAY + " getötet!");
+            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getName() + ChatColor.GRAY + " getÃ¶tet!");
         }else
         {
             e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getName() + ChatColor.GRAY + " ist gestorben!");

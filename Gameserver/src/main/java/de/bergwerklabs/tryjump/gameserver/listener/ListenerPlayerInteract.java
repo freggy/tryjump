@@ -103,7 +103,7 @@ public class ListenerPlayerInteract implements Listener {
                                 TryJump.getInstance().getGameSession().onJumpFail(p);
                             }else
                             {
-                                p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Bitte warte noch einen Moment, bevor du den Instant Tod ausführst!");
+                                p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Bitte warte noch einen Moment, bevor du den Instant Tod ausfÃ¼hrst!");
                             }
                         }
                     }

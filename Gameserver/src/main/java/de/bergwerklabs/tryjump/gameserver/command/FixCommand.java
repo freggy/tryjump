@@ -37,7 +37,7 @@ public class FixCommand implements CommandExecutor {
 
         if(cooldown(p.getUniqueId()))
         {
-            p.sendMessage("Du darfst diesen Befehl nur 1x pro Minute ausführen!");
+            p.sendMessage("Du darfst diesen Befehl nur 1x pro Minute ausfÃ¼hren!");
             return true;
         }
         p.sendMessage("Fixing ...");

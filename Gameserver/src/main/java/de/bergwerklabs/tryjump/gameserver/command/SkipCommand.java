@@ -30,7 +30,7 @@ public class SkipCommand implements CommandExecutor {
         Player p = (Player)cs;
         if(!TryJump.getInstance().getGameSession().isBuyphase())
         {
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du kannst diesen Befehl nur in der Kauf-Phase ausführen!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du kannst diesen Befehl nur in der Kauf-Phase ausfÃ¼hren!");
             return true;
         }
         if(!TryJump.getInstance().getGameSession().getIngame_players().contains(p.getUniqueId()))
@@ -40,12 +40,12 @@ public class SkipCommand implements CommandExecutor {
         }
         if(skiped.contains(p.getUniqueId()))
         {
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast diesen Befehl bereits ausgeführt!");
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du hast diesen Befehl bereits ausgefÃ¼hrt!");
             return true;
         }
 
         skiped.add(p.getUniqueId());
-        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " hat dafür gestimmt, die Wartezeit zu verkürzen " + ChatColor.AQUA + "(" + skiped.size() + "/" + TryJump.getInstance().getGameSession().getIngame_players().size() +")"+ChatColor.GRAY +"! " + ChatColor.GRAY + ChatColor.ITALIC +"[/skip]");
+        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " hat dafÃ¼r gestimmt, die Wartezeit zu verkÃ¼rzen " + ChatColor.AQUA + "(" + skiped.size() + "/" + TryJump.getInstance().getGameSession().getIngame_players().size() +")"+ChatColor.GRAY +"! " + ChatColor.GRAY + ChatColor.ITALIC +"[/skip]");
         for(Player play : Bukkit.getOnlinePlayers())
         {
             play.playSound(play.getEyeLocation(), Sound.NOTE_PLING, 100,20);
@@ -53,7 +53,7 @@ public class SkipCommand implements CommandExecutor {
 
         if(skiped.size() >= TryJump.getInstance().getGameSession().getIngame_players().size())
         {
-            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Die Wartezeit wurde auf " + ChatColor.AQUA + "5 Sekunden " + ChatColor.GRAY + "verkürzt!");
+            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Die Wartezeit wurde auf " + ChatColor.AQUA + "5 Sekunden " + ChatColor.GRAY + "verkÃ¼rzt!");
             TryJump.getInstance().getGameSession().setTimeleft(5);
         }
 

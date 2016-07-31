@@ -38,7 +38,7 @@ public class AchievementManager {
     // sprengmeister
     HashMap<UUID, Integer> sprengmeister = new HashMap<UUID,Integer>();
 
-    // schütze
+    // schÃ¼tze
     HashMap<UUID, Integer> schuetze = new HashMap<UUID,Integer>();
 
 
@@ -122,7 +122,7 @@ public class AchievementManager {
             return "Sprengmeister";
         }else if(key.equalsIgnoreCase("achievements.tryjump.schuetze"))
         {
-            return "Schütze";
+            return "SchÃ¼tze";
         }
         return null;
     }
@@ -136,10 +136,10 @@ public class AchievementManager {
             return "Sei der erste, der in einer Runde stirbt!";
         }else if(key.equalsIgnoreCase("achievements.tryjump.firstkill"))
         {
-            return "Sei der erste, der in einer Runde jemanden tötet!";
+            return "Sei der erste, der in einer Runde jemanden tÃ¶tet!";
         }else if(key.equalsIgnoreCase("achievements.tryjump.killstreak"))
         {
-            return "Töte fünf Spieler, ohne selber zu sterben!";
+            return "TÃ¶te fÃ¼nf Spieler, ohne selber zu sterben!";
         }else if(key.equalsIgnoreCase("achievements.tryjump.unbesiegbar"))
         {
             return "Erreiche 20 Herzen";
@@ -235,6 +235,10 @@ public class AchievementManager {
                 setAchievement(p.getUniqueId(),key,true);
                 announceAchievement(p,key);
             }
+
+            // give fucking tokens
+            p.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "MEGA TOKEN BOOST " + ChatColor.GOLD + ChatColor.BOLD + "+2000 Tokens");
+            session.tokens = session.tokens + 2000;
         }
     }
 
