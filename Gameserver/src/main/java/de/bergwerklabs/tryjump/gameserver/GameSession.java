@@ -848,6 +848,11 @@ public class GameSession {
     public void checkpointReached(Player p, Block checkpoint)
     {
 
+        if(buyphase == true)
+        {
+            return;
+        }
+
         PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
         //checkpoint.setType(Material.WOOD_STAIRS);
         if(session.currentCheckpointLocation.distanceSquared(checkpoint.getLocation()) > 1) //TODO: find a better option
