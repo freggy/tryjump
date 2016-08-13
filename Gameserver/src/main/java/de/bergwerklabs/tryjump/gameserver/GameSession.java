@@ -944,6 +944,12 @@ public class GameSession {
         }
     }
 
+    public void externalUpdateTokens(Player p,int tokens)
+    {
+        token_objective.getScore(p).setScore(tokens);
+        updateTokensInJumpScoreboard(p);
+    }
+
     public void updateLevelBar(Player p)
     {
         if(deathmatch)

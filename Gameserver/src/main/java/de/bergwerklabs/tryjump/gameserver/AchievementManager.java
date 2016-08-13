@@ -239,6 +239,7 @@ public class AchievementManager {
             // give fucking tokens
             p.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "MEGA TOKEN BOOST " + ChatColor.GOLD + ChatColor.BOLD + "+2000 Tokens");
             session.tokens = session.tokens + 2000;
+            TryJump.getInstance().getGameSession().externalUpdateTokens(p,session.tokens);
         }
     }
 
