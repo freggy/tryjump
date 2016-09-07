@@ -24,8 +24,14 @@ public class ListenerPlayerRespawn implements Listener {
         Player p = e.getPlayer();
         if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH)
         {
-            Location loc = TryJump.getInstance().getDmSession().getRandomSpawn();
+            final Location loc = TryJump.getInstance().getDmSession().getRandomSpawn();
             e.setRespawnLocation(loc);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    p.teleport(loc);
+                }
+            },2L);
             Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
                 @Override
                 public void run() {

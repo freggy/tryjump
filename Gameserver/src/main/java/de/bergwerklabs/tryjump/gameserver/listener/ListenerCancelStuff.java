@@ -38,6 +38,12 @@ public class ListenerCancelStuff implements Listener {
         } else
         {
         }
+
+        if(e.getBlock().getType() == Material.CAKE_BLOCK || e.getBlock().getType() == Material.CAKE)
+        {
+            e.setCancelled(false);
+        }
+
     }
 
     @EventHandler
