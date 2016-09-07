@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.unitcreator;
 
 import de.bergwerklabs.tryjump.unitcreator.command.*;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.defaults.ListCommand;
 import org.bukkit.entity.Player;
@@ -42,6 +43,8 @@ public class UnitCreator extends JavaPlugin implements Listener {
         this.getCommand("delete").setExecutor(new DeleteCommand());
 
         getServer().getPluginManager().registerEvents(this,this);
+        getServer().getPluginManager().registerEvents(new Stoplag(),this);
+        Stoplag.setActive(true,Bukkit.getWorld("world"));
 
     }
 

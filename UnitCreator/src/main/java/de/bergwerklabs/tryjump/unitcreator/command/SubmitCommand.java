@@ -129,7 +129,7 @@ public class SubmitCommand implements CommandExecutor {
         System.out.println("lowZ " + lowZ);
         System.out.println("highZ " + highZ);
 
-        // alle Blöcke durchgehen
+        // alle BlÃ¶cke durchgehen
         p.sendMessage(i.PREFIX + "speichere ...");
 
         for(int z = 0; z <= (highZ - lowZ);z++)

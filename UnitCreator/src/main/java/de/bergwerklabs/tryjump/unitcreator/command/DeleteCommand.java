@@ -25,13 +25,13 @@ public class DeleteCommand implements CommandExecutor {
         if(file.exists())
         {
             file.delete();
-            cs.sendMessage(file.getName() + " wurde erfolgreich gelöscht!");
+            cs.sendMessage(file.getName() + " wurde erfolgreich gelÃ¶scht!");
         }
         file = new File("units/" + name + "_lite.unit");
         if(file.exists())
         {
             file.delete();
-            cs.sendMessage(file.getName() + " wurde erfolgreich gelöscht!");
+            cs.sendMessage(file.getName() + " wurde erfolgreich gelÃ¶scht!");
         }
 
         return true;

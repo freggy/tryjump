@@ -94,7 +94,7 @@ public class SubmitCommand2 implements CommandExecutor {
         unit.setEndLocY(endLoc.getBlockY() - startLoc.getBlockY());
         unit.setEndLocZ(endLoc.getBlockZ() - startLoc.getBlockZ());
 
-        // alle Blöcke durchgehen
+        // alle BlÃ¶cke durchgehen
         ArrayList<JSONBlock> blocklist = new ArrayList<JSONBlock>();
 
         for(int z = minZ; z <= maxZ;z++)
