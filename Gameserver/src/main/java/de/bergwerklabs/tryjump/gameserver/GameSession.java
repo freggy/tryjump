@@ -375,6 +375,9 @@ public class GameSession {
                 Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective sidebar = sb.registerNewObjective("sidebar", "dummy");
                 sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+                sidebar.getScore(ChatColor.YELLOW + ""+ ChatColor.BOLD + "Server-IP:").setScore(106);
+                sidebar.getScore("bergwerklabs.de").setScore(105);
+                sidebar.getScore(ChatColor.YELLOW + "      ").setScore(104);
                 sidebar.getScore(ChatColor.YELLOW + "" + ChatColor.BOLD + "Tokens:").setScore(103);
                 sidebar.getScore(ChatColor.YELLOW + "  ").setScore(101);
 
