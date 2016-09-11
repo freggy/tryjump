@@ -21,6 +21,7 @@ import de.bergwerklabs.util.mechanic.StartTimer;
 import de.bergwerklabs.util.playerdata.DataRegistry;
 import de.bergwerklabs.util.playerdata.PlayerDataEntry;
 import de.bergwerklabs.util.templates.cmd.CommandStart;
+import java.io.BufferedReader;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -28,6 +29,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -55,7 +57,8 @@ public class TryJump extends LABSGameMode {
     private static TryJump instance;
 
     private static String dmname = null;
-
+    
+    private String serverID = "TRYJUMP";
 
     @Override
     public void labsEnable() {
@@ -77,7 +80,10 @@ public class TryJump extends LABSGameMode {
 
         getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
 
-
+        try (BufferedReader br = new BufferedReader(new FileReader("./serverid.NETSYN")))
+        {
+            serverID = br.readLine();
+        } catch (Exception e){}
 
         for(World w : getServer().getWorlds())
         {
@@ -135,6 +141,10 @@ public class TryJump extends LABSGameMode {
 
     public Chat getChat() {
         return chat;
+    }
+    
+    public String getServerID() {
+        return serverID;
     }
 
     /**

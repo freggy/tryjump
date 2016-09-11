@@ -8,6 +8,7 @@ import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
 import de.bergwerklabs.tryjump.gameserver.util.ItemShop;
 import de.bergwerklabs.tryjump.gameserver.util.PlayerJumpSession;
 import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
+import de.bergwerklabs.tryjump.gameserver.util.TabTitleManager;
 import de.bergwerklabs.util.GameState;
 import de.bergwerklabs.util.Util;
 import de.bergwerklabs.util.effect.HoverText;
@@ -22,7 +23,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -522,23 +522,45 @@ public class GameSession {
                     Player p = Bukkit.getPlayer(uuid);
                     jumpprogress_objective.getScore(p).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
                 }
-
                 // now care for the players' scoreboard
+                HashMap<UUID, Integer> percent = new HashMap<>();
+                for(UUID uuid : ingame_players)
+                {
+                    Player p = Bukkit.getPlayer(uuid);
+                    percent.put(uuid, percentOfJumpPart(p.getLocation().getBlockZ()));
+                }
+                
                 for(UUID uuid : ingame_players)
                 {
                     Player p = Bukkit.getPlayer(uuid);
                     Scoreboard sb = p.getScoreboard();
                     if(sb != null)
                     {
+                        String footer = "§7Du befindest dich auf: §b" + TryJump.getInstance().getServerID().toUpperCase() + "\n\n\n§e§lZIEL§r\n";
                         sb.getObjective(DisplaySlot.SIDEBAR).setDisplayName(displayName);
                         for(UUID uuid1 : ingame_players)
                         {
                             Player pl = Bukkit.getPlayer(uuid1);
-                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percentOfJumpPart(pl.getLocation().getBlockZ()));
+//                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percentOfJumpPart(pl.getLocation().getBlockZ()));
+                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percent.get(uuid1));
                         }
+                        for(int i = 9; i >= 0; i--)
+                        {
+                            ArrayList<UUID> ingame_players_r = (ArrayList<UUID>) ingame_players.clone();
+                            Collections.reverse(ingame_players_r);
+                            for(UUID uuid1 : ingame_players_r)
+                            {
+                                if(percent.get(uuid1) >= i * 10)
+                                    footer += (uuid1 == uuid ? "§a" : "§c") + "█§r";
+                                else
+                                    footer += (uuid1 == uuid ? "§7" : "§8") + "▒§r";
+                            }
+                            footer += "\n";
+                        }
+                        footer += "§e§lSTART";
+                        TabTitleManager.sendTablist(p, "§6>> §ebergwerkLABS-Servernetzwerk §6<<", footer);
                     }
                 }
-
             }
         }.runTaskTimer(TryJump.getInstance(), 0L, 20L);
     }
@@ -562,6 +584,10 @@ public class GameSession {
     {
         buyphase = true;
         itemShop = new ItemShop();
+        for(Player p : Bukkit.getOnlinePlayers())
+        {
+            TabTitleManager.sendTablist(p, "§6>> §ebergwerkLABS-Servernetzwerk §6<<", "§7Du befindest dich auf: §b" + TryJump.getInstance().getServerID().toUpperCase());
+        }
         stopHoverUpdater();
         hoverUpdater = new BukkitRunnable() {
             @Override
@@ -1374,7 +1400,7 @@ public class GameSession {
         value = coins_group.getValue("network.coins", "0");
         vlue = Integer.parseInt(value);
 
-        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhältst " + ChatColor.GREEN + "20 " + ChatColor.AQUA + "Coins für das Gewinnen dieser Runde!");
+        p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "Du erhÃ¤ltst " + ChatColor.GREEN + "20 " + ChatColor.AQUA + "Coins für das Gewinnen dieser Runde!");
 
         if(p.hasPermission("bergwerklabs.full-join"))
         {
