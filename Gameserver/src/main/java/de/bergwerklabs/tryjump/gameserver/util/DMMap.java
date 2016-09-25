@@ -61,7 +61,7 @@ public class DMMap // TODO - Merge this with SGMap at some point. Probably. Is m
                 List<String> spawnStrings = configuration.getStringList("spawns");
                 ArrayList<Location> spawns = new ArrayList<>();
                 for (String s : spawnStrings) {
-                    spawns.add(LocationUtil.buildLocationFromString(s, world));
+                    spawns.add(LocationUtil.buildLocationFromString(s, world).add(0.5,0.5,0.5)); // <-- the .add(0.5,0.5,0.5) should fix the spawn out of map bug
                 }
                 String s = configuration.getString("mid");
                 DMMap mapSession = new DMMap(world, spawns, LocationUtil.buildLocationFromString(s, world));
