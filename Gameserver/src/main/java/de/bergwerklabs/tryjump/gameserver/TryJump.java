@@ -3,6 +3,7 @@ package de.bergwerklabs.tryjump.gameserver;
 import com.google.gson.Gson;
 import de.bergwerklabs.chat.Chat;
 import de.bergwerklabs.tryjump.gameserver.command.FixCommand;
+import de.bergwerklabs.tryjump.gameserver.command.LogCommand;
 import de.bergwerklabs.tryjump.gameserver.command.SkipCommand;
 import de.bergwerklabs.tryjump.gameserver.command.StatsCommand;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
@@ -27,6 +28,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsService;
 
 import java.io.File;
 import java.io.FileReader;
@@ -60,6 +62,8 @@ public class TryJump extends LABSGameMode {
     
     private String serverID = "TRYJUMP";
 
+    private ZPermissionsService  permissionService;
+
     @Override
     public void labsEnable() {
         instance = this;//Waru mha
@@ -67,6 +71,7 @@ public class TryJump extends LABSGameMode {
         getServer().setDefaultGameMode(GameMode.ADVENTURE);
         gameSession = new GameSession();
         achievementManager = new AchievementManager();
+
 
         if (getServer().getPluginManager().isPluginEnabled("LABS_Chat"))
         {
@@ -128,6 +133,7 @@ public class TryJump extends LABSGameMode {
         getCommand("stats").setExecutor(new StatsCommand());
         getCommand("skip").setExecutor(new SkipCommand());
         getCommand("fix").setExecutor(new FixCommand());
+        getCommand("fix").setExecutor(new LogCommand());
 
 
         timer.launch();
@@ -136,6 +142,8 @@ public class TryJump extends LABSGameMode {
         prepareTop10();
 
         getGameStateManager().setState(GameState.WAITING);
+
+        permissionService = getServer().getServicesManager().load(ZPermissionsService.class);
 
     }//
 
@@ -251,6 +259,11 @@ public class TryJump extends LABSGameMode {
     }
 
      */
+
+    public ZPermissionsService getPermissionService()
+    {
+        return permissionService;
+    }
 
     private void prepareTop10()
     {

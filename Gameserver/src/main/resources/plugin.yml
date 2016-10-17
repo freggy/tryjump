@@ -3,7 +3,7 @@ author: nexotekHD
 version: 1.0
 main: de.bergwerklabs.tryjump.gameserver.TryJump
 
-depend: ["LABS_Util","LABS_Chat","LABS_Nick"]
+depend: [LABS_Util, LABS_Nick, LABS_Chat, zPermissions]
 
 commands:
      start:
@@ -18,3 +18,6 @@ commands:
      fix:
           description: Fix
           usage: /fix
+     log:
+          description: Log
+          usage: /log
