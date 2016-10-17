@@ -133,7 +133,7 @@ public class TryJump extends LABSGameMode {
         getCommand("stats").setExecutor(new StatsCommand());
         getCommand("skip").setExecutor(new SkipCommand());
         getCommand("fix").setExecutor(new FixCommand());
-        getCommand("fix").setExecutor(new LogCommand());
+        getCommand("log").setExecutor(new LogCommand());
 
 
         timer.launch();
