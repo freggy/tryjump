@@ -670,38 +670,41 @@ public class GameSession {
                             p.showPlayer(pl);
                         }
                     }
-                }
 
-                // fix party unnick
-                // first check if there are any nicked players on this server. If not do nothing.
-                boolean somebodyHasNickPermission = false;
-                boolean somebodyIsNicked = false;
-                AutoNick nickPlugin = (AutoNick) TryJump.getInstance().getNickPlugin();
-                for(Player p : Bukkit.getOnlinePlayers())
-                {
-                    if(p.hasPermission("bergwerklabs.nick"))
-                    {
-                        somebodyHasNickPermission = true;
-                    }
-                }
-                if(somebodyHasNickPermission)
-                {
+                    // fix party unnick
+                    // first check if there are any nicked players on this server. If not do nothing.
+                    boolean somebodyHasNickPermission = false;
+                    boolean somebodyIsNicked = false;
+                    AutoNick nickPlugin = (AutoNick) TryJump.getInstance().getNickPlugin();
                     for(Player p : Bukkit.getOnlinePlayers())
                     {
-                        if(nickPlugin.isPlayerNicked(p))
+                        if(p.hasPermission("bergwerklabs.nick"))
                         {
-                            somebodyIsNicked = true;
+                            somebodyHasNickPermission = true;
                         }
                     }
+                    if(somebodyHasNickPermission)
+                    {
+                        for(Player p : Bukkit.getOnlinePlayers())
+                        {
+                            if(nickPlugin.isPlayerNicked(p))
+                            {
+                                somebodyIsNicked = true;
+                            }
+                        }
+                    }
+
+                    if(somebodyHasNickPermission && somebodyIsNicked)
+                    {
+                        for(Player p : Bukkit.getOnlinePlayers())
+                        {
+                            nickPlugin.partyUnnick(p,nickPlugin);
+                        }
+                    }
+
                 }
 
-                if(somebodyHasNickPermission && somebodyIsNicked)
-                {
-                    for(Player p : Bukkit.getOnlinePlayers())
-                    {
-                        nickPlugin.partyUnnick(p,nickPlugin);
-                    }
-                }
+
 
                 if(timeleft <= 5)
                 {
