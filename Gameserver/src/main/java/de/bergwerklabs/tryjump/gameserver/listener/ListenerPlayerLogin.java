@@ -43,6 +43,8 @@ public class ListenerPlayerLogin implements Listener {
 
         if(TryJump.getInstance().getCurrentState().getRoot() != GameState.WAITING)
         {
+            if(p.hasPermission("bergwerklabs.team"))
+                e.allow();
             System.out.println("2");
             TryJump.getInstance().getGameSession().addSpectator(p);
         }
