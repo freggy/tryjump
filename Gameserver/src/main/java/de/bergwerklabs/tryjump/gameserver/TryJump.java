@@ -72,6 +72,9 @@ public class TryJump extends LABSGameMode {
         gameSession = new GameSession();
         achievementManager = new AchievementManager();
 
+        System.out.println("-------------------------------------");
+        System.out.println("HELLO CI (TRYJUMP: TEAMS NOT ALLOWED)");
+        System.out.println("-------------------------------------");
 
         if (getServer().getPluginManager().isPluginEnabled("LABS_Chat"))
         {
@@ -218,6 +221,7 @@ public class TryJump extends LABSGameMode {
                     sign.setLine(1,"loading ...");
                     sign.setLine(2,"");
                     sign.setLine(3,"");
+
                     try {
                         String name = NameResolveTask.resolveName(entry.getUuid());
                         headskull.setOwner(name);
@@ -235,7 +239,6 @@ public class TryJump extends LABSGameMode {
                 }
             }
         });
-
     }
     */
 

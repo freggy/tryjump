@@ -1,0 +1,15 @@
+job-prod:
+    script: source /home/gitlab-runner-deamon/ci/preflight.sh "=ALL_GAMEMODES"
+    tags:
+        - release-s0
+    only:
+        - tags
+        - master
+
+job-dev:
+    script: source /home/gitlab-runner/ci/preflight.sh "dev"
+    tags:
+        - snapshot
+    only:
+        - tags
+        - dev
