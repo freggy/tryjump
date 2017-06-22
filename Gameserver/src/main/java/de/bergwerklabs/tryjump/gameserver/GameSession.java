@@ -81,20 +81,21 @@ public class GameSession {
 
     private HashMap<UUID,Long> instant_tod_cooldown = new HashMap<UUID,Long>();
 
-
     private HashMap<UUID,PlayerJumpSession> playerJumpSessions = new HashMap<UUID,PlayerJumpSession>();
 
-    private HashMap<Integer,JSONUnit> easy_units = new HashMap<Integer, JSONUnit>();
-    private HashMap<Integer,JSONUnit> easy_lite_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> easy_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> easy_lite_units = new HashMap<Integer, JSONUnit>();
 
-    private HashMap<Integer,JSONUnit> medium_units = new HashMap<Integer, JSONUnit>();
-    private HashMap<Integer,JSONUnit> medium_lite_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> medium_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> medium_lite_units = new HashMap<Integer, JSONUnit>();
 
-    private HashMap<Integer,JSONUnit> hard_units = new HashMap<Integer, JSONUnit>();
-    private HashMap<Integer,JSONUnit> hard_lite_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> hard_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> hard_lite_units = new HashMap<Integer, JSONUnit>();
 
-    private HashMap<Integer,JSONUnit> extreme_units = new HashMap<Integer, JSONUnit>();
-    private HashMap<Integer,JSONUnit> extreme_lite_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> extreme_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> extreme_lite_units = new HashMap<Integer, JSONUnit>();
+
+    public HashMap<String, JSONUnit> pickedUnits = new HashMap<>();
 
     private Location spawnShift = null;
 
@@ -106,7 +107,6 @@ public class GameSession {
      */
     public GameSession()
     {
-
         // init scoreboard
         scoreboard = TryJump.getInstance().getServer().getScoreboardManager().getNewScoreboard();
         jumpprogress_objective = scoreboard.registerNewObjective("sidebar", "dummy");
@@ -122,6 +122,7 @@ public class GameSession {
         File[] list = dir.listFiles();
         ArrayList<File> units = new ArrayList<File>();
         ArrayList<File> liteunits = new ArrayList<File>();
+
         for(int i = 0; i < list.length; i++)
         {
             File file = list[i];
@@ -142,6 +143,7 @@ public class GameSession {
             String name = unit.getName();
             name = name.split(".unit",-1)[0];
             JSONUnit lite = null;
+
             // search for lite unit
             for(File liteunit : liteunits)
             {
@@ -150,12 +152,17 @@ public class GameSession {
                     lite = gson.fromJson(readFile(liteunit),JSONUnit.class);
                 }
             }
+
             if(lite != null)
             {
                 // read unit
                 JSONUnit instance = gson.fromJson(readFile(unit),JSONUnit.class);
                 instance.setName(unit.getName());
                 lite.setName(unit.getName());
+
+                TryJump.getInstance().getAllunits().put(lite.getName() + "_lite", lite);
+                TryJump.getInstance().getAllunits().put(instance.getName(), instance);
+
                 switch (instance.getDifficulty())
                 {
                     case 1:
@@ -193,7 +200,6 @@ public class GameSession {
                 }
             }
         }
-
 
         for(int i = 1; i <= 10; i++){
             JSONUnit unit = getUnit(i,false);
@@ -741,8 +747,6 @@ public class GameSession {
             spawnEnchanterHologram(p);
         }
 
-
-
     }
 
     public boolean isDeathmatch()
@@ -1045,6 +1049,7 @@ public class GameSession {
             session.fails_current_unit = 0;
             session.blocklist.clear();
             build(session.currentCheckpointLocation.clone(), getUnit(session.currentunit, session.lite), Bukkit.getPlayer(uuid), session.blocklist);
+
         }else
         {
             session.fails_current_unit++;
@@ -1192,6 +1197,7 @@ public class GameSession {
     {
         buildHard(loca, unit, soundPlayer, logBlockList);
     }
+
     private void buildHard(Location loca, JSONUnit unit,Player soundPlayer,ArrayList<Block> logBlockList)
     {
         ArrayList<JSONBlock> blocklist = new ArrayList<JSONBlock>();

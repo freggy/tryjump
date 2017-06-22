@@ -2,10 +2,7 @@ package de.bergwerklabs.tryjump.gameserver;
 
 import com.google.gson.Gson;
 import de.bergwerklabs.chat.Chat;
-import de.bergwerklabs.tryjump.gameserver.command.FixCommand;
-import de.bergwerklabs.tryjump.gameserver.command.LogCommand;
-import de.bergwerklabs.tryjump.gameserver.command.SkipCommand;
-import de.bergwerklabs.tryjump.gameserver.command.StatsCommand;
+import de.bergwerklabs.tryjump.gameserver.command.*;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
 import de.bergwerklabs.tryjump.gameserver.listener.*;
@@ -22,7 +19,6 @@ import de.bergwerklabs.util.mechanic.StartTimer;
 import de.bergwerklabs.util.playerdata.DataRegistry;
 import de.bergwerklabs.util.playerdata.PlayerDataEntry;
 import de.bergwerklabs.util.templates.cmd.CommandStart;
-import java.io.BufferedReader;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -30,6 +26,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsService;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -38,7 +35,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by nexotekHD on 12.04.2016.
@@ -46,7 +46,7 @@ import java.util.*;
 public class TryJump extends LABSGameMode {
 
 
-    private GameSession gameSession;
+    public GameSession gameSession;
 
     private StartTimer timer;
 
@@ -63,6 +63,10 @@ public class TryJump extends LABSGameMode {
     private String serverID = "TRYJUMP";
 
     private ZPermissionsService  permissionService;
+
+    public HashMap<String, JSONUnit> getAllunits() { return this.allunits; }
+
+    private HashMap<String, JSONUnit> allunits = new HashMap<>();
 
     @Override
     public void labsEnable() {
@@ -137,10 +141,9 @@ public class TryJump extends LABSGameMode {
         getCommand("skip").setExecutor(new SkipCommand());
         getCommand("fix").setExecutor(new FixCommand());
         getCommand("log").setExecutor(new LogCommand());
-
+        getCommand("force").setExecutor(new ForceCommand());
 
         timer.launch();
-
 
         prepareTop10();
 

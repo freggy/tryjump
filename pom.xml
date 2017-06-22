@@ -18,6 +18,10 @@
             <id>notepass_de_private</id>
             <url>http://private.maven.notepass.de/maven2</url>
         </repository>
+        <repository>
+            <id>ftp_bwueller</id>
+            <url>https://bwueller.de/maven2</url>
+        </repository>
     </repositories>
 
     <dependencies>

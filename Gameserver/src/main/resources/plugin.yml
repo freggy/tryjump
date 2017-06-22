@@ -21,3 +21,6 @@ commands:
      log:
           description: Log
           usage: /log
+     force:
+           description: Log
+           usage: /log
