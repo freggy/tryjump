@@ -2,9 +2,11 @@ package de.bergwerklabs.tryjump.gameserver.listener;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.util.GameState;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Entity;
@@ -64,6 +66,15 @@ public class ListenerCancelStuff implements Listener {
                 tnt.setFuseTicks(40);
 
             }
+        }
+
+
+        if(e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType() == Material.CAKE && e.getBlockPlaced().getLocation().subtract(0, 1, 0).getBlock().getType() == Material.CAKE_BLOCK) {
+            e.setCancelled(true);
+            Player p = e.getPlayer();
+            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du darfst keine Kuchen stapeln!");
+            p.playSound(p.getEyeLocation(), Sound.NOTE_BASS,50,1);
+            p.updateInventory();
         }
     }
 
