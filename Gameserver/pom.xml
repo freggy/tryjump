@@ -20,27 +20,28 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>de.bergwerklabs</groupId>
-            <artifactId>LABS_Chat</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.bergwerklabs</groupId>
-            <artifactId>LABS_Nick</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.tyrannyofheaven</groupId>
             <artifactId>zPermissions</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>de.bergwerklabs</groupId>
-            <artifactId>netsyn-bukkitcore</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>de.bergwerklabs.framework</groupId>
+            <artifactId>spigot-commons</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.bergwerklabs.atlantis</groupId>
+            <artifactId>atlantis-client-bukkit</artifactId>
+            <version>0.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.bergwerklabs.framework</groupId>
+            <artifactId>chat-commons</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

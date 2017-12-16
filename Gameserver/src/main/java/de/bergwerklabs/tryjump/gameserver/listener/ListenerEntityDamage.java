@@ -1,13 +1,13 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  * Created by nexotekHD on 14.04.2016.
@@ -21,7 +21,7 @@ public class ListenerEntityDamage implements Listener {
         {
             Player p = (Player)e.getEntity();
 
-            if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+            if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
             {
                 if(e.getCause() == EntityDamageEvent.DamageCause.VOID)
                 {
@@ -34,7 +34,7 @@ public class ListenerEntityDamage implements Listener {
                 }
                 e.setCancelled(true);
             }
-            if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+            if(GamestateManager.getCurrentState() == Gamestate.WAITING)
             {
                 e.setCancelled(true);
             }

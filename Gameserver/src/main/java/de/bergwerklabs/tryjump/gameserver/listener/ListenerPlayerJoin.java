@@ -1,8 +1,8 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
-import de.bergwerklabs.chat.Chat;
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -26,9 +26,7 @@ public class ListenerPlayerJoin implements Listener {
     {
         Player p = e.getPlayer();
         p.getInventory().clear();
-        Chat chatPlugin = TryJump.getInstance().getChat();
-        chatPlugin.setChatHandler(p, new TryJumpChatHandler(TryJump.getInstance(), p));
-        if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+        if(GamestateManager.getCurrentState() == Gamestate.WAITING)
         {
             ItemStack achievements = new ItemStack(Material.NETHER_STAR);
             ItemMeta im = achievements.getItemMeta();
@@ -48,7 +46,7 @@ public class ListenerPlayerJoin implements Listener {
                 @Override
                 public void run()
                 {
-                    if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+                    if(GamestateManager.getCurrentState() == Gamestate.WAITING)
                     {
                         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!"); //TODO
                     }
@@ -57,7 +55,7 @@ public class ListenerPlayerJoin implements Listener {
             }.runTaskLater(TryJump.getInstance(), 2L);
         } else
         {
-            if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+            if(GamestateManager.getCurrentState() == Gamestate.WAITING)
             {
                 e.setJoinMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!");
             }else
@@ -82,7 +80,7 @@ public class ListenerPlayerJoin implements Listener {
 
 
         // handle spec
-        if(TryJump.getInstance().getCurrentState().getRoot() != GameState.WAITING)
+        if(GamestateManager.getCurrentState() != Gamestate.WAITING)
         {
             System.out.println("2");
             TryJump.getInstance().getGameSession().addSpectator(p);

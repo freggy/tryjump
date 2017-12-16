@@ -1,7 +1,8 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,8 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Random;
 
 /**
  * Created by nexotekHD on 04.05.2016.
@@ -22,7 +21,7 @@ public class ListenerPlayerRespawn implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e)
     {
         Player p = e.getPlayer();
-        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
             final Location loc = TryJump.getInstance().getDmSession().getRandomSpawn();
             e.setRespawnLocation(loc);

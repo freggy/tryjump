@@ -1,7 +1,10 @@
 package de.bergwerklabs.tryjump.gameserver;
 
 import com.google.gson.Gson;
-import de.bergwerklabs.chat.Chat;
+import de.bergwerklabs.atlantis.client.base.playerdata.PlayerdataSet;
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
+import de.bergwerklabs.commons.spigot.chat.ChatCommons;
 import de.bergwerklabs.tryjump.gameserver.command.*;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
@@ -10,8 +13,6 @@ import de.bergwerklabs.tryjump.gameserver.util.DMMap;
 import de.bergwerklabs.tryjump.gameserver.util.JumpStartHandler;
 import de.bergwerklabs.tryjump.gameserver.util.Stoplag;
 import de.bergwerklabs.util.ComponentRegistry;
-import de.bergwerklabs.util.GameState;
-import de.bergwerklabs.util.GameStateManager;
 import de.bergwerklabs.util.LABSGameMode;
 import de.bergwerklabs.util.file.WorldMaid;
 import de.bergwerklabs.util.mechanic.Ranking;
@@ -54,8 +55,6 @@ public class TryJump extends LABSGameMode {
 
     private AchievementManager achievementManager;
 
-    private Chat chat;
-
     private static TryJump instance;
 
     private static String dmname = null;
@@ -75,15 +74,6 @@ public class TryJump extends LABSGameMode {
         getServer().setDefaultGameMode(GameMode.ADVENTURE);
         gameSession = new GameSession();
         achievementManager = new AchievementManager();
-
-        System.out.println("-------------------------------------");
-        System.out.println("HELLO CI (TRYJUMP: TEAMS NOT ALLOWED)");
-        System.out.println("-------------------------------------");
-
-        if (getServer().getPluginManager().isPluginEnabled("LABS_Chat"))
-        {
-            chat = (Chat) getServer().getPluginManager().getPlugin("LABS_Chat");
-        }
 
         chooseDMMap();
 
@@ -107,6 +97,7 @@ public class TryJump extends LABSGameMode {
                     e.remove();
                 }
             }
+
             w.setTime(0);
             w.setGameRuleValue("doMobSpawning", "false");
             w.setGameRuleValue("doDaylightCycle","false");
@@ -140,23 +131,23 @@ public class TryJump extends LABSGameMode {
         getCommand("stats").setExecutor(new StatsCommand());
         getCommand("skip").setExecutor(new SkipCommand());
         getCommand("fix").setExecutor(new FixCommand());
-        getCommand("log").setExecutor(new LogCommand());
         getCommand("force").setExecutor(new ForceCommand());
 
         timer.launch();
 
         prepareTop10();
 
-        getGameStateManager().setState(GameState.WAITING);
+        setState(Gamestate.WAITING);
 
         permissionService = getServer().getServicesManager().load(ZPermissionsService.class);
 
     }//
 
-    public Chat getChat() {
-        return chat;
+
+    public void setState(Gamestate gamestate) {
+        GamestateManager.setGamestate(gamestate);
     }
-    
+
     public String getServerID() {
         return serverID;
     }
@@ -359,21 +350,14 @@ public class TryJump extends LABSGameMode {
         return dmSession;
     }
 
-    @Override
-    public GameStateManager.MetadataHandler getMetaDataHandler() {
-        return () -> { return dmname;};
-    }
 
+    public ChatColor getColor(Player player) {
+        return ChatCommons.chatColorFromColorCode(permissionService.getPlayerPrefix(player.getUniqueId())).orElse(ChatColor.BOLD);
+    }
 
     public static TryJump getInstance()
     {
         return instance;
-    }
-
-    public String getColor(Player p)
-    {
-        Chat chat = (Chat)getServer().getPluginManager().getPlugin("LABS_Chat");
-        return chat.getUserPrefix(p);
     }
 
     /**
@@ -477,5 +461,4 @@ public class TryJump extends LABSGameMode {
             blocklist.remove(0);
         }
     }
-
 }

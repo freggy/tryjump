@@ -1,7 +1,6 @@
 package de.bergwerklabs.tryjump.gameserver.command;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
