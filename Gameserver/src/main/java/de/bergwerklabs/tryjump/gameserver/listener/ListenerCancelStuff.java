@@ -49,7 +49,6 @@ public class ListenerCancelStuff implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e)
     {
-        if (e.getPlayer().getGameMode() != GameMode.CREATIVE) e.setCancelled(true);
         if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
             Block block = e.getBlock();
@@ -68,9 +67,9 @@ public class ListenerCancelStuff implements Listener {
                 e.getBlock().setType(Material.AIR);
                 TNTPrimed tnt = (TNTPrimed)e.getBlock().getWorld().spawn(e.getBlock().getLocation(), TNTPrimed.class);
                 tnt.setFuseTicks(40);
-
             }
         }
+        else e.setCancelled(true);
     }
 
     @EventHandler
