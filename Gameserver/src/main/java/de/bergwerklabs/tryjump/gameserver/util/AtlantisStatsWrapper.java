@@ -14,19 +14,17 @@ import java.util.UUID;
  */
 public class AtlantisStatsWrapper {
 
-    private static HashMap<UUID, PlayerdataSet> playerdataCache = new HashMap<>();
     private static AtlantisLogger logger = AtlantisLogger.getLogger(AtlantisStatsWrapper.class);
 
     private static final String ACHIEVEMENT_GROUP = "achievements.tryjump";
     private static final String DEFAULT_GROUP = "stats.tryjump";
     private static final String BANS_GROUP = "bans.tryjump";
 
-    public static void load(UUID player) {
+    private static PlayerdataSet load(UUID player) {
         logger.info("Trying to load stats of " + player);
-        if (playerdataCache.keySet().contains(player)) return;
         PlayerdataSet set = new PlayerdataSet(player);
         set.loadAndWait();
-        playerdataCache.putIfAbsent(player, set);
+        return set;
     }
 
 
@@ -37,7 +35,9 @@ public class AtlantisStatsWrapper {
 
     public static boolean hasAchievement(UUID uuid, String key) {
         logger.info("Checking achievement " + key + " for " + uuid);
-        return Boolean.valueOf(getStatistic(uuid, key, "false", ACHIEVEMENT_GROUP).toString());
+        Object val = getStatistic(uuid, key, "false", ACHIEVEMENT_GROUP).toString();
+        System.out.println(val);
+        return Boolean.valueOf(val.toString());
     }
 
     public static String getLastBan(UUID uuid) {
@@ -115,7 +115,7 @@ public class AtlantisStatsWrapper {
     }
 
     private static void setStatistic(UUID player, String key, Object value, String group) {
-        PlayerdataSet set = playerdataCache.get(player);
+        PlayerdataSet set = load(player);
         if (set != null) {
             set.getGroup(group).setValue(key, value.toString());
             set.save();
@@ -123,12 +123,10 @@ public class AtlantisStatsWrapper {
     }
 
     private static Object getStatistic(UUID player, String key, Object defaultValue, String group) {
-        PlayerdataSet set = playerdataCache.get(player);
+        PlayerdataSet set = load(player);
         if (set != null) {
             return set.getGroup(group).getValue(key, defaultValue);
         }
         return defaultValue;
     }
-
-
 }

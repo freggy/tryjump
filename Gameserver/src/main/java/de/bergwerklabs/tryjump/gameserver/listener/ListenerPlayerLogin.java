@@ -19,7 +19,6 @@ public class ListenerPlayerLogin implements Listener {
     public void onPlayerLogin(PlayerLoginEvent e)
     {
         Player p = e.getPlayer();        // handle spec
-        Bukkit.getScheduler().runTaskAsynchronously(TryJump.getInstance(), () -> AtlantisStatsWrapper.load(p.getUniqueId()));
 
         // check 5 min ban
         if(!p.hasPermission("bergwerklabs.full-join"))
