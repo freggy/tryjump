@@ -6,6 +6,8 @@ import de.bergwerklabs.tryjump.gameserver.TryJump;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
@@ -50,10 +52,16 @@ public class ListenerCancelStuff implements Listener {
         if (e.getPlayer().getGameMode() != GameMode.CREATIVE) e.setCancelled(true);
         if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
-            if(e.getBlock().getType() == Material.CAKE_BLOCK)
-            {
-                e.setCancelled(false);
+            Block block = e.getBlock();
+            if (block.getType() == Material.CAKE_BLOCK) {
+                Material belowBlock = block.getRelative(BlockFace.DOWN).getType();
+                Material belowPlayer = e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+                if (belowPlayer == Material.CAKE_BLOCK || belowBlock == Material.CAKE_BLOCK) {
+                    e.setCancelled(true);
+                    return;
+                }
             }
+
             if(e.getBlock().getType() == Material.TNT)
             {
                 e.setCancelled(false);
