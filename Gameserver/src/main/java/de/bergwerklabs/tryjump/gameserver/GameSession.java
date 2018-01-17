@@ -667,44 +667,7 @@ public class GameSession {
                             p.showPlayer(pl);
                         }
                     }
-
-                    // TODO: nick
-                    /*
-                    // fix party unnick
-                    // first check if there are any nicked players on this server. If not do nothing.
-                    boolean somebodyHasNickPermission = false;
-                    boolean somebodyIsNicked = false;
-                    AutoNick nickPlugin = (AutoNick) TryJump.getInstance().getNickPlugin();
-                    for(Player p : Bukkit.getOnlinePlayers())
-                    {
-                        if(p.hasPermission("bergwerklabs.nick"))
-                        {
-                            somebodyHasNickPermission = true;
-                        }
-                    }
-                    if(somebodyHasNickPermission)
-                    {
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            if(nickPlugin.isPlayerNicked(p))
-                            {
-                                somebodyIsNicked = true;
-                            }
-                        }
-                    }
-
-                    if(somebodyHasNickPermission && somebodyIsNicked)
-                    {
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            nickPlugin.partyUnnick(p,nickPlugin);
-                        }
-                    } */
-
                 }
-
-
-
                 if(timeleft <= 5)
                 {
                     for(Player p : Bukkit.getOnlinePlayers())
@@ -968,7 +931,7 @@ public class GameSession {
                     play.playSound(play.getEyeLocation(),Sound.WITHER_SPAWN,10,1);
                 }
                 TryJump.getInstance().getAchievementManager().checkFirstTry(p,session);
-                TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(),TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Ziel erreicht!",1,20,25);
+                TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(),TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Ziel erreicht!",1,20,25);
                 if(timeleft > 10)
                 {
                     timeleft = 10;
@@ -1342,7 +1305,7 @@ public class GameSession {
                     }
                 }
             }
-            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " ist ausgeschieden!");
+            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " ist ausgeschieden!");
 
             if(spec)
             {
@@ -1373,20 +1336,18 @@ public class GameSession {
         }
         won = true;
 
-        /*
-        AutoNick nickPlugin = (AutoNick)TryJump.getInstance().getNickPlugin();
 
         for(Player pl : Bukkit.getOnlinePlayers())
         {
-            if(nickPlugin.isPlayerNicked(pl))
+            if(TryJump.api.isNicked(pl))
             {
-                nickPlugin.unnick(pl);
+                TryJump.api.removeNick(pl);
                 if(p.getUniqueId().equals(pl.getUniqueId()))
                 {
-                    TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
+                    TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
                 }
             }
-        } */
+        }
 
         TryJump.getInstance().setState(Gamestate.CLEANUP);
         stopThreads();
@@ -1395,8 +1356,8 @@ public class GameSession {
             play.playSound(play.getEyeLocation(), Sound.FIREWORK_LAUNCH,100,1);
 
         }
-        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " hat das Spiel gewonnen!");
-        TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
+        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " hat das Spiel gewonnen!");
+        TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
         finished = true;
         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Der Server startet in 10 Sekunden neu.");
 

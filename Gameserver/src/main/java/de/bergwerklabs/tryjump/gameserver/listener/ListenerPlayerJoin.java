@@ -48,7 +48,7 @@ public class ListenerPlayerJoin implements Listener {
                 {
                     if(GamestateManager.getCurrentState() == Gamestate.WAITING)
                     {
-                        TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!"); //TODO
+                        TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + p.getDisplayName() + ChatColor.GRAY + " ist dem Spiel beigetreten!"); //TODO
                     }
 
                 }
@@ -57,7 +57,7 @@ public class ListenerPlayerJoin implements Listener {
         {
             if(GamestateManager.getCurrentState() == Gamestate.WAITING)
             {
-                e.setJoinMessage(TryJump.getInstance().getChatPrefix() + p.getName() + ChatColor.GRAY + " ist dem Spiel beigetreten!");
+                e.setJoinMessage(TryJump.getInstance().getChatPrefix() + p.getDisplayName() + ChatColor.GRAY + " ist dem Spiel beigetreten!");
             }else
             {
                 e.setJoinMessage("");

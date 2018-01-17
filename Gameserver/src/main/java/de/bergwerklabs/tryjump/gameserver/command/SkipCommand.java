@@ -44,7 +44,7 @@ public class SkipCommand implements CommandExecutor {
         }
 
         skiped.add(p.getUniqueId());
-        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " hat dafür gestimmt, die Wartezeit zu verkürzen " + ChatColor.AQUA + "(" + skiped.size() + "/" + TryJump.getInstance().getGameSession().getIngame_players().size() +")"+ChatColor.GRAY +"! " + ChatColor.GRAY + ChatColor.ITALIC +"[/skip]");
+        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " hat dafür gestimmt, die Wartezeit zu verkürzen " + ChatColor.AQUA + "(" + skiped.size() + "/" + TryJump.getInstance().getGameSession().getIngame_players().size() +")"+ChatColor.GRAY +"! " + ChatColor.GRAY + ChatColor.ITALIC +"[/skip]");
         for(Player play : Bukkit.getOnlinePlayers())
         {
             play.playSound(play.getEyeLocation(), Sound.NOTE_PLING, 100,20);

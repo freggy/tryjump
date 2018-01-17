@@ -20,6 +20,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>de.bergwerklabs.nick</groupId>
+            <artifactId>labs-nick-tool</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.tyrannyofheaven</groupId>
             <artifactId>zPermissions</artifactId>
             <version>1.0</version>

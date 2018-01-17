@@ -83,10 +83,10 @@ public class ListenerPlayerDeath implements Listener {
 
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 1));
             killer.playSound(killer.getEyeLocation(), Sound.LEVEL_UP,100,10);
-            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getName() + ChatColor.GRAY + " getötet!");
+            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getDisplayName() + ChatColor.GRAY + " getötet!");
         }else
         {
-            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getName() + ChatColor.GRAY + " ist gestorben!");
+            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getDisplayName() + ChatColor.GRAY + " ist gestorben!");
         }
 
         if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH && (!TryJump.getInstance().getGameSession().isGrace()))

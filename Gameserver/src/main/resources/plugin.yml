@@ -3,7 +3,7 @@ author: nexotekHD, freggy
 version: 1.0
 main: de.bergwerklabs.tryjump.gameserver.TryJump
 
-depend: [LABS_Util, zPermissions, AtlantisBukkitClient, SpigotChatCommons]
+depend: [LABS_Util, zPermissions, AtlantisBukkitClient, SpigotChatCommons, SpigotCommons, NickTool]
 
 commands:
      start:

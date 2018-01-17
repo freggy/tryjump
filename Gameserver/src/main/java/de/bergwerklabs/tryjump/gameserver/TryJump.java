@@ -5,6 +5,7 @@ import de.bergwerklabs.atlantis.client.base.playerdata.PlayerdataSet;
 import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
 import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.commons.spigot.chat.ChatCommons;
+import de.bergwerklabs.nick.api.NickApi;
 import de.bergwerklabs.tryjump.gameserver.command.*;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
@@ -67,9 +68,13 @@ public class TryJump extends LABSGameMode {
 
     private HashMap<String, JSONUnit> allunits = new HashMap<>();
 
+    public static NickApi api;
+
     @Override
     public void labsEnable() {
+        GamestateManager.setGamestate(Gamestate.PREPARING);
         instance = this;//Waru mha
+        api = this.getServer().getServicesManager().load(NickApi.class);
         getLogger().info("Enabling TryJump ...");
         getServer().setDefaultGameMode(GameMode.ADVENTURE);
         gameSession = new GameSession();
@@ -352,6 +357,7 @@ public class TryJump extends LABSGameMode {
 
 
     public ChatColor getColor(Player player) {
+        if (api.isNicked(player)) return ChatColor.GOLD;
         return ChatCommons.chatColorFromColorCode(permissionService.getPlayerPrefix(player.getUniqueId())).orElse(ChatColor.BOLD);
     }
 
