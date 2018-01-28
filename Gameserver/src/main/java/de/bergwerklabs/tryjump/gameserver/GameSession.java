@@ -5,6 +5,7 @@ import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
 import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.framework.commons.misc.FancyNameGenerator;
 import de.bergwerklabs.framework.commons.spigot.general.LabsTabList;
+import de.bergwerklabs.nick.api.event.NickEvent;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
 import de.bergwerklabs.tryjump.gameserver.util.*;
@@ -235,7 +236,8 @@ public class GameSession {
                 if(o != null)
                 {
                     PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
-                    o.getScore(p).setScore(session.tokens);
+                    o.getScore(p.getDisplayName()).setScore(session.tokens);
+                    //o.getScore(p).setScore(session.tokens);
                 }
             }
         }
@@ -344,6 +346,7 @@ public class GameSession {
             started = true;
             TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + "Teleportiere ..." );
             int x = 0;
+
             for(UUID uuid : ingame_players)
             {
                 Player p = TryJump.getInstance().getServer().getPlayer(uuid);
@@ -519,7 +522,7 @@ public class GameSession {
                 for(UUID uuid : ingame_players)
                 {
                     Player p = Bukkit.getPlayer(uuid);
-                    jumpprogress_objective.getScore(p).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
+                    jumpprogress_objective.getScore(p.getDisplayName()).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
                 }
                 // now care for the players' scoreboard
                 HashMap<UUID, Integer> percent = new HashMap<>();
@@ -542,7 +545,7 @@ public class GameSession {
                         {
                             Player pl = Bukkit.getPlayer(uuid1);
 //                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percentOfJumpPart(pl.getLocation().getBlockZ()));
-                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percent.get(uuid1));
+                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl.getDisplayName()).setScore(percent.get(uuid1));
                         }
                         for(int i = 9; i >= 0; i--)
                         {
@@ -1279,7 +1282,7 @@ public class GameSession {
         if(ingame_players.contains(p.getUniqueId()))
         {
             ingame_players.remove(p.getUniqueId());
-            scoreboard.resetScores(p);
+            scoreboard.resetScores(p.getDisplayName());
 
             if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
             {
@@ -1461,13 +1464,17 @@ public class GameSession {
     // TODO: nick
 
     /*
+
     public void unnickUpdate(NickEvent e)
     {
         Player p = e.getPlayer();
+
+        String
+
         try
         {
-            int i = token_objective.getScore(e.getOldName()).getScore();
-            token_objective.getScore(e.getNewName()).setScore(i);
+            int i = token_objective.getScore(e.getInfo().getNickName()).getScore();
+            token_objective.getScore(e.getInfo().getNickName()).setScore(i);
 
             for(Player pl : Bukkit.getOnlinePlayers())
             {
@@ -1513,7 +1520,7 @@ public class GameSession {
 
         }
 
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING && !(buyphase))
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING && !(buyphase))
         {
             if(p.getScoreboard() != null)
             {

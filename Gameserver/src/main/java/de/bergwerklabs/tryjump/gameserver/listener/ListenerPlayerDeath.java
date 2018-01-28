@@ -91,7 +91,7 @@ public class ListenerPlayerDeath implements Listener {
 
         if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH && (!TryJump.getInstance().getGameSession().isGrace()))
         {
-            Score score = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p);
+            Score score = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p.getDisplayName());
             score.setScore(score.getScore() - 1);
             if(score.getScore() <= 0)
             {
