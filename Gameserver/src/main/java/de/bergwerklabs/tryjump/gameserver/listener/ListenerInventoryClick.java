@@ -1,7 +1,6 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

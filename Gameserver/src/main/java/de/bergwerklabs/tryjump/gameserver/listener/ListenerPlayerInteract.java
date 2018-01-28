@@ -1,23 +1,19 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -38,7 +34,7 @@ public class ListenerPlayerInteract implements Listener {
     {
         Player p = e.getPlayer();
         // case checkpoint reached
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             if(e.getAction() == Action.PHYSICAL)
             {
@@ -56,7 +52,7 @@ public class ListenerPlayerInteract implements Listener {
         }
 
         // case shop interacted
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
             {
@@ -72,7 +68,7 @@ public class ListenerPlayerInteract implements Listener {
         }
 
         // case achievements menu interacted
-        if(TryJump.getInstance().getCurrentState() == GameState.WAITING)
+        if(GamestateManager.getCurrentState() == Gamestate.WAITING)
         {
             if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
             {
@@ -88,7 +84,7 @@ public class ListenerPlayerInteract implements Listener {
         }
 
         // case instant tod
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)
             {
@@ -117,7 +113,7 @@ public class ListenerPlayerInteract implements Listener {
             if(e.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE)
             {
                 e.setCancelled(true);
-                if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+                if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
                 {
                     if(TryJump.getInstance().getGameSession().isBuyphase())
                     {
@@ -146,7 +142,7 @@ public class ListenerPlayerInteract implements Listener {
         }
 
         // case gapple in buyphase
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             if(TryJump.getInstance().getGameSession().isBuyphase())
             {

@@ -1,12 +1,12 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
-import de.bergwerklabs.util.Util;
-import de.bergwerklabs.util.playerdata.DataRegistry;
+import de.bergwerklabs.tryjump.gameserver.util.AtlantisStatsWrapper;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
@@ -20,13 +20,11 @@ public class ListenerPlayerLogin implements Listener {
     {
         Player p = e.getPlayer();        // handle spec
 
-
         // check 5 min ban
         if(!p.hasPermission("bergwerklabs.full-join"))
         {
-            DataRegistry.DataSet set = Util.getUtil().getDataRegistry().getSet(p);
-            DataRegistry.DataGroup group = set.getGroup("bans.tryjump");
-            String value = group.getValue("tryjump.lastban","0");
+            String value = AtlantisStatsWrapper.getLastBan(p.getUniqueId());
+
             if(!value.equalsIgnoreCase("0"))
             {
                 Long lastban = Long.valueOf(value);
@@ -41,7 +39,7 @@ public class ListenerPlayerLogin implements Listener {
         }
 
 
-        if(TryJump.getInstance().getCurrentState().getRoot() != GameState.WAITING)
+        if(GamestateManager.getCurrentState() != Gamestate.WAITING)
         {
             if(p.hasPermission("bergwerklabs.team"))
                 e.allow();
@@ -50,5 +48,4 @@ public class ListenerPlayerLogin implements Listener {
         }
 
     }
-
 }

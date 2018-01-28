@@ -1,7 +1,7 @@
 package de.bergwerklabs.tryjump.gameserver;
 
+import de.bergwerklabs.tryjump.gameserver.util.AtlantisStatsWrapper;
 import de.bergwerklabs.tryjump.gameserver.util.PlayerJumpSession;
-import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -53,11 +53,10 @@ public class AchievementManager {
      */
     public void loadPlayerToCache(UUID uuid)
     {
-        DataRegistry.DataGroup set = TryJump.getInstance().getUtil().getDataRegistry().getSet(uuid).getGroup("achievements.tryjump");
         HashMap<String,Boolean> insert = new HashMap<String,Boolean>();
         for(String s : achievementList())
         {
-            insert.put(s,Boolean.valueOf(set.getValue(s,"false")));
+            insert.put(s, AtlantisStatsWrapper.hasAchievement(uuid, s));
         }
         cache.put(uuid,insert);
         System.out.println(uuid.toString() + "'s achievements loaded!");
@@ -96,8 +95,7 @@ public class AchievementManager {
     private void setAchievement(UUID uuid,String key, boolean value)
     {
         cache.get(uuid).put(key,value);
-        DataRegistry.DataGroup set = TryJump.getInstance().getUtil().getDataRegistry().getSet(uuid).getGroup("achievements.tryjump");
-        set.setValue(key,String.valueOf(value));
+        AtlantisStatsWrapper.saveAchievement(uuid, key, value);
     }
 
     private String getTitle(String key)

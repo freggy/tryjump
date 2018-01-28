@@ -1,10 +1,11 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
+import de.bergwerklabs.tryjump.gameserver.util.AtlantisStatsWrapper;
 import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
-import de.bergwerklabs.util.GameState;
 import de.bergwerklabs.util.playerdata.Currency;
-import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -30,12 +31,7 @@ public class ListenerPlayerDeath implements Listener {
         Player p = e.getEntity();
         Player killer = p.getKiller();
 
-        // add death to stats
-        DataRegistry.DataSet set = TryJump.getInstance().getUtil().getDataRegistry().getSet(p.getUniqueId());
-        DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
-        String value = group.getValue("tryjump.deaths", "0");
-        int vlue = Integer.parseInt(value);
-        group.setValue("tryjump.deaths", String.valueOf(vlue + 1));
+        AtlantisStatsWrapper.addDeaths(p.getUniqueId());
 
         RoundStats deathStats = TryJump.getInstance().getGameSession().getRoundStats(p.getUniqueId());
         if(deathStats != null)
@@ -50,16 +46,10 @@ public class ListenerPlayerDeath implements Listener {
         if(killer != null)
         {
             //add kill to killers stats
-            set = TryJump.getInstance().getUtil().getDataRegistry().getSet(killer);
-            group = set.getGroup("stats.tryjump");
-            value = group.getValue("tryjump.kills", "0");
-            vlue = Integer.parseInt(value);
-            group.setValue("tryjump.kills", String.valueOf(vlue + 1));
+            AtlantisStatsWrapper.addKills(killer.getUniqueId());
+            // Add points to killers stats
+            AtlantisStatsWrapper.addPoints(killer.getUniqueId(), 15);
 
-            // add points to killers stats
-            value = group.getValue("tryjump.points", "0");
-            vlue = Integer.parseInt(value);
-            group.setValue("tryjump.points", String.valueOf(vlue + 15));
             killer.sendMessage(TryJump.getInstance().getChatPrefix() + "+ 15 Ranking Punkte");
 
             RoundStats killerStats = TryJump.getInstance().getGameSession().getRoundStats(killer.getUniqueId());
@@ -83,8 +73,7 @@ public class ListenerPlayerDeath implements Listener {
             }else
             {
                 coins_group.setValue("network.coins",String.valueOf((vlue +5)));
-            }
-            */
+            } */
 
             Currency.addCoinsWithPremiumAmplifier(killer,5);
 
@@ -94,15 +83,15 @@ public class ListenerPlayerDeath implements Listener {
 
             killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 1));
             killer.playSound(killer.getEyeLocation(), Sound.LEVEL_UP,100,10);
-            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getName() + ChatColor.GRAY + " getötet!");
+            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " wurde von " + TryJump.getInstance().getColor(killer) +killer.getDisplayName() + ChatColor.GRAY + " getötet!");
         }else
         {
-            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getName() + ChatColor.GRAY + " ist gestorben!");
+            e.setDeathMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p)+ p.getDisplayName() + ChatColor.GRAY + " ist gestorben!");
         }
 
-        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH && (!TryJump.getInstance().getGameSession().isGrace()))
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH && (!TryJump.getInstance().getGameSession().isGrace()))
         {
-            Score score = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p);
+            Score score = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p.getDisplayName());
             score.setScore(score.getScore() - 1);
             if(score.getScore() <= 0)
             {
@@ -119,8 +108,6 @@ public class ListenerPlayerDeath implements Listener {
                 },10L);
             }
         }
-
-
     }
 
 }

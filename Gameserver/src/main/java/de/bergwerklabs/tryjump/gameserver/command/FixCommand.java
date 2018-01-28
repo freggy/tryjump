@@ -1,7 +1,8 @@
 package de.bergwerklabs.tryjump.gameserver.command;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -52,10 +53,6 @@ public class FixCommand implements CommandExecutor {
 
         for(Chunk c : toUpdate)
         {
-            /*
-            PacketMapChunk packet = new PacketMapChunk(c);
-            packet.send(p);
-            */
             p.getWorld().refreshChunk(c.getX(),c.getZ());
         }
 
@@ -83,7 +80,7 @@ public class FixCommand implements CommandExecutor {
 
         b.getChunk().load();
 
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING && !(TryJump.getInstance().getGameSession().isBuyphase()) && !(TryJump.getInstance().getGameSession().isDeathmatch()))
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING && !(TryJump.getInstance().getGameSession().isBuyphase()) && !(TryJump.getInstance().getGameSession().isDeathmatch()))
         {
             TryJump.getInstance().getGameSession().fix(p);
 

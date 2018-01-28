@@ -28,3 +28,4 @@ commands:
      delete:
           description: Delete
           usage: /delete
+     prepare:

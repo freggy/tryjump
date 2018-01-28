@@ -1,7 +1,7 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
-import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +22,7 @@ public class ListenerEntityDamageByEntity implements Listener {
             return;
         }
         Player p = (Player)e.getEntity();
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING_DEATHMATCH)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
             if(p.hasPotionEffect(PotionEffectType.INVISIBILITY))
             {

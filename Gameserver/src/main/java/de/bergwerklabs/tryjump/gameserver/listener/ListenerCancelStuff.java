@@ -1,16 +1,15 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -24,7 +23,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by nexotekHD on 12.04.2016.
@@ -51,31 +49,27 @@ public class ListenerCancelStuff implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e)
     {
-        if (e.getPlayer().getGameMode() != GameMode.CREATIVE) e.setCancelled(true);
-        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
-            if(e.getBlock().getType() == Material.CAKE_BLOCK)
-            {
-                e.setCancelled(false);
+            Block block = e.getBlock();
+            if (block.getType() == Material.CAKE_BLOCK) {
+                Material belowBlock = block.getRelative(BlockFace.DOWN).getType();
+                Material belowPlayer = e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType();
+                if (belowPlayer == Material.CAKE_BLOCK || belowBlock == Material.CAKE_BLOCK) {
+                    e.setCancelled(true);
+                    return;
+                }
             }
+
             if(e.getBlock().getType() == Material.TNT)
             {
                 e.setCancelled(false);
                 e.getBlock().setType(Material.AIR);
                 TNTPrimed tnt = (TNTPrimed)e.getBlock().getWorld().spawn(e.getBlock().getLocation(), TNTPrimed.class);
                 tnt.setFuseTicks(40);
-
             }
         }
-
-
-        if(e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType() == Material.CAKE && e.getBlockPlaced().getLocation().subtract(0, 1, 0).getBlock().getType() == Material.CAKE_BLOCK) {
-            e.setCancelled(true);
-            Player p = e.getPlayer();
-            p.sendMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Du darfst keine Kuchen stapeln!");
-            p.playSound(p.getEyeLocation(), Sound.NOTE_BASS,50,1);
-            p.updateInventory();
-        }
+        else e.setCancelled(true);
     }
 
     @EventHandler
@@ -123,7 +117,7 @@ public class ListenerCancelStuff implements Listener {
     @EventHandler
     public void onEntityShootBow(EntityShootBowEvent e)
     {
-        if(e.getEntity() instanceof Player && TryJump.getInstance().getCurrentState() != GameState.RUNNING_DEATHMATCH)
+        if(e.getEntity() instanceof Player && GamestateManager.getCurrentState() != Gamestate.RUNNING_DEATHMATCH)
         {
             Player p =  (Player)e.getEntity();
             p.updateInventory();
@@ -137,7 +131,7 @@ public class ListenerCancelStuff implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent e)
     {
         e.setCancelled(true);
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING_DEATHMATCH)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
         {
             e.setCancelled(false);
         }
@@ -172,7 +166,7 @@ public class ListenerCancelStuff implements Listener {
             Player p = e.getPlayer();
             if(p.getItemInHand() != null)
             {
-                if(p.getItemInHand().getType() == Material.POTION && TryJump.getInstance().getCurrentState() != GameState.RUNNING_DEATHMATCH)
+                if(p.getItemInHand().getType() == Material.POTION && GamestateManager.getCurrentState() != Gamestate.RUNNING_DEATHMATCH)
                 {
                     e.setCancelled(true);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
@@ -238,7 +232,7 @@ public class ListenerCancelStuff implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent e)
     {
-        if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             e.setCancelled(true);
             Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
@@ -248,7 +242,7 @@ public class ListenerCancelStuff implements Listener {
                 }
             },2L);
 
-        }else if(TryJump.getInstance().getGameStateManager().getState() == GameState.WAITING)
+        }else if(GamestateManager.getCurrentState() == Gamestate.WAITING)
         {
             e.setCancelled(true);
             Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
@@ -267,7 +261,7 @@ public class ListenerCancelStuff implements Listener {
         {
             e.setCancelled(true);
         }
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             e.setCancelled(true);
         }

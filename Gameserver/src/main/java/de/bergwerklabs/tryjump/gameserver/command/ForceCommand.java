@@ -1,21 +1,23 @@
 package de.bergwerklabs.tryjump.gameserver.command;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
-import de.bergwerklabs.util.GameState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
  * Created by Yannic Rieger on 22.06.2017.
+ *
  * @author Yannic Rieger
  */
 public class ForceCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (commandSender.hasPermission("bergwerklabs.tryjump.force") && s.equalsIgnoreCase("force") && TryJump.getInstance().getCurrentState() == GameState.WAITING) {
+        if (commandSender.hasPermission("bergwerklabs.tryjump.force") && s.equalsIgnoreCase("force") && GamestateManager.getCurrentState() == Gamestate.WAITING) {
             if (strings.length == 0) return false;
             String unitName = strings[0];
             JSONUnit normalUnit = TryJump.getInstance().getAllunits().get(unitName + ".unit");

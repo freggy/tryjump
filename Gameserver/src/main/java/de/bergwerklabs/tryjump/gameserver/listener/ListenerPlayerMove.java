@@ -1,7 +1,8 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
-import de.bergwerklabs.util.GameState;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,7 @@ public class ListenerPlayerMove implements Listener {
     public void onPlayerMove(PlayerMoveEvent e)
     {
         Player p = e.getPlayer();
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING)
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING)
         {
             if(TryJump.getInstance().getGameSession().isFreezed())
             {

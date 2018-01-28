@@ -1,6 +1,5 @@
 package de.bergwerklabs.tryjump.gameserver.listener;
 
-import de.bergwerklabs.nick.NickEvent;
 import de.bergwerklabs.tryjump.gameserver.TryJump;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +9,7 @@ import org.bukkit.event.Listener;
  */
 public class ListenerPlayerNick implements Listener {
 
+    /* TODO: nick
     @EventHandler
     public void onPlayerNick(NickEvent e)
     {
@@ -20,6 +20,6 @@ public class ListenerPlayerNick implements Listener {
                 TryJump.getInstance().getGameSession().unnickUpdate(e);
             }
         }
-    }
+    } */
 
 }

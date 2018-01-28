@@ -1,21 +1,18 @@
 package de.bergwerklabs.tryjump.gameserver;
 
 import com.google.gson.Gson;
-import de.bergwerklabs.nick.AutoNick;
-import de.bergwerklabs.nick.NickEvent;
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
+import de.bergwerklabs.framework.commons.misc.FancyNameGenerator;
+import de.bergwerklabs.framework.commons.spigot.general.LabsTabList;
+import de.bergwerklabs.nick.api.event.NickEvent;
 import de.bergwerklabs.tryjump.gameserver.json.JSONBlock;
 import de.bergwerklabs.tryjump.gameserver.json.JSONUnit;
-import de.bergwerklabs.tryjump.gameserver.util.ItemShop;
-import de.bergwerklabs.tryjump.gameserver.util.PlayerJumpSession;
-import de.bergwerklabs.tryjump.gameserver.util.RoundStats;
-import de.bergwerklabs.tryjump.gameserver.util.TabTitleManager;
-import de.bergwerklabs.util.GameState;
-import de.bergwerklabs.util.Util;
+import de.bergwerklabs.tryjump.gameserver.util.*;
 import de.bergwerklabs.util.effect.HoverText;
 import de.bergwerklabs.util.effect.TitleBuilder;
 import de.bergwerklabs.util.entity.Marker;
 import de.bergwerklabs.util.playerdata.Currency;
-import de.bergwerklabs.util.playerdata.DataRegistry;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -36,10 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by nexotekHD on 13.04.2016.
@@ -242,7 +236,8 @@ public class GameSession {
                 if(o != null)
                 {
                     PlayerJumpSession session = playerJumpSessions.get(p.getUniqueId());
-                    o.getScore(p).setScore(session.tokens);
+                    o.getScore(p.getDisplayName()).setScore(session.tokens);
+                    //o.getScore(p).setScore(session.tokens);
                 }
             }
         }
@@ -345,11 +340,13 @@ public class GameSession {
      */
     public void start()
     {
+        TryJump.getInstance().setState(Gamestate.RUNNING);
         if(!started)
         {
             started = true;
             TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + "Teleportiere ..." );
             int x = 0;
+
             for(UUID uuid : ingame_players)
             {
                 Player p = TryJump.getInstance().getServer().getPlayer(uuid);
@@ -401,11 +398,7 @@ public class GameSession {
 
 
                 // add played games to stats
-                DataRegistry.DataSet set = TryJump.getInstance().getUtil().getDataRegistry().getSet(uuid);
-                DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
-                String value = group.getValue("tryjump.played", "0");
-                int vlue = Integer.parseInt(value);
-                group.setValue("tryjump.played", String.valueOf(vlue + 1));
+                AtlantisStatsWrapper.addGamesPlayed(uuid);
 
                 RoundStats stats = new RoundStats();
                 stats.setJump_fails(0);
@@ -529,7 +522,7 @@ public class GameSession {
                 for(UUID uuid : ingame_players)
                 {
                     Player p = Bukkit.getPlayer(uuid);
-                    jumpprogress_objective.getScore(p).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
+                    jumpprogress_objective.getScore(p.getDisplayName()).setScore(percentOfJumpPart(p.getLocation().getBlockZ()));
                 }
                 // now care for the players' scoreboard
                 HashMap<UUID, Integer> percent = new HashMap<>();
@@ -538,20 +531,23 @@ public class GameSession {
                     Player p = Bukkit.getPlayer(uuid);
                     percent.put(uuid, percentOfJumpPart(p.getLocation().getBlockZ()));
                 }
-                
+
+                // TEST
+
                 for(UUID uuid : ingame_players)
                 {
                     Player p = Bukkit.getPlayer(uuid);
                     Scoreboard sb = p.getScoreboard();
                     if(sb != null)
                     {
-                        String footer = "§7Du befindest dich auf: §b" + TryJump.getInstance().getServerID().toUpperCase() + "\n\n\n§e§lZIEL§r\n";
+                        StringBuilder footer = new StringBuilder("§7Du befindest dich auf: §b" + FancyNameGenerator
+                                .generate(System.getenv("HOSTNAME")) + "\n\n\n§e§lZIEL§r\n");
                         sb.getObjective(DisplaySlot.SIDEBAR).setDisplayName(displayName);
                         for(UUID uuid1 : ingame_players)
                         {
                             Player pl = Bukkit.getPlayer(uuid1);
 //                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percentOfJumpPart(pl.getLocation().getBlockZ()));
-                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl).setScore(percent.get(uuid1));
+                            sb.getObjective(DisplaySlot.SIDEBAR).getScore(pl.getDisplayName()).setScore(percent.get(uuid1));
                         }
                         for(int i = 9; i >= 0; i--)
                         {
@@ -560,14 +556,14 @@ public class GameSession {
                             for(UUID uuid1 : ingame_players_r)
                             {
                                 if(percent.get(uuid1) >= i * 10)
-                                    footer += (uuid1 == uuid ? "§a" : "§c") + "█§r";
+                                    footer.append(uuid1 == uuid ? "§a" : "§c").append("█§r");
                                 else
-                                    footer += (uuid1 == uuid ? "§7" : "§8") + "▒§r";
+                                    footer.append(uuid1 == uuid ? "§7" : "§8").append("▒§r");
                             }
-                            footer += "\n";
+                            footer.append("\n");
                         }
-                        footer += "§e§lSTART";
-                        TabTitleManager.sendTablist(p, "§6>> §ebergwerkLABS-Servernetzwerk §6<<", footer);
+                        footer.append("§e§lSTART");
+                        new LabsTabList(new String[]{"§6» §ebergwerkLABS §6«"}, footer.toString().split("\n")).send(p);
                     }
                 }
             }
@@ -595,7 +591,7 @@ public class GameSession {
         itemShop = new ItemShop();
         for(Player p : Bukkit.getOnlinePlayers())
         {
-            TabTitleManager.sendTablist(p, "§6>> §ebergwerkLABS-Servernetzwerk §6<<", "§7Du befindest dich auf: §b" + TryJump.getInstance().getServerID().toUpperCase());
+            new LabsTabList(new String[]{"§6>> §ebergwerkLABS-Servernetzwerk §6<<"}, new String[] {"§7Du befindest dich auf: §b" + FancyNameGenerator.generate(System.getenv("HOSTNAME"))}).send(p);
         }
         stopHoverUpdater();
         hoverUpdater = new BukkitRunnable() {
@@ -676,42 +672,7 @@ public class GameSession {
                             p.showPlayer(pl);
                         }
                     }
-
-                    // fix party unnick
-                    // first check if there are any nicked players on this server. If not do nothing.
-                    boolean somebodyHasNickPermission = false;
-                    boolean somebodyIsNicked = false;
-                    AutoNick nickPlugin = (AutoNick) TryJump.getInstance().getNickPlugin();
-                    for(Player p : Bukkit.getOnlinePlayers())
-                    {
-                        if(p.hasPermission("bergwerklabs.nick"))
-                        {
-                            somebodyHasNickPermission = true;
-                        }
-                    }
-                    if(somebodyHasNickPermission)
-                    {
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            if(nickPlugin.isPlayerNicked(p))
-                            {
-                                somebodyIsNicked = true;
-                            }
-                        }
-                    }
-
-                    if(somebodyHasNickPermission && somebodyIsNicked)
-                    {
-                        for(Player p : Bukkit.getOnlinePlayers())
-                        {
-                            nickPlugin.partyUnnick(p,nickPlugin);
-                        }
-                    }
-
                 }
-
-
-
                 if(timeleft <= 5)
                 {
                     for(Player p : Bukkit.getOnlinePlayers())
@@ -793,7 +754,7 @@ public class GameSession {
                 // time managment
                 timeleft--;
 
-                if(TryJump.getInstance().getCurrentState() == GameState.CLEANUP)
+                if(GamestateManager.getCurrentState() == Gamestate.CLEANUP)
                 {
                     cancel();
                     return;
@@ -837,7 +798,7 @@ public class GameSession {
         }.runTaskTimer(TryJump.getInstance(), 0L, 20L);
 
 
-        TryJump.getInstance().getGameStateManager().setState(GameState.RUNNING_DEATHMATCH);
+        TryJump.getInstance().setState(Gamestate.RUNNING_DEATHMATCH);
         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.AQUA + "DEATHMATCH!");
         ArrayList<Location> spawns = TryJump.getInstance().getDmSession().getSpawns();
         grace = System.currentTimeMillis();
@@ -955,17 +916,10 @@ public class GameSession {
             p.sendMessage(TryJump.getInstance().getChatPrefix() + "Du hast " + ChatColor.AQUA + "Unit " + session.currentunit + lite + ChatColor.GRAY + " geschafft! Du erhältst " + ChatColor.GREEN + addtokens +  " Tokens" + ChatColor.GRAY + ".");
 
             // add unit to stats
-            DataRegistry.DataSet set = TryJump.getInstance().getUtil().getDataRegistry().getSet(p);
-            DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
-            String value = group.getValue("tryjump.units", "0");
-            int vlue = Integer.parseInt(value);
-            group.setValue("tryjump.units", String.valueOf(vlue + 1));
-
+            AtlantisStatsWrapper.addUntis(p.getUniqueId());
 
             // add points to stats
-            value = group.getValue("tryjump.points", "0");
-            vlue = Integer.parseInt(value);
-            group.setValue("tryjump.points", String.valueOf(vlue + 10));
+            AtlantisStatsWrapper.addPoints(p.getUniqueId(), 10);
             p.sendMessage(TryJump.getInstance().getChatPrefix() + "+ 10 Ranking Punkte");
 
             RoundStats stats = getRoundStats(p.getUniqueId());
@@ -982,7 +936,7 @@ public class GameSession {
                     play.playSound(play.getEyeLocation(),Sound.WITHER_SPAWN,10,1);
                 }
                 TryJump.getInstance().getAchievementManager().checkFirstTry(p,session);
-                TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(),TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Ziel erreicht!",1,20,25);
+                TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(),TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Ziel erreicht!",1,20,25);
                 if(timeleft > 10)
                 {
                     timeleft = 10;
@@ -994,11 +948,7 @@ public class GameSession {
                 }
 
                 // add goals to stats
-                value = group.getValue("tryjump.goals", "0");
-                vlue = Integer.parseInt(value);
-                group.setValue("tryjump.goals", String.valueOf(vlue + 1));
-
-
+                AtlantisStatsWrapper.addGoals(p.getUniqueId());
 
                 return;
             }
@@ -1146,6 +1096,7 @@ public class GameSession {
 
     /**
      * starts a thread that builds the unit block per block
+     *
      * @param loca the startLocation
      * @param unit building instructions
      * @param soundPlayer the Player instance the unit is gonna built for
@@ -1308,12 +1259,7 @@ public class GameSession {
 
             // 5 min ban
             if(!p.hasPermission("bergwerklabs.full-join")) {
-                DataRegistry.DataSet set = Util.getUtil().getDataRegistry().getSet(p);
-                DataRegistry.DataGroup group = set.getGroup("bans.tryjump");
-                String value = String.valueOf(System.currentTimeMillis());
-                group.setValue("tryjump.lastban", String.valueOf(value));
-                System.out.println("submitting 5 min ban for " + p.getName());
-                set.save();
+                AtlantisStatsWrapper.setLastBan(p.getUniqueId(), String.valueOf(System.currentTimeMillis()));
             }
         }
         if(specators.contains(p.getUniqueId()))
@@ -1338,9 +1284,9 @@ public class GameSession {
         if(ingame_players.contains(p.getUniqueId()))
         {
             ingame_players.remove(p.getUniqueId());
-            scoreboard.resetScores(p);
+            scoreboard.resetScores(p.getDisplayName());
 
-            if(TryJump.getInstance().getGameStateManager().getState() == GameState.RUNNING_DEATHMATCH)
+            if(GamestateManager.getCurrentState() == Gamestate.RUNNING_DEATHMATCH)
             {
                 for(ItemStack is : p.getInventory().getContents())
                 {
@@ -1364,7 +1310,7 @@ public class GameSession {
                     }
                 }
             }
-            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " ist ausgeschieden!");
+            Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " ist ausgeschieden!");
 
             if(spec)
             {
@@ -1394,30 +1340,40 @@ public class GameSession {
             return;
         }
         won = true;
-        AutoNick nickPlugin = (AutoNick)TryJump.getInstance().getNickPlugin();
+
 
         for(Player pl : Bukkit.getOnlinePlayers())
         {
-            if(nickPlugin.isPlayerNicked(pl))
+            if(TryJump.api.isNicked(pl))
             {
-                nickPlugin.unnick(pl);
+                TryJump.api.removeNick(pl);
                 if(p.getUniqueId().equals(pl.getUniqueId()))
                 {
-                    TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
+                    TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
                 }
             }
         }
-        TryJump.getInstance().getGameStateManager().setState(GameState.CLEANUP);
+
+        TryJump.getInstance().setState(Gamestate.CLEANUP);
         stopThreads();
         for(Player play : Bukkit.getOnlinePlayers())
         {
             play.playSound(play.getEyeLocation(), Sound.FIREWORK_LAUNCH,100,1);
 
         }
-        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getName() + ChatColor.GRAY + " hat das Spiel gewonnen!");
-        TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
+        Bukkit.broadcastMessage(TryJump.getInstance().getChatPrefix() + "Der Spieler " + TryJump.getInstance().getColor(p) + p.getDisplayName() + ChatColor.GRAY + " hat das Spiel gewonnen!");
+        TitleBuilder.broadcastTitle(Bukkit.getOnlinePlayers(), TryJump.getInstance().getColor(p) + p.getDisplayName(), ChatColor.GRAY + "hat das Spiel gewonnen!", 1, 20, 25);
         finished = true;
         TryJump.getInstance().getServer().broadcastMessage(TryJump.getInstance().getChatPrefix() + ChatColor.RED + "Der Server startet in 10 Sekunden neu.");
+
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                GamestateManager.setGamestate(Gamestate.FINISHED);
+            }
+        }.runTaskLater(TryJump.getInstance(), 100L);
 
         new BukkitRunnable()
         {
@@ -1431,11 +1387,7 @@ public class GameSession {
 
 
         // add wins to stats
-        DataRegistry.DataSet set = TryJump.getInstance().getUtil().getDataRegistry().getSet(p);
-        DataRegistry.DataGroup group = set.getGroup("stats.tryjump");
-        String value = group.getValue("tryjump.wins", "0");
-        int vlue = Integer.parseInt(value);
-        group.setValue("tryjump.wins", String.valueOf(vlue + 1));
+        AtlantisStatsWrapper.addWin(p.getUniqueId());
 
         // add network coins
         /*
@@ -1455,7 +1407,7 @@ public class GameSession {
         }
 
 */
-        Currency.addCoinsWithPremiumAmplifier(p,20);
+        Currency.addCoinsWithPremiumAmplifier(p, 20);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(TryJump.getInstance(), new Runnable() {
             @Override
@@ -1511,13 +1463,20 @@ public class GameSession {
 
     }
 
+    // TODO: nick
+
+    /*
+
     public void unnickUpdate(NickEvent e)
     {
         Player p = e.getPlayer();
+
+        String
+
         try
         {
-            int i = token_objective.getScore(e.getOldName()).getScore();
-            token_objective.getScore(e.getNewName()).setScore(i);
+            int i = token_objective.getScore(e.getInfo().getNickName()).getScore();
+            token_objective.getScore(e.getInfo().getNickName()).setScore(i);
 
             for(Player pl : Bukkit.getOnlinePlayers())
             {
@@ -1563,7 +1522,7 @@ public class GameSession {
 
         }
 
-        if(TryJump.getInstance().getCurrentState() == GameState.RUNNING && !(buyphase))
+        if(GamestateManager.getCurrentState() == Gamestate.RUNNING && !(buyphase))
         {
             if(p.getScoreboard() != null)
             {
@@ -1573,7 +1532,7 @@ public class GameSession {
                 underlined.addPlayer(p);
             }
         }
-    }
+    } */
 
 
     public boolean instantTodCooldown(UUID uuid)

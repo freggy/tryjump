@@ -1,9 +1,9 @@
 name: Gameserver
-author: nexotekHD
+author: nexotekHD, freggy
 version: 1.0
 main: de.bergwerklabs.tryjump.gameserver.TryJump
 
-depend: [LABS_Util, LABS_Nick, LABS_Chat, zPermissions]
+depend: [LABS_Util, zPermissions, AtlantisBukkitClient, SpigotChatCommons, SpigotCommons, NickTool]
 
 commands:
      start:

@@ -41,6 +41,7 @@ public class UnitCreator extends JavaPlugin implements Listener {
         this.getCommand("load").setExecutor(new LoadCommand());
         this.getCommand("list").setExecutor(new ListsCommand());
         this.getCommand("delete").setExecutor(new DeleteCommand());
+        this.getCommand("prepare").setExecutor(new PrepareCommand());
 
         getServer().getPluginManager().registerEvents(this,this);
         getServer().getPluginManager().registerEvents(new Stoplag(),this);
