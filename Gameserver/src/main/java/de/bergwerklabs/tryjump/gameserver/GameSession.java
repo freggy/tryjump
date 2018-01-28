@@ -1013,7 +1013,7 @@ public class GameSession {
                 }
                 build(session.currentCheckpointLocation.clone(),getUnit(session.currentunit, session.lite), Bukkit.getPlayer(uuid), session.blocklist);
             }
-            Bukkit.getPlayer(uuid).teleport(session.currentCheckpointLocation.clone().add(0, 1, 0));
+            Bukkit.getPlayer(uuid).teleport(session.currentCheckpointLocation.clone().add(0.5, 1, 0.5));
         }
         updateHoverText(session.currentunit, session.lite, uuid);
         String title = "";
