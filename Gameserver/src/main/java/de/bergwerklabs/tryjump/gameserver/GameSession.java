@@ -531,7 +531,9 @@ public class GameSession {
                     Player p = Bukkit.getPlayer(uuid);
                     percent.put(uuid, percentOfJumpPart(p.getLocation().getBlockZ()));
                 }
-                
+
+                // TEST
+
                 for(UUID uuid : ingame_players)
                 {
                     Player p = Bukkit.getPlayer(uuid);
