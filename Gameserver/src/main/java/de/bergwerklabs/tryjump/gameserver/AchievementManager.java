@@ -47,21 +47,6 @@ public class AchievementManager {
 
     }
 
-    /**
-     * loads the achievements from the playerdata database
-     * @param uuid
-     */
-    public void loadPlayerToCache(UUID uuid)
-    {
-        HashMap<String,Boolean> insert = new HashMap<String,Boolean>();
-        for(String s : achievementList())
-        {
-            insert.put(s, AtlantisStatsWrapper.hasAchievement(uuid, s));
-        }
-        cache.put(uuid,insert);
-        System.out.println(uuid.toString() + "'s achievements loaded!");
-    }
-
     private ArrayList<String> achievementList()
     {
         ArrayList<String> list = new ArrayList<String>();
@@ -82,15 +67,7 @@ public class AchievementManager {
 
     private boolean hasAchivement(UUID uuid, String key)
     {
-        if(!cache.containsKey(uuid))
-        {
-            loadPlayerToCache(uuid);
-        }
-        if(!cache.get(uuid).containsKey(key))
-        {
-            return false;
-        }
-        return cache.get(uuid).get(key);
+        return AtlantisStatsWrapper.hasAchievement(uuid, key);
     }
     private void setAchievement(UUID uuid,String key, boolean value)
     {

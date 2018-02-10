@@ -85,9 +85,5 @@ public class ListenerPlayerJoin implements Listener {
             System.out.println("2");
             TryJump.getInstance().getGameSession().addSpectator(p);
         }
-
-        // load achievements
-        TryJump.getInstance().getAchievementManager().loadPlayerToCache(p.getUniqueId());
-
     }
 }

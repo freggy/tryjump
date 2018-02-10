@@ -40,8 +40,8 @@ import java.util.*;
  */
 public class GameSession {
 
-    private ArrayList<UUID> ingame_players = new ArrayList<UUID>();
-    private ArrayList<UUID> specators = new ArrayList<UUID>();
+    private ArrayList<UUID> ingame_players = new ArrayList<>();
+    private ArrayList<UUID> specators = new ArrayList<>();
 
     private boolean started = false;
     private boolean freezed = true;
@@ -63,7 +63,7 @@ public class GameSession {
     private boolean deathmatch = false;
     private ItemShop itemShop = null;
 
-    private HashMap<UUID,Integer> cachedTokens = new HashMap<UUID,Integer>();
+    private HashMap<UUID,Integer> cachedTokens = new HashMap<UUID, Integer>();
 
     private boolean finished = false;
 
@@ -75,9 +75,9 @@ public class GameSession {
 
     private HashMap<UUID,Long> instant_tod_cooldown = new HashMap<UUID,Long>();
 
-    private HashMap<UUID,PlayerJumpSession> playerJumpSessions = new HashMap<UUID,PlayerJumpSession>();
+    private HashMap<UUID,PlayerJumpSession> playerJumpSessions = new HashMap<>();
 
-    public HashMap<Integer,JSONUnit> easy_units = new HashMap<Integer, JSONUnit>();
+    public HashMap<Integer,JSONUnit> easy_units = new HashMap<>();
     public HashMap<Integer,JSONUnit> easy_lite_units = new HashMap<Integer, JSONUnit>();
 
     public HashMap<Integer,JSONUnit> medium_units = new HashMap<Integer, JSONUnit>();
@@ -396,7 +396,6 @@ public class GameSession {
                 updateTokensInJumpScoreboard(p);
                 x+= 35;
 
-
                 // add played games to stats
                 AtlantisStatsWrapper.addGamesPlayed(uuid);
 
@@ -407,7 +406,6 @@ public class GameSession {
                 stats.setKills(0);
                 stats.setPoints(0);
                 roundStats.put(uuid,stats);
-
             }
 
             // start entfreezer
@@ -589,8 +587,7 @@ public class GameSession {
     {
         buyphase = true;
         itemShop = new ItemShop();
-        for(Player p : Bukkit.getOnlinePlayers())
-        {
+        for(Player p : Bukkit.getOnlinePlayers()) {
             new LabsTabList(new String[]{"§6>> §ebergwerkLABS-Servernetzwerk §6<<"}, new String[] {"§7Du befindest dich auf: §b" + FancyNameGenerator.generate(System.getenv("HOSTNAME"))}).send(p);
         }
         stopHoverUpdater();
@@ -905,7 +902,7 @@ public class GameSession {
                 addtokens = addtokens / 2;
             }
             session.tokens += addtokens;
-            token_objective.getScore(p).setScore(session.tokens);
+            token_objective.getScore(p.getDisplayName()).setScore(session.tokens);
             updateTokensInJumpScoreboard(p);
             p.playSound(p.getEyeLocation(), Sound.LEVEL_UP, 100, 10);
             String lite = "";
@@ -963,7 +960,7 @@ public class GameSession {
 
     public void externalUpdateTokens(Player p,int tokens)
     {
-        token_objective.getScore(p).setScore(tokens);
+        token_objective.getScore(p.getDisplayName()).setScore(tokens);
         updateTokensInJumpScoreboard(p);
     }
 
@@ -974,7 +971,7 @@ public class GameSession {
             p.setLevel(0);
         }else if(buyphase)
         {
-            p.setLevel(p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p).getScore());
+            p.setLevel(p.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(p.getDisplayName()).getScore());
         }
     }
 

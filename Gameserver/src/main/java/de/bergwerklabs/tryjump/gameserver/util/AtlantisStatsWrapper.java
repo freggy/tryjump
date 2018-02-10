@@ -2,9 +2,14 @@ package de.bergwerklabs.tryjump.gameserver.util;
 
 import de.bergwerklabs.atlantis.api.logging.AtlantisLogger;
 import de.bergwerklabs.atlantis.client.base.playerdata.PlayerdataSet;
+import de.bergwerklabs.tryjump.gameserver.TryJump;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Created by Yannic Rieger on 14.12.2017.
@@ -20,11 +25,16 @@ public class AtlantisStatsWrapper {
     private static final String DEFAULT_GROUP = "stats.tryjump";
     private static final String BANS_GROUP = "bans.tryjump";
 
-    private static PlayerdataSet load(UUID player) {
+    private static final ConcurrentHashMap<UUID, PlayerdataSet> CACHE = new ConcurrentHashMap<>();
+
+    public static void load(UUID player) {
+
         logger.info("Trying to load stats of " + player);
-        PlayerdataSet set = new PlayerdataSet(player);
-        set.loadAndWait();
-        return set;
+        Bukkit.getScheduler().runTaskAsynchronously(TryJump.getInstance(), () -> {
+            PlayerdataSet set = new PlayerdataSet(player);
+            set.loadAndWait();
+            CACHE.put(player, set);
+        });
     }
 
 
@@ -96,7 +106,7 @@ public class AtlantisStatsWrapper {
         setStatistic(uuid, "stats.tryjump", untis + 1, DEFAULT_GROUP);
     }
 
-    public static int getGoals(UUID uuid) {
+    public static Integer getGoals(UUID uuid) {
         return Integer.valueOf(getStatistic(uuid, "tryjump.goals", "0", DEFAULT_GROUP).toString());
     }
 
@@ -105,28 +115,29 @@ public class AtlantisStatsWrapper {
         setStatistic(uuid, "tryjump.goals", goals + 1, DEFAULT_GROUP);
     }
 
-    public static int getWins(UUID uuid) {
+    public static Integer getWins(UUID uuid) {
         return Integer.valueOf(getStatistic(uuid, "tryjump.wins", "0", DEFAULT_GROUP).toString());
     }
 
     public static void addWin(UUID uuid) {
-        int wins = getWins(uuid);
+        Integer wins = getWins(uuid);
         setStatistic(uuid, "tryjump.wins", wins + 1, DEFAULT_GROUP);
     }
 
     private static void setStatistic(UUID player, String key, Object value, String group) {
-        PlayerdataSet set = load(player);
-        if (set != null) {
-            set.getGroup(group).setValue(key, value.toString());
-            set.save();
-        }
+        PlayerdataSet set = CACHE.get(player);
+
+        if (set == null) return;
+
+        set.getGroup(group).setValue(key, value.toString());
+        set.save();
     }
 
     private static Object getStatistic(UUID player, String key, Object defaultValue, String group) {
-        PlayerdataSet set = load(player);
+        PlayerdataSet set = CACHE.get(player);
         if (set != null) {
             return set.getGroup(group).getValue(key, defaultValue);
         }
-        return defaultValue;
+        else return defaultValue;
     }
 }

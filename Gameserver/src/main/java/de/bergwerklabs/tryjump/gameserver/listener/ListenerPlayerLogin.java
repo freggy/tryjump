@@ -19,6 +19,7 @@ public class ListenerPlayerLogin implements Listener {
     public void onPlayerLogin(PlayerLoginEvent e)
     {
         Player p = e.getPlayer();        // handle spec
+        AtlantisStatsWrapper.load(p.getUniqueId());
 
         // check 5 min ban
         if(!p.hasPermission("bergwerklabs.full-join"))
