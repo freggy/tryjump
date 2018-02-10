@@ -21,10 +21,6 @@ import java.util.UUID;
  */
 public class AchievementManager {
 
-    private HashMap<UUID,HashMap<String,Boolean>> cache = new HashMap<UUID,HashMap<String,Boolean>>();
-
-
-
     // achievement specific attributes
     // first blood
     boolean firstblood = false;
@@ -71,7 +67,6 @@ public class AchievementManager {
     }
     private void setAchievement(UUID uuid,String key, boolean value)
     {
-        cache.get(uuid).put(key,value);
         AtlantisStatsWrapper.saveAchievement(uuid, key, value);
     }
 
