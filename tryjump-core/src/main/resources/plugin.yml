@@ -1,0 +1,26 @@
+name: TryJump-Core-Module
+author: freggy
+version: 1.0
+main: de.bergwerklabs.tryjump.gameserver.TryJump
+
+depend: [zPermissions, AtlantisBukkitClient, SpigotChatCommons, SpigotCommons, NickTool]
+
+commands:
+     start:
+          description: Start
+          usage: /start
+     stats:
+          description: Stats
+          usage: /stats
+     skip:
+          description: Skip
+          usage: /skip
+     fix:
+          description: Fix
+          usage: /fix
+     log:
+          description: Log
+          usage: /log
+     force:
+           description: Log
+           usage: /log

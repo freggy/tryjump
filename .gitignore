@@ -30,4 +30,5 @@ manifest.mf
 *.iml
 *.ipr
 *.iws
+tryjump.iml
 .idea/
