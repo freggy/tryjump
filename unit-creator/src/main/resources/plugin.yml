@@ -1,31 +1,15 @@
-name: UnitCreator
-author: nexotekHD
+name: TryJumpModuleUploader
+author: freggy
 version: 1.0
-main: de.bergwerklabs.tryjump.unitcreator.UnitCreator
+webiste: http://bergwerklabs.de
+main: de.bergwerklabs.tryjump.uploader.Main
+
+depend: [SchematicService]
 
 commands:
-     startloc:
-          description: StartLoc
-          usage: /startloc
-     endloc:
-          description: EndLoc
-          usage: /endloc
-     pos1:
-          description: Pos1
-          usage: /pos1
-     pos2:
-          description: Pos2
-          usage: /pos2
-     submit:
-          description: Submit
-          usage: /submit
-     load:
-          description: Load
-          usage: /load
-     list:
-          description: List
-          usage: /list
-     delete:
-          description: Delete
-          usage: /delete
-     prepare:
+    pos1:
+    pos2:
+    create:
+    cm:
+    submit:
+    load:
