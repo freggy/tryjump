@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.unitcreator.metadata;
+package de.bergwerklabs.tryjump.api;
 
 import org.bukkit.util.Vector;
 
@@ -14,21 +14,21 @@ public class TryjumpModuleMetadata {
     /**
      * Distance from the start point to the end point.
      */
-    Vector getDistanceToEnd() {
+    public Vector getDistanceToEnd() {
         return distanceToEnd;
     }
 
     /**
      * Whether the unit is lite.
      */
-    boolean isLite() {
+    public boolean isLite() {
         return isLite;
     }
 
     /**
      * Difficulty of the module.
      */
-    int getDifficulty() {
+    public int getDifficulty() {
         return difficulty;
     }
 
@@ -39,20 +39,29 @@ public class TryjumpModuleMetadata {
         return creationTime;
     }
 
+    /**
+     * Gets the name of the module.
+     */
+    public String getName() {
+        return name;
+    }
+
     private long creationTime;
     private Vector distanceToEnd;
     private boolean isLite;
     private int difficulty;
+    private String name;
 
     /**
      * @param distanceToEnd Distance from the start point to the end point.
      * @param isLite        Whether the unit is lite.
      * @param difficulty    Difficulty of the module.
      */
-    public TryjumpModuleMetadata(Vector distanceToEnd, boolean isLite, int difficulty, long creationTime) {
+    public TryjumpModuleMetadata(String name, Vector distanceToEnd, boolean isLite, int difficulty, long creationTime) {
         this.distanceToEnd = distanceToEnd;
         this.isLite = isLite;
         this.creationTime = creationTime;
         this.difficulty = difficulty;
+        this.name = name;
     }
 }

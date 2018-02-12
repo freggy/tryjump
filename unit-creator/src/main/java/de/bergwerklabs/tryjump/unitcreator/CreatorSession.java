@@ -1,19 +1,23 @@
 package de.bergwerklabs.tryjump.unitcreator;
 
+import com.boydti.fawe.object.schematic.Schematic;
 import com.flowpowered.nbt.CompoundTag;
-import com.google.common.base.Strings;
 import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.regions.Region;
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.NbtUtil;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
+import de.bergwerklabs.tryjump.api.Difficulty;
+import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
 import de.bergwerklabs.tryjump.unitcreator.metadata.ModuleSerializer;
-import de.bergwerklabs.tryjump.unitcreator.metadata.TryjumpModuleMetadata;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by Yannic Rieger on 14.05.2017.
@@ -46,8 +50,8 @@ public class CreatorSession {
         this.end = end;
     }
 
-    private final String FOLDER = Main.getInstance().getDataFolder().getParent() + "/WorldEdit/schematics";
-    private String userFolder, schemName;
+    private final String FOLDER = Main.getInstance().getDataFolder().getAbsolutePath();
+    private String schemName;
     private Vector end, start;
     private Player player;
 
@@ -56,7 +60,6 @@ public class CreatorSession {
      */
     CreatorSession(Player p) {
         this.player = p;
-        this.userFolder = "/" + p.getUniqueId();
     }
 
     /**
@@ -65,7 +68,7 @@ public class CreatorSession {
      * @param difficulty Difficulty of the TryJump unit
      * @param isLite     Value indicating whether or not the unit is lite.
      */
-    void createSchematic(int difficulty, boolean isLite) {
+    void createSchematic(String name, int difficulty, boolean isLite, Region region) {
         if (start == null || end == null) {
             this.player.sendMessage(Main.CHAT_PREFIX + ChatColor.RED + "Start- oder Endpunkt fehlt.");
             return;
@@ -73,13 +76,17 @@ public class CreatorSession {
 
         if (difficulty > 4 || difficulty <= 0) {
             this.player.sendMessage(Main.CHAT_PREFIX + ChatColor.RED + "Die Schwierigkeit muss zwischen 1 und 4 liegen.");
-            Difficulty.displayDifficulties(player);
+            Arrays.stream(Difficulty.values())
+                  .forEach(diff -> player.sendMessage(Main.CHAT_PREFIX + diff.toString()));
             return;
         }
 
-        File schemFile = new File(this.FOLDER + userFolder + "/" + this.schemName + ".schematic");
+        Difficulty diff = Difficulty.getByValue(difficulty);
+        Schematic schematic = new Schematic(region);
+        File schemFile = new File(this.FOLDER + "/" + this.schemName + diff.name() + (isLite ? "_lite" : "") + ".schematic");
 
         try {
+            schematic.save(schemFile, ClipboardFormat.SCHEMATIC);
             CompoundTag schematicTag = NbtUtil.readCompoundTag(schemFile);
             Vector origin = new Vector(Integer.valueOf(schematicTag.getValue().get("WEOriginX").getValue().toString()),
                                        Integer.valueOf(schematicTag.getValue().get("WEOriginY").getValue().toString()),
@@ -89,10 +96,10 @@ public class CreatorSession {
             // Now when pasting the schematic will be put exactly where specified.
             NbtUtil.writeDistance(this.worldEditVectorToBukkitVector(origin.subtract(start)), schematicTag, "WEOffset");
 
-            TryjumpModuleMetadata metadata = new TryjumpModuleMetadata(this.worldEditVectorToBukkitVector(start.subtract(end)), isLite, difficulty, System.currentTimeMillis());
+            TryjumpModuleMetadata metadata = new TryjumpModuleMetadata(name, this.worldEditVectorToBukkitVector(start.subtract(end)), isLite, difficulty, System.currentTimeMillis());
             service.saveSchematic(schematicTag, schemFile, metadata);
 
-            player.sendMessage(Main.CHAT_PREFIX + "Unit §b" + this.renameFile(schemFile, difficulty, isLite) + "§7 wurde erfolgreich erstellt.");
+            player.sendMessage(Main.CHAT_PREFIX + "Unit §b" + schemFile.getName() + "§7 wurde erfolgreich erstellt.");
             this.deselect();
         }
         catch (Exception e) {
@@ -106,33 +113,9 @@ public class CreatorSession {
      * Loads the unit.
      */
     void loadOld(Location loc, String schemName) {
-        File file = new File(FOLDER + this.userFolder + "/" + schemName + ".schematic");
+        File file = new File(FOLDER + "/" + schemName + ".schematic");
         LabsSchematic schematic = new LabsSchematic(file);
         schematic.pasteAsync(loc.getWorld().getName(), loc.toVector());
-    }
-
-    /**
-     * Creates the module and saves it as a schematic file.
-     *
-     * @param name Name of the module
-     */
-    void createModule(String name) {
-
-        if (Strings.isNullOrEmpty(name)) {
-            player.sendMessage(Main.CHAT_PREFIX + "§cDer Unit-Name darf nicht leer sein.");
-            return;
-        }
-
-        this.schemName = name;
-
-        try {
-            player.performCommand("/copy");
-            player.performCommand("/schem save " + name);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            player.sendMessage(Main.CHAT_PREFIX + "§cEin fehler ist aufgetreten.");
-        }
     }
 
     /**
@@ -152,23 +135,5 @@ public class CreatorSession {
         this.start = null;
         this.end = null;
         this.schemName = null;
-    }
-
-    /**
-     * Renames a file.
-     *
-     * @param schemFile file to rename.
-     */
-    private String renameFile(File schemFile, int difficulty, boolean isLite) {
-        File rename;
-        String diff = Difficulty.getByValue(difficulty).name();
-        if (isLite) rename = new File(this.FOLDER + userFolder + "/" + this.schemName + "_" + diff + "_lite.schematic");
-        else        rename = new File(this.FOLDER + userFolder + "/" + this.schemName + "_" + diff + ".schematic");
-
-        if (!schemFile.renameTo(rename)) {
-            rename.delete();
-            schemFile.renameTo(rename);
-        }
-        return rename.getName().replace(".schematic", "").toLowerCase();
     }
 }

@@ -1,5 +1,7 @@
 package de.bergwerklabs.tryjump.unitcreator;
 
+import com.boydti.fawe.FaweAPI;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -97,8 +99,14 @@ public class Main extends JavaPlugin implements Listener {
                     return true;
                 }
 
-                creator.getSession().createModule(name);
-                creator.getSession().createSchematic(difficulty, isLite);
+                Region region = FaweAPI.wrapPlayer(player).getSelection();
+
+                if (region == null) {
+                    player.sendMessage(CHAT_PREFIX + ChatColor.RED + "Du musst ein Gebiet markieren.");
+                    return false;
+                }
+
+                creator.getSession().createSchematic(name, difficulty, isLite, region);
             }
             else if (label.equalsIgnoreCase("load")) {
                 creator.getSession().loadOld(player.getLocation(), args[0]);
