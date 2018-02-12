@@ -18,7 +18,6 @@ import java.util.List;
  *
  * @author Yannic Rieger
  */
-
 public class ModuleTypeSummary {
 
     private WeightedLootTable<LabsSchematic<TryjumpModuleMetadata>> lootTable = new WeightedLootTable<>();
@@ -60,6 +59,8 @@ public class ModuleTypeSummary {
         return list;
     }
 
+    // Copy pasta from https://gist.github.com/Alrecenk/7221196
+    // because java.util.Vector doesn't have such a method :(
     private void normalize(double a[]){
         double scale = 0;
         for (double anA : a) {
@@ -68,7 +69,7 @@ public class ModuleTypeSummary {
 
         scale = 1 / Math.sqrt(scale);
 
-        for(int k = 0; k < a.length; k++){
+        for (int k = 0; k < a.length; k++){
             a[k] *= scale;
         }
     }
