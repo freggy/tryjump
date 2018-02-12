@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.gameserver;
+package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.bedrock.api.LabsPlayer;
 import de.bergwerklabs.tryjump.api.TryJumpPlayer;

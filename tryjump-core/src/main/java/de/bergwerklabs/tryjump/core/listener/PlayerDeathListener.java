@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.gameserver.listener;
+package de.bergwerklabs.tryjump.core.listener;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.

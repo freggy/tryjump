@@ -1,22 +1,16 @@
-package de.bergwerklabs.tryjump.gameserver.unit;
+package de.bergwerklabs.tryjump.core.unit;
 
 import com.google.common.base.Preconditions;
-import de.bergwerklabs.framework.commons.spigot.general.WeightedLootTable;
-import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimerStartCause;
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
 import de.bergwerklabs.tryjump.api.Difficulty;
 import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
-import de.bergwerklabs.tryjump.api.Unit;
-import de.bergwerklabs.tryjump.gameserver.Jumper;
-import de.bergwerklabs.tryjump.gameserver.TryJumpUnit;
+import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import org.bukkit.Location;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.*;
-import java.util.prefs.PreferenceChangeEvent;
 import java.util.stream.Collectors;
 
 /**

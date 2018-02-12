@@ -1,7 +1,6 @@
-package de.bergwerklabs.tryjump.gameserver;
+package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
-import de.bergwerklabs.tryjump.api.Difficulty;
 import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
 import de.bergwerklabs.tryjump.api.Unit;
 

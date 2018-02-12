@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.gameserver.unit;
+package de.bergwerklabs.tryjump.core.unit;
 
 import com.flowpowered.nbt.*;
 import de.bergwerklabs.framework.schematicservice.NbtUtil;

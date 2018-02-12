@@ -1,7 +1,7 @@
 name: TryJump-Core-Module
 author: freggy
 version: 1.0
-main: de.bergwerklabs.tryjump.gameserver.TryJump
+main: de.bergwerklabs.tryjump.core.TryJump
 
 depend: [zPermissions, AtlantisBukkitClient, SpigotChatCommons, SpigotCommons, NickTool]
 

@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.gameserver;
+package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.bedrock.api.PlayerFactory;
 import org.bukkit.entity.Player;

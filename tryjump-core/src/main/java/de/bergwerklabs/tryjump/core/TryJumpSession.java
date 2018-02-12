@@ -1,8 +1,8 @@
-package de.bergwerklabs.tryjump.gameserver;
+package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
-import de.bergwerklabs.tryjump.gameserver.unit.UnitPlacer;
+import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 
 import java.io.File;
 
