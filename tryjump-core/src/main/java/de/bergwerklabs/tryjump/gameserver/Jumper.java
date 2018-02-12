@@ -20,6 +20,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     private Queue<TryJumpUnit> unitsAhead;
     private Queue<TryJumpUnit> completed;
+    private Unit current;
 
 
     public Jumper(Player player) {
@@ -48,7 +49,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     @Override
     public Unit getCurrentUnit() {
-        return null;
+        return this.current;
     }
 
     // TODO: find better solutions
@@ -65,5 +66,9 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     public void setUnits(Queue<TryJumpUnit> units) {
         this.unitsAhead = units;
+    }
+
+    public void setCurrentUnit(Unit unit) {
+        this.current = unit;
     }
 }

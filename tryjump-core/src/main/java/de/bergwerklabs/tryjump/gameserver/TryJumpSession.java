@@ -11,6 +11,19 @@ import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
  */
 public class TryJumpSession extends MinigameSession {
 
+    public static TryJumpSession getInstance() {
+        return instance;
+    }
+
+    public UnitPlacer getPlacer() {
+        return placer;
+    }
+
+    private static TryJumpSession instance;
+    private UnitPlacer placer;
+
+
+
     @Override
     public LabsGame getGame() {
         return null;
@@ -18,6 +31,7 @@ public class TryJumpSession extends MinigameSession {
 
     @Override
     public void prepare() {
-
+        instance = this;
+        placer = new UnitPlacer()
     }
 }

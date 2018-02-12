@@ -11,13 +11,13 @@ public abstract class Unit {
     private String name;
     private Difficulty difficulty;
     private long timeOfCreation;
+    private int position = -1;
 
 
     public Unit(TryjumpModuleMetadata metadata) {
         this.name = metadata.getName();
-        this.difficulty = difficulty;
+        this.difficulty = Difficulty.getByValue(metadata.getDifficulty());
         this.timeOfCreation = metadata.getCreationTime();
-        this.difficulty =
     }
 
     public Difficulty getDifficulty() {
@@ -27,4 +27,14 @@ public abstract class Unit {
     public String getName() {
         return name;
     }
+
+    public long getTimeOfCreation() {
+        return timeOfCreation;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition()
 }
