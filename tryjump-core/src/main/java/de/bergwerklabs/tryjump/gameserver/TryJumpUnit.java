@@ -1,6 +1,8 @@
 package de.bergwerklabs.tryjump.gameserver;
 
+import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.Difficulty;
+import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
 import de.bergwerklabs.tryjump.api.Unit;
 
 /**
@@ -11,7 +13,20 @@ import de.bergwerklabs.tryjump.api.Unit;
  */
 public class TryJumpUnit extends Unit {
 
-    public TryJumpUnit(String name, Difficulty difficulty) {
-        super(name, difficulty);
+    private LabsSchematic<TryjumpModuleMetadata> normalVersion;
+    private LabsSchematic<TryjumpModuleMetadata> liteVersion;
+
+    public TryJumpUnit(LabsSchematic<TryjumpModuleMetadata> normal, LabsSchematic<TryjumpModuleMetadata> lite) {
+        super(normal.getMetadata());
+        this.normalVersion = normal;
+        this.liteVersion = lite;
+    }
+
+    public LabsSchematic<TryjumpModuleMetadata> getNormalVersion() {
+        return normalVersion;
+    }
+
+    public LabsSchematic<TryjumpModuleMetadata> getLiteVersion() {
+        return liteVersion;
     }
 }

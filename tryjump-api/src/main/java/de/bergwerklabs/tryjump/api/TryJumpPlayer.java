@@ -24,4 +24,6 @@ public interface TryJumpPlayer {
     Set<Unit> getCompletedUnits();
 
     Queue<Unit> getUnitsAhead();
+
+    int getCurrentFails();
 }

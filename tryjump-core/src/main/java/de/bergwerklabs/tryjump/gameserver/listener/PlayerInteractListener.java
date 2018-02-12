@@ -5,12 +5,15 @@ import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Ga
 import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.gameserver.Jumper;
 import de.bergwerklabs.tryjump.gameserver.TryJumpSession;
+import de.bergwerklabs.tryjump.gameserver.TryJumpUnit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.Optional;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -32,20 +35,26 @@ public class PlayerInteractListener implements Listener {
                                                .getPlayerRegistry()
                                                .getPlayer(player.getUniqueId());
 
-        boolean isLast = jumper.getUnitsAhead().peek() == null;
+        Optional<TryJumpUnit> unitOptional = jumper.getNextUnit();
 
-        if (isLast) {
-            handleLast();
-            return;
+        if (unitOptional.isPresent()) {
+            TryJumpUnit next = unitOptional.get();
+            this.handleNext(jumper, next);
+            jumper.setCurrentUnit(next);
+
         }
-
-        Unit next = jumper.getUnitsAhead().poll();
-
-        // TODO: get tokens
-        // TODO: display messages
+        else this.handleLast(jumper);
     }
 
-    private void handleLast() {
+    private void handleLast(Jumper jumper) {
+        // TODO: add tokens
+        // TODO: display messages
+        // TODO: start deathmatch
+    }
 
+    private void handleNext(Jumper jumper, TryJumpUnit unit) {
+        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation(), unit);
+        jumper.setCurrentFails(0);
+        // TODO: display messages
     }
 }

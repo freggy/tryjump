@@ -5,10 +5,7 @@ import de.bergwerklabs.tryjump.api.TryJumpPlayer;
 import de.bergwerklabs.tryjump.api.Unit;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -21,7 +18,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     private Queue<TryJumpUnit> unitsAhead;
     private Queue<TryJumpUnit> completed;
     private Unit current;
-
+    private int currentFails;
 
     public Jumper(Player player) {
         super(player);
@@ -64,11 +61,26 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
         return new LinkedList<>(this.unitsAhead);
     }
 
+    @Override
+    public int getCurrentFails() {
+        return currentFails;
+    }
+
     public void setUnits(Queue<TryJumpUnit> units) {
         this.unitsAhead = units;
     }
 
+    public Optional<TryJumpUnit> getNextUnit() {
+        TryJumpUnit unit = this.unitsAhead.poll();
+        if (unit == null) return Optional.empty();
+        return Optional.of(unit);
+    }
+
     public void setCurrentUnit(Unit unit) {
         this.current = unit;
+    }
+
+    public void setCurrentFails(int currentFails) {
+        this.currentFails = currentFails;
     }
 }

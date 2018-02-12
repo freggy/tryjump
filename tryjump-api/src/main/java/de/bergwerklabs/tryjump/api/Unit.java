@@ -32,9 +32,4 @@ public abstract class Unit {
         return timeOfCreation;
     }
 
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition()
 }
