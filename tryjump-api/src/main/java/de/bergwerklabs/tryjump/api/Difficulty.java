@@ -8,6 +8,7 @@ import java.util.Arrays;
 /**
  * Created by Yannic Rieger on 11.02.2018.
  * <p>
+ * Represents the difficulty of a TryJump unit.
  *
  * @author Yannic Rieger
  */
@@ -40,10 +41,16 @@ public enum Difficulty {
                      .orElse(Difficulty.UNDEFINED);
     }
 
+    /**
+     * Color of this difficulty to display.
+     */
     public ChatColor getColor() {
         return color;
     }
 
+    /**
+     * Gets the numeric difficulty value.
+     */
     public int getDifValue() {
         return this.difValue;
     }
