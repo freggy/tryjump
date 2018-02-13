@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.core.listener;
 
 import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
 import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
+import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
@@ -17,6 +18,7 @@ import java.util.Optional;
 /**
  * Created by Yannic Rieger on 11.02.2018.
  * <p>
+ * Handles event when players activate the gold pressure plate.
  *
  * @author Yannic Rieger
  */
@@ -35,11 +37,13 @@ public class PlayerInteractListener implements Listener {
                                                .getPlayer(player.getUniqueId());
 
         Optional<TryJumpUnit> unitOptional = jumper.getNextUnit();
+        TryJumpUnit current = (TryJumpUnit) jumper.getCurrentUnit();
 
         if (unitOptional.isPresent()) {
             TryJumpUnit next = unitOptional.get();
             this.handleNext(jumper, next);
             jumper.setCurrentUnit(next);
+            jumper.addCompletedUnit(current);
 
         }
         else this.handleLast(jumper);
@@ -52,7 +56,7 @@ public class PlayerInteractListener implements Listener {
     }
 
     private void handleNext(Jumper jumper, TryJumpUnit unit) {
-        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation(), unit);
+        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation(), unit, false);
         jumper.setCurrentFails(0);
         // TODO: display messages
     }

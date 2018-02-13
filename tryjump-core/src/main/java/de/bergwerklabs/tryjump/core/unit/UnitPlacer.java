@@ -27,6 +27,12 @@ public class UnitPlacer {
             .build();
 
 
+    /**
+     * @param easyFolder    folder containing easy modules of type DEFAULT not LITE.
+     * @param mediumFolder  folder containing medium modules of type DEFAULT not LITE.
+     * @param hardFolder    folder containing hard modules of type DEFAULT not LITE.
+     * @param extremeFolder folder containing extreme modules of type DEFAULT not LITE.
+     */
     public UnitPlacer(File easyFolder, File mediumFolder, File hardFolder, File extremeFolder) {
         Preconditions.checkArgument(easyFolder == null || easyFolder.isFile());
         Preconditions.checkArgument(mediumFolder == null || mediumFolder.isFile());

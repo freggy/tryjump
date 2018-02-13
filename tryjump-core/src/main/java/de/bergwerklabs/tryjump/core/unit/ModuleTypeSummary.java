@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Created by Yannic Rieger on 12.02.2018.
  * <p>
+ * TODO: add documentation
  *
  * @author Yannic Rieger
  */
@@ -48,6 +49,12 @@ public class ModuleTypeSummary {
         }
     }
 
+    /**
+     * Preferably returns the units that have been created recently.
+     *
+     * @param count amount of units to be returned.
+     * @return returns the units that have been created recently.
+     */
     public List<TryJumpUnit> getModlues(int count) {
         List<TryJumpUnit> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -59,18 +66,23 @@ public class ModuleTypeSummary {
         return list;
     }
 
-    // Copy pasta from https://gist.github.com/Alrecenk/7221196
-    // because java.util.Vector doesn't have such a method :(
-    private void normalize(double a[]){
+    /**
+     * Changes the values in the given array so they add up to one.
+     * Copy pasta from https://gist.github.com/Alrecenk/7221196
+     * because java.util.Vector doesn't have such a method :(
+     *
+     * @param array array containing values to be normalized.
+     */
+    private void normalize(double array[]){
         double scale = 0;
-        for (double anA : a) {
+        for (double anA : array) {
             scale += anA * anA;
         }
 
         scale = 1 / Math.sqrt(scale);
 
-        for (int k = 0; k < a.length; k++){
-            a[k] *= scale;
+        for (int k = 0; k < array.length; k++){
+            array[k] *= scale;
         }
     }
 }
