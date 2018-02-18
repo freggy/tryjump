@@ -109,6 +109,13 @@ public class Main extends JavaPlugin implements Listener {
                 creator.getSession().createSchematic(name, difficulty, isLite, region);
             }
             else if (label.equalsIgnoreCase("load")) {
+                String name = args[0];
+
+                if (name.isEmpty()) {
+                    player.sendMessage(CHAT_PREFIX + "Usage: " + ChatColor.AQUA + "/load [name]");
+                    return false;
+                }
+
                 creator.getSession().loadOld(player.getLocation(), args[0]);
             }
             else if (label.equalsIgnoreCase("submit")) {
@@ -122,6 +129,9 @@ public class Main extends JavaPlugin implements Listener {
             }
             else if (label.equalsIgnoreCase("cm")) {
                 creator.toggle();
+            }
+            else if (label.equalsIgnoreCase("removeUnit")) {
+                creator.getSession().removeUnit();
             }
             return true;
         }

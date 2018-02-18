@@ -5,7 +5,7 @@ import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
 import de.bergwerklabs.tryjump.api.Difficulty;
-import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import org.bukkit.Location;
 
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class UnitPlacer {
 
     private Queue<TryJumpUnit> selectedUnits;
-    private SchematicService<TryjumpModuleMetadata> service = new SchematicServiceBuilder<TryjumpModuleMetadata>()
+    private SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>()
             .setDeserializer(new UnitDeserializer())
             .build();
 
@@ -39,7 +39,7 @@ public class UnitPlacer {
         Preconditions.checkArgument(hardFolder == null || hardFolder.isFile());
         Preconditions.checkArgument(extremeFolder == null || extremeFolder.isFile());
 
-        List<LabsSchematic<TryjumpModuleMetadata>> schematics = new ArrayList<>();
+        List<LabsSchematic<TryjumpUnitMetadata>> schematics = new ArrayList<>();
 
         schematics.addAll(this.fromDirectory(easyFolder));
         schematics.addAll(this.fromDirectory(mediumFolder));
@@ -70,14 +70,14 @@ public class UnitPlacer {
     }
 
 
-    private List<LabsSchematic<TryjumpModuleMetadata>> fromDirectory(File dir) {
+    private List<LabsSchematic<TryjumpUnitMetadata>> fromDirectory(File dir) {
         return Arrays.stream(dir.listFiles())
                      .map(file -> this.service.createSchematic(file))
                      .collect(Collectors.toList());
     }
 
-    private List<LabsSchematic<TryjumpModuleMetadata>> getUnitsByDifficulty(
-            List<LabsSchematic<TryjumpModuleMetadata>> schematics,
+    private List<LabsSchematic<TryjumpUnitMetadata>> getUnitsByDifficulty(
+            List<LabsSchematic<TryjumpUnitMetadata>> schematics,
             Difficulty difficulty
     ) {
         return schematics

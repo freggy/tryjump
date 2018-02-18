@@ -14,6 +14,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.bergwerklabs.atlantis</groupId>
+            <artifactId>atlantis-client-bukkit</artifactId>
+            <version>0.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.flowpowered</groupId>
             <artifactId>flow-nbt</artifactId>
             <version>1.0.0</version>

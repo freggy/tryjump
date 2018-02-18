@@ -3,7 +3,7 @@ package de.bergwerklabs.tryjump.unitcreator.metadata;
 import com.flowpowered.nbt.*;
 import de.bergwerklabs.framework.schematicservice.NbtUtil;
 import de.bergwerklabs.framework.schematicservice.metadata.MetadataSerializer;
-import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import org.bukkit.util.Vector;
 
 /**
@@ -12,10 +12,10 @@ import org.bukkit.util.Vector;
  * Deserializes module metadata.
  * @author Yannic Rieger
  */
-public class ModuleSerializer implements MetadataSerializer<TryjumpModuleMetadata> {
+public class UnitSerializer implements MetadataSerializer<TryjumpUnitMetadata> {
 
     @Override
-    public CompoundTag serialize(TryjumpModuleMetadata tryjumpModuleMetadata) {
+    public CompoundTag serialize(TryjumpUnitMetadata tryjumpModuleMetadata) {
         Vector vector = tryjumpModuleMetadata.getDistanceToEnd();
         CompoundMap map = new CompoundMap();
 

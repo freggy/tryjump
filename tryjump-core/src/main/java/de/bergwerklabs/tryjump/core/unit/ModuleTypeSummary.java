@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import de.bergwerklabs.framework.commons.spigot.general.WeightedLootTable;
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.Difficulty;
-import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
 
@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class ModuleTypeSummary {
 
-    private WeightedLootTable<LabsSchematic<TryjumpModuleMetadata>> lootTable = new WeightedLootTable<>();
+    private WeightedLootTable<LabsSchematic<TryjumpUnitMetadata>> lootTable = new WeightedLootTable<>();
 
     private File liteFolder;
     private String diffString;
 
-    ModuleTypeSummary(List<LabsSchematic<TryjumpModuleMetadata>> schematics, Difficulty difficulty) {
+    ModuleTypeSummary(List<LabsSchematic<TryjumpUnitMetadata>> schematics, Difficulty difficulty) {
         Preconditions.checkNotNull(difficulty);
         Preconditions.checkNotNull(schematics);
 
@@ -43,7 +43,7 @@ public class ModuleTypeSummary {
         this.normalize(weights);
 
         for (int i = 0; i < weights.length; i++) {
-            LabsSchematic<TryjumpModuleMetadata> schematic = schematics.get(i);
+            LabsSchematic<TryjumpUnitMetadata> schematic = schematics.get(i);
             double weight = weights[i];
             this.lootTable.add(weight, schematic);
         }
@@ -58,9 +58,9 @@ public class ModuleTypeSummary {
     public List<TryJumpUnit> getModlues(int count) {
         List<TryJumpUnit> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            LabsSchematic<TryjumpModuleMetadata> schematic = this.lootTable.next();
+            LabsSchematic<TryjumpUnitMetadata> schematic = this.lootTable.next();
             File lite = new File(this.liteFolder + schematic.getMetadata().getName() + diffString + "_lite.schematic");
-            LabsSchematic<TryjumpModuleMetadata> counterPart = new LabsSchematic<>(lite);
+            LabsSchematic<TryjumpUnitMetadata> counterPart = new LabsSchematic<>(lite);
             list.add(new TryJumpUnit(this.lootTable.next(), counterPart));
         }
         return list;

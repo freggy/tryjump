@@ -13,8 +13,6 @@
 
 
     <dependencies>
-
-
         <dependency>
             <groupId>com.boydti</groupId>
             <artifactId>FastAsyncWorldEdit</artifactId>

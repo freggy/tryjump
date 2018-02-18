@@ -1,22 +1,23 @@
 package de.bergwerklabs.tryjump.unitcreator;
 
+import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.object.schematic.Schematic;
 import com.flowpowered.nbt.CompoundTag;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.regions.Region;
-import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.NbtUtil;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
 import de.bergwerklabs.tryjump.api.Difficulty;
-import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
-import de.bergwerklabs.tryjump.unitcreator.metadata.ModuleSerializer;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
+import de.bergwerklabs.tryjump.unitcreator.metadata.UnitSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Arrays;
  */
 public class CreatorSession {
 
-    private SchematicService<TryjumpModuleMetadata> service = new SchematicServiceBuilder<TryjumpModuleMetadata>().setSerializer(new ModuleSerializer()).build();
+    private SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>().setSerializer(new UnitSerializer()).build();
 
     /**
      * Sets the vector representing the start of the unit
@@ -54,6 +55,7 @@ public class CreatorSession {
     private String schemName;
     private Vector end, start;
     private Player player;
+    private EditSession current;
 
     /**
      * @param p Player belonging to the session.
@@ -69,6 +71,8 @@ public class CreatorSession {
      * @param isLite     Value indicating whether or not the unit is lite.
      */
     void createSchematic(String name, int difficulty, boolean isLite, Region region) {
+        this.schemName = name;
+
         if (start == null || end == null) {
             this.player.sendMessage(Main.CHAT_PREFIX + ChatColor.RED + "Start- oder Endpunkt fehlt.");
             return;
@@ -83,7 +87,7 @@ public class CreatorSession {
 
         Difficulty diff = Difficulty.getByValue(difficulty);
         Schematic schematic = new Schematic(region);
-        File schemFile = new File(this.FOLDER + "/" + this.schemName + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic");
+        File schemFile = new File(this.FOLDER + "/" + this.schemName + "_" + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic");
 
         try {
             schematic.save(schemFile, ClipboardFormat.SCHEMATIC);
@@ -96,7 +100,7 @@ public class CreatorSession {
             // Now when pasting the schematic will be put exactly where specified.
             NbtUtil.writeDistance(this.worldEditVectorToBukkitVector(origin.subtract(start)), schematicTag, "WEOffset");
 
-            TryjumpModuleMetadata metadata = new TryjumpModuleMetadata(name, this.worldEditVectorToBukkitVector(start.subtract(end)), isLite, difficulty, System.currentTimeMillis());
+            TryjumpUnitMetadata metadata = new TryjumpUnitMetadata(name, this.worldEditVectorToBukkitVector(start.subtract(end)), isLite, difficulty, System.currentTimeMillis());
             service.saveSchematic(schematicTag, schemFile, metadata);
 
             player.sendMessage(Main.CHAT_PREFIX + "Unit §b" + schemFile.getName() + "§7 wurde erfolgreich erstellt.");
@@ -113,9 +117,25 @@ public class CreatorSession {
      * Loads the unit.
      */
     void loadOld(Location loc, String schemName) {
+        removeUnit();
         File file = new File(FOLDER + "/" + schemName + ".schematic");
-        LabsSchematic schematic = new LabsSchematic(file);
-        schematic.pasteAsync(loc.getWorld().getName(), loc.toVector());
+        try {
+            Schematic schematic = ClipboardFormat.SCHEMATIC.load(file);
+            this.current = schematic.paste(FaweAPI.getWorld(loc.getWorld().getName()), new Vector(loc.getX(), loc.getY(), loc.getBlockZ()));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Removes placed unit.
+     */
+    public void removeUnit() {
+        if (this.current == null) return;
+        player.sendMessage(Main.CHAT_PREFIX + "Unit entfernt.");
+        this.current.undo(this.current);
+        this.current = null;
     }
 
     /**

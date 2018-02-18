@@ -2,7 +2,7 @@ name: TryJumpModuleUploader
 author: freggy
 version: 1.0
 webiste: http://bergwerklabs.de
-main: de.bergwerklabs.tryjump.uploader.Main
+main: de.bergwerklabs.tryjump.unitcreator.Main
 
 depend: [SchematicService]
 
@@ -13,3 +13,4 @@ commands:
     cm:
     submit:
     load:
+    remove:

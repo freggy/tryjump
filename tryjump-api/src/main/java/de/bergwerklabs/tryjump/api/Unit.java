@@ -17,7 +17,7 @@ public abstract class Unit {
     /**
      * @param metadata metadata of the unit.
      */
-    public Unit(TryjumpModuleMetadata metadata) {
+    public Unit(TryjumpUnitMetadata metadata) {
         this.name = metadata.getName();
         this.difficulty = Difficulty.getByValue(metadata.getDifficulty());
         this.timeOfCreation = metadata.getCreationTime();

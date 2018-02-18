@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
  *
  * @author Yannic Rieger
  */
-public class TryjumpModuleMetadata {
+public class TryjumpUnitMetadata {
 
     /**
      * Distance from the start point to the end point.
@@ -57,7 +57,7 @@ public class TryjumpModuleMetadata {
      * @param isLite        Whether the unit is lite.
      * @param difficulty    Difficulty of the module.
      */
-    public TryjumpModuleMetadata(String name, Vector distanceToEnd, boolean isLite, int difficulty, long creationTime) {
+    public TryjumpUnitMetadata(String name, Vector distanceToEnd, boolean isLite, int difficulty, long creationTime) {
         this.distanceToEnd = distanceToEnd;
         this.isLite = isLite;
         this.creationTime = creationTime;

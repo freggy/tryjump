@@ -1,7 +1,7 @@
 package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
-import de.bergwerklabs.tryjump.api.TryjumpModuleMetadata;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.api.Unit;
 
 /**
@@ -12,20 +12,20 @@ import de.bergwerklabs.tryjump.api.Unit;
  */
 public class TryJumpUnit extends Unit {
 
-    private LabsSchematic<TryjumpModuleMetadata> normalVersion;
-    private LabsSchematic<TryjumpModuleMetadata> liteVersion;
+    private LabsSchematic<TryjumpUnitMetadata> normalVersion;
+    private LabsSchematic<TryjumpUnitMetadata> liteVersion;
 
-    public TryJumpUnit(LabsSchematic<TryjumpModuleMetadata> normal, LabsSchematic<TryjumpModuleMetadata> lite) {
+    public TryJumpUnit(LabsSchematic<TryjumpUnitMetadata> normal, LabsSchematic<TryjumpUnitMetadata> lite) {
         super(normal.getMetadata());
         this.normalVersion = normal;
         this.liteVersion = lite;
     }
 
-    public LabsSchematic<TryjumpModuleMetadata> getNormalVersion() {
+    public LabsSchematic<TryjumpUnitMetadata> getNormalVersion() {
         return normalVersion;
     }
 
-    public LabsSchematic<TryjumpModuleMetadata> getLiteVersion() {
+    public LabsSchematic<TryjumpUnitMetadata> getLiteVersion() {
         return liteVersion;
     }
 }
