@@ -85,11 +85,11 @@ public class CreatorSession {
             return;
         }
 
-        Difficulty diff = Difficulty.getByValue(difficulty);
-        Schematic schematic = new Schematic(region);
+        final Difficulty diff = Difficulty.getByValue(difficulty);
+        final Schematic schematic = new Schematic(region);
 
-        String diffName = diff.name().toLowerCase();
-        String schemFileName = this.schemName + "_" + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic";
+        final String diffName = diff.name().toLowerCase();
+        final String schemFileName = this.schemName + "_" + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic";
         File schemFile;
 
         if (isLite) {
@@ -101,18 +101,24 @@ public class CreatorSession {
 
         try {
             schematic.save(schemFile, ClipboardFormat.SCHEMATIC);
-            CompoundTag schematicTag = NbtUtil.readCompoundTag(schemFile);
-            Vector origin = new Vector(Integer.valueOf(schematicTag.getValue().get("WEOriginX").getValue().toString()),
-                                       Integer.valueOf(schematicTag.getValue().get("WEOriginY").getValue().toString()),
-                                       Integer.valueOf(schematicTag.getValue().get("WEOriginZ").getValue().toString()));
+            final CompoundTag schematicTag = NbtUtil.readCompoundTag(schemFile);
+            final Vector origin = new Vector(Integer.valueOf(schematicTag.getValue().get("WEOriginX").getValue().toString()),
+                                             Integer.valueOf(schematicTag.getValue().get("WEOriginY").getValue().toString()),
+                                             Integer.valueOf(schematicTag.getValue().get("WEOriginZ").getValue().toString()));
 
             // To set the offset properly we need to subtract the origin from the start point.
             // Now when pasting the schematic will be put exactly where specified.
             NbtUtil.writeDistance(this.worldEditVectorToBukkitVector(origin.subtract(start)), schematicTag, "WEOffset");
 
-            TryjumpUnitMetadata metadata = new TryjumpUnitMetadata(name, this.worldEditVectorToBukkitVector(start.subtract(end)), isLite, difficulty, System.currentTimeMillis());
-            service.saveSchematic(schematicTag, schemFile, metadata);
+            final TryjumpUnitMetadata metadata = new TryjumpUnitMetadata(
+                    name,
+                    this.worldEditVectorToBukkitVector(start.subtract(end)),
+                    isLite,
+                    difficulty,
+                    System.currentTimeMillis()
+            );
 
+            service.saveSchematic(schematicTag, schemFile, metadata);
             player.sendMessage(Main.CHAT_PREFIX + "Unit §b" + schemFile.getName() + "§7 wurde erfolgreich erstellt.");
             this.deselect();
         }
@@ -128,9 +134,9 @@ public class CreatorSession {
      */
     void loadOld(Location loc, String schemName) {
         removeUnit();
-        File file = new File(FOLDER + "/" + schemName + ".schematic");
+        final File file = new File(FOLDER + "/" + schemName + ".schematic");
         try {
-            Schematic schematic = ClipboardFormat.SCHEMATIC.load(file);
+            final Schematic schematic = ClipboardFormat.SCHEMATIC.load(file);
             this.current = schematic.paste(FaweAPI.getWorld(loc.getWorld().getName()), new Vector(loc.getX(), loc.getY(), loc.getBlockZ()));
         }
         catch (IOException e) {

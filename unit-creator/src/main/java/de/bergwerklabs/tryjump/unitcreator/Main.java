@@ -39,16 +39,16 @@ public class Main extends JavaPlugin implements Listener {
     static final String CHAT_PREFIX = "§6>> §eUnitCreator §6| §7";
 
     private static Main instance;
-    private Map<UUID, Creator> creators = new HashMap<>();
+    private final Map<UUID, Creator> creators = new HashMap<>();
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
 
-        File dataFolder = this.getDataFolder();
+        final File dataFolder = this.getDataFolder();
         dataFolder.mkdir();
 
-        File unitsFolder = new File(dataFolder.getAbsolutePath() +  "/units");
+        final File unitsFolder = new File(dataFolder.getAbsolutePath() +  "/units");
         unitsFolder.mkdir();
 
         this.createFolders(unitsFolder, "easy");
@@ -75,13 +75,13 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        Creator creator = creators.get(e.getPlayer().getUniqueId());
+        final Creator creator = creators.get(e.getPlayer().getUniqueId());
 
         if (e.getAction() == Action.RIGHT_CLICK_AIR) {
                 this.toggleCreativeInv(creator);
         }
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Location blocLoc = e.getClickedBlock().getLocation();
+            final Location blocLoc = e.getClickedBlock().getLocation();
             if (creator.getPlayer().getItemInHand().getType() == Material.EMERALD) {
                 creator.getSession().setStart(new com.sk89q.worldedit.Vector(blocLoc.getX(), blocLoc.getY(), blocLoc.getZ()));
             }
@@ -95,8 +95,8 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player) sender;
-            Creator creator = creators.get(((Player)sender).getUniqueId());
+            final Player player = (Player) sender;
+            final Creator creator = creators.get(((Player)sender).getUniqueId());
 
             if (label.equalsIgnoreCase("create")) {
                 int difficulty;
@@ -118,7 +118,7 @@ public class Main extends JavaPlugin implements Listener {
                     return true;
                 }
 
-                Region region = FaweAPI.wrapPlayer(player).getSelection();
+                final Region region = FaweAPI.wrapPlayer(player).getSelection();
 
                 if (region == null) {
                     player.sendMessage(CHAT_PREFIX + ChatColor.RED + "Du musst ein Gebiet markieren.");
@@ -128,7 +128,7 @@ public class Main extends JavaPlugin implements Listener {
                 creator.getSession().createSchematic(name, difficulty, isLite, region);
             }
             else if (label.equalsIgnoreCase("load")) {
-                String name = args[0];
+                final String name = args[0];
 
                 if (name.isEmpty()) {
                     player.sendMessage(CHAT_PREFIX + "Usage: " + ChatColor.AQUA + "/load [name]");

@@ -16,8 +16,8 @@ public class UnitSerializer implements MetadataSerializer<TryjumpUnitMetadata> {
 
     @Override
     public CompoundTag serialize(TryjumpUnitMetadata tryjumpModuleMetadata) {
-        Vector vector = tryjumpModuleMetadata.getDistanceToEnd();
-        CompoundMap map = new CompoundMap();
+        final Vector vector = tryjumpModuleMetadata.getDistanceToEnd();
+        final CompoundMap map = new CompoundMap();
 
         map.put(new StringTag("Name", tryjumpModuleMetadata.getName()));
         map.put(new IntTag("Difficulty", tryjumpModuleMetadata.getDifficulty()));

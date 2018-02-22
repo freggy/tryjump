@@ -78,8 +78,8 @@ public class Creator {
      * @return Renamed ItemStack
      */
     private ItemStack createNamedItem(String name, Material material) {
-        ItemStack item  = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
+        final ItemStack item  = new ItemStack(material);
+        final ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         item.setItemMeta(meta);
         return item;

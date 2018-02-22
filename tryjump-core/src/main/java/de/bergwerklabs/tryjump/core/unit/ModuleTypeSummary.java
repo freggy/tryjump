@@ -36,9 +36,9 @@ public class ModuleTypeSummary {
         this.liteFolder = new File(TryJumpSession.getInstance().getDataFolder().getAbsolutePath()
                                            + "/" + this.diffString + "/lite/");
 
-        double[] weights = schematics.stream()
-                                     .mapToDouble(schematic -> schematic.getMetadata().getCreationTime())
-                                     .toArray();
+        final double[] weights = schematics.stream()
+                                           .mapToDouble(schematic -> schematic.getMetadata().getCreationTime())
+                                           .toArray();
 
         this.normalize(weights);
 
@@ -58,9 +58,10 @@ public class ModuleTypeSummary {
     public List<TryJumpUnit> getModlues(int count) {
         List<TryJumpUnit> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            LabsSchematic<TryjumpUnitMetadata> schematic = this.lootTable.next();
-            File lite = new File(this.liteFolder + schematic.getMetadata().getName() + diffString + "_lite.schematic");
-            LabsSchematic<TryjumpUnitMetadata> counterPart = new LabsSchematic<>(lite);
+            final LabsSchematic<TryjumpUnitMetadata> schematic = this.lootTable.next();
+            final File lite = new File(this.liteFolder + schematic.getMetadata().getName()
+                                               + diffString + "_lite" + ".schematic");
+            final LabsSchematic<TryjumpUnitMetadata> counterPart = new LabsSchematic<>(lite);
             list.add(new TryJumpUnit(this.lootTable.next(), counterPart));
         }
         return list;
@@ -81,7 +82,7 @@ public class ModuleTypeSummary {
 
         scale = 1 / Math.sqrt(scale);
 
-        for (int k = 0; k < array.length; k++){
+        for (int k = 0; k < array.length; k++) {
             array[k] *= scale;
         }
     }

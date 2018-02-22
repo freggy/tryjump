@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class UnitPlacer {
 
     private Queue<TryJumpUnit> selectedUnits;
-    private SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>()
+    private final SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>()
             .setDeserializer(new UnitDeserializer())
             .build();
 

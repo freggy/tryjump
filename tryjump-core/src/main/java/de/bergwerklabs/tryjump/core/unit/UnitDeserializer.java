@@ -17,12 +17,12 @@ public class UnitDeserializer implements MetadataDeserializer<TryjumpUnitMetadat
 
     @Override
     public TryjumpUnitMetadata deserialize(CompoundTag compoundTag) {
-        CompoundMap map      = compoundTag.getValue();
-        String name          = map.get("Name").getValue().toString();
-        Boolean isLite       = Boolean.valueOf(map.get("IsLite").getValue().toString());
-        Integer diff         = ((IntTag)map.get("Difficulty")).getValue();
-        Long created         = ((LongTag)map.get("Created")).getValue();
-        Vector distanceToEnd = NbtUtil.vectorFromNbt((CompoundTag)map.get("DistanceToEnd"));
+        final CompoundMap map      = compoundTag.getValue();
+        final String name          = map.get("Name").getValue().toString();
+        final Boolean isLite       = Boolean.valueOf(map.get("IsLite").getValue().toString());
+        final Integer diff         = ((IntTag)map.get("Difficulty")).getValue();
+        final Long created         = ((LongTag)map.get("Created")).getValue();
+        final Vector distanceToEnd = NbtUtil.vectorFromNbt((CompoundTag)map.get("DistanceToEnd"));
         return new TryjumpUnitMetadata(name, distanceToEnd, isLite, diff, created);
     }
 }
