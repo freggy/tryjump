@@ -87,7 +87,17 @@ public class CreatorSession {
 
         Difficulty diff = Difficulty.getByValue(difficulty);
         Schematic schematic = new Schematic(region);
-        File schemFile = new File(this.FOLDER + "/" + this.schemName + "_" + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic");
+
+        String diffName = diff.name().toLowerCase();
+        String schemFileName = this.schemName + "_" + diff.name().toLowerCase() + (isLite ? "_lite" : "") + ".schematic";
+        File schemFile;
+
+        if (isLite) {
+            schemFile = new File(this.FOLDER + "/units/" + diffName + "/lite/" + schemFileName);
+        }
+        else {
+            schemFile = new File(this.FOLDER + "/units/" + diffName + "/default/" + schemFileName);
+        }
 
         try {
             schematic.save(schemFile, ClipboardFormat.SCHEMATIC);

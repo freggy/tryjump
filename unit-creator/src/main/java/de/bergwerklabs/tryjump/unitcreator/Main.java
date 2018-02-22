@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.unitcreator;
 
 import com.boydti.fawe.FaweAPI;
 import com.sk89q.worldedit.regions.Region;
+import de.bergwerklabs.tryjump.api.Difficulty;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,6 +17,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +44,23 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
+
+        File dataFolder = this.getDataFolder();
+        dataFolder.mkdir();
+
+        File unitsFolder = new File(dataFolder.getAbsolutePath() +  "/units");
+        unitsFolder.mkdir();
+
+        this.createFolders(unitsFolder, "easy");
+        this.createFolders(unitsFolder, "medium");
+        this.createFolders(unitsFolder, "hard");
+        this.createFolders(unitsFolder, "extreme");
         instance = this;
+    }
+
+    private void createFolders(File folder, String diff) {
+        new File(folder.getAbsolutePath() + "/" + diff + "/default").mkdirs();
+        new File(folder.getAbsolutePath() + "/" + diff + "/lite").mkdirs();
     }
 
     @EventHandler
@@ -130,7 +149,7 @@ public class Main extends JavaPlugin implements Listener {
             else if (label.equalsIgnoreCase("cm")) {
                 creator.toggle();
             }
-            else if (label.equalsIgnoreCase("removeUnit")) {
+            else if (label.equalsIgnoreCase("remove")) {
                 creator.getSession().removeUnit();
             }
             return true;
