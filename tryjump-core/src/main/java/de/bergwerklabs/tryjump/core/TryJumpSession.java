@@ -1,8 +1,14 @@
 package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
+import de.bergwerklabs.framework.bedrock.api.event.session.SessionDonePreparationEvent;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
+import de.bergwerklabs.tryjump.core.unit.UnitSelectionStrategy;
+import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
+import org.bukkit.Bukkit;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 
 import java.io.File;
 
@@ -25,28 +31,36 @@ public class TryJumpSession extends MinigameSession {
     private static TryJumpSession instance;
     private UnitPlacer placer;
 
-
     @Override
     public LabsGame getGame() {
-        return null;
+        return this.tryJump;
     }
+
+    private TryJump tryJump = new TryJump();
 
     @Override
     public void prepare() {
         instance = this;
-
         // Folder structure is:
         //  - /${datafolder}/units/${difficulty}/lite/
         //  - /${datafolder}/units/${difficulty}/default/
         //
         // Example:
-        //  - /${datafolder}/units/easy/lite/myUnit_hard_lite.schematic
-        //  - /${datafolder}/units/easy/default/myUnit_hard.schematic
+        //  - /${datafolder}/units/hard/lite/myUnit_hard_lite.schematic
+        //  - /${datafolder}/units/hard/default/myUnit_hard.schematic
 
-        String basePath = this.getDataFolder().getAbsolutePath() + "/units/";
-        this.placer = new UnitPlacer(new File(basePath + "easy/default"),
-                                     new File(basePath + "medium/default"),
-                                     new File(basePath + "hard/default"),
-                                     new File(basePath + "extreme/default"));
+        final String basePath = this.getDataFolder().getAbsolutePath() + "/units/";
+
+        this.placer = new UnitPlacer(
+                new File(basePath + "easy"),
+                new File(basePath + "medium"),
+                new File(basePath + "hard"),
+                new File(basePath + "extreme"),
+                new File(basePath + "start.schematic"),
+                SelectionStrategy.RANDOM // TODO: make configurable
+        );
+
+        this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
+        Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
     }
 }

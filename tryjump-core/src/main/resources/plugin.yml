@@ -1,9 +1,9 @@
-name: TryJump-Core-Module
+name: TryJumpCoreModule
 author: freggy
 version: 1.0
-main: de.bergwerklabs.tryjump.core.TryJump
+main: de.bergwerklabs.tryjump.core.TryJumpSession
 
-depend: [zPermissions, AtlantisBukkitClient, SpigotChatCommons, SpigotCommons, NickTool]
+depend: [SpigotCommons, BedrockSessionService, SchematicService]
 
 commands:
      start:

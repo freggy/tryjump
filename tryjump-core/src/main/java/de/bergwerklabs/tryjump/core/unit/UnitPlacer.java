@@ -1,16 +1,19 @@
 package de.bergwerklabs.tryjump.core.unit;
 
-import com.google.common.base.Preconditions;
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
-import de.bergwerklabs.tryjump.api.Difficulty;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import de.bergwerklabs.tryjump.core.unit.strategy.RandomSelectionStrategies;
+import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
+import de.bergwerklabs.tryjump.core.unit.strategy.TimeBasedSelectionStrategy;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -21,69 +24,95 @@ import java.util.stream.Collectors;
  */
 public class UnitPlacer {
 
-    private Queue<TryJumpUnit> selectedUnits;
-    private final SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>()
-            .setDeserializer(new UnitDeserializer())
-            .build();
-
-
-    /**
-     * @param easyFolder    folder containing easy modules of type DEFAULT not LITE.
-     * @param mediumFolder  folder containing medium modules of type DEFAULT not LITE.
-     * @param hardFolder    folder containing hard modules of type DEFAULT not LITE.
-     * @param extremeFolder folder containing extreme modules of type DEFAULT not LITE.
-     */
-    public UnitPlacer(File easyFolder, File mediumFolder, File hardFolder, File extremeFolder) {
-        Preconditions.checkArgument(easyFolder == null || easyFolder.isFile());
-        Preconditions.checkArgument(mediumFolder == null || mediumFolder.isFile());
-        Preconditions.checkArgument(hardFolder == null || hardFolder.isFile());
-        Preconditions.checkArgument(extremeFolder == null || extremeFolder.isFile());
-
-        List<LabsSchematic<TryjumpUnitMetadata>> schematics = new ArrayList<>();
-
-        schematics.addAll(this.fromDirectory(easyFolder));
-        schematics.addAll(this.fromDirectory(mediumFolder));
-        schematics.addAll(this.fromDirectory(hardFolder));
-        schematics.addAll(this.fromDirectory(extremeFolder));
-
-        schematics = schematics.stream().sorted(Comparator.comparingLong(t -> t.getMetadata().getCreationTime())).collect(Collectors.toList());
-
-        ModuleTypeSummary easy    = new ModuleTypeSummary(this.getUnitsByDifficulty(schematics, Difficulty.EASY), Difficulty.EASY);
-        ModuleTypeSummary medium  = new ModuleTypeSummary(this.getUnitsByDifficulty(schematics, Difficulty.MEDIUM), Difficulty.MEDIUM);
-        ModuleTypeSummary hard    = new ModuleTypeSummary(this.getUnitsByDifficulty(schematics, Difficulty.HARD), Difficulty.HARD);
-        ModuleTypeSummary extreme = new ModuleTypeSummary(this.getUnitsByDifficulty(schematics, Difficulty.EXTREME), Difficulty.EXTREME);
-
-        selectedUnits = new LinkedList<>();
-        selectedUnits.addAll(easy.getModlues(3));
-        selectedUnits.addAll(medium.getModlues(3));
-        selectedUnits.addAll(hard.getModlues(3));
-        selectedUnits.addAll(extreme.getModlues(1));
-    }
-
-    public void placeUnit(Location location, TryJumpUnit unit, boolean toggleLite) {
-        if (toggleLite) unit.getLiteVersion().pasteAsync("jump", location.toVector());
-        else unit.getNormalVersion().pasteAsync("jump", location.toVector());
+    public LabsSchematic<TryjumpUnitMetadata> getStart() {
+        return start;
     }
 
     public Queue<TryJumpUnit> getSelectedUnits() {
         return selectedUnits;
     }
 
+    private Queue<TryJumpUnit> selectedUnits;
+    private LabsSchematic<TryjumpUnitMetadata> start;
+    private UnitSelectionStrategy strategy;
+    private final SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>().setDeserializer(new UnitDeserializer()).build();
 
-    private List<LabsSchematic<TryjumpUnitMetadata>> fromDirectory(File dir) {
-        return Arrays.stream(dir.listFiles())
-                     .map(file -> this.service.createSchematic(file))
-                     .collect(Collectors.toList());
-    }
 
-    private List<LabsSchematic<TryjumpUnitMetadata>> getUnitsByDifficulty(
-            List<LabsSchematic<TryjumpUnitMetadata>> schematics,
-            Difficulty difficulty
+    /**
+     * @param easyFolder    folder containing subdirectories (../default, ../lite) of units with type EASY
+     * @param mediumFolder  folder containing subdirectories (../default, ../lite) of units with type MEDIUM
+     * @param hardFolder    folder containing subdirectories (../default, ../lite) of units with type HARD
+     * @param extremeFolder folder containing subdirectories (../default, ../lite) of units with type EXTREME
+     */
+    public UnitPlacer(
+            File easyFolder,
+            File mediumFolder,
+            File hardFolder,
+            File extremeFolder,
+            File startSchematic,
+            SelectionStrategy type
     ) {
-        return schematics
-                .stream()
-                .filter(schematic -> schematic.getMetadata().getDifficulty() == difficulty.getDifValue())
-                .collect(Collectors.toList());
+        this.start = this.service.createSchematic(startSchematic);
+
+        final UnitList easy = this.createUnitList(
+                new File(easyFolder.getAbsoluteFile() + "/default"),
+                new File(easyFolder.getAbsoluteFile() + "/lite")
+        );
+
+        final UnitList medium = this.createUnitList(
+                new File(mediumFolder.getAbsoluteFile() + "/default"),
+                new File(mediumFolder.getAbsoluteFile() + "/lite")
+        );
+
+        final UnitList hard = this.createUnitList(
+                new File(hardFolder.getAbsoluteFile() + "/default"),
+                new File(hardFolder.getAbsoluteFile() + "/lite")
+        );
+
+        final UnitList extreme = this.createUnitList(
+                new File(extremeFolder.getAbsoluteFile() + "/default"),
+                new File(extremeFolder.getAbsoluteFile() + "/lite")
+        );
+
+        switch (type) {
+            case RANDOM:
+                this.strategy = new RandomSelectionStrategies(easy, medium, hard, extreme);
+                break;
+            case TIME_BASED:
+                this.strategy = new TimeBasedSelectionStrategy(easy, medium, hard, extreme);
+                break;
+        }
+
+        this.selectedUnits = this.strategy.createParkour();
+
+                /*
+        schematics = schematics.stream().sorted(Comparator.comparingLong(t -> t.getMetadata().getCreationTime()))
+                               .collect(Collectors.toList()); */
     }
 
+    public void placeUnit(Location location, TryJumpUnit unit, boolean toggleLite) {
+        LabsSchematic<TryjumpUnitMetadata> schematic;
+        if (toggleLite) {
+            schematic = unit.getLiteVersion();
+        }
+        else {
+            schematic = unit.getNormalVersion();
+        }
+
+        Location end = location.clone().subtract(schematic.getMetadata().getEndVector()).add(0, 1, 0);
+        end.getBlock().setType(Material.GOLD_PLATE);
+        schematic.pasteAsync("jump", location.toVector());
+    }
+
+    private UnitList createUnitList(File normalFolder, File liteFolder) {
+        final Map<String, LabsSchematic<TryjumpUnitMetadata>> normal = this.fromDirectory(normalFolder);
+        final Map<String, LabsSchematic<TryjumpUnitMetadata>> lite = this.fromDirectory(liteFolder);
+        return new UnitList(lite, normal);
+    }
+
+    private Map<String, LabsSchematic<TryjumpUnitMetadata>> fromDirectory(File dir) {
+        return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+                     .map(this.service::createSchematic)
+                     .collect(Collectors.toMap(schem ->  schem.getMetadata().getName(), Function.identity(), (s1, s2) -> s1));
+    }
 }

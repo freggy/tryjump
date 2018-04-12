@@ -6,6 +6,7 @@ import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,9 +26,12 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
-        if (GamestateManager.getCurrentState() != Gamestate.RUNNING) return;
         if (event.getAction() != Action.PHYSICAL) return;
-        if (event.getClickedBlock().getType() != Material.GOLD_PLATE) return;
+        final Block clicked = event.getClickedBlock();
+        if (clicked.getType() != Material.GOLD_PLATE) return;
+
+        clicked.setType(Material.AIR);
+        event.setCancelled(true);
 
         Player player = event.getPlayer();
         Jumper jumper = (Jumper) TryJumpSession.getInstance()
@@ -43,7 +47,6 @@ public class PlayerInteractListener implements Listener {
             this.handleNext(jumper, next);
             jumper.setCurrentUnit(next);
             jumper.addCompletedUnit(current);
-
         }
         else this.handleLast(jumper);
     }
@@ -55,7 +58,7 @@ public class PlayerInteractListener implements Listener {
     }
 
     private void handleNext(Jumper jumper, TryJumpUnit unit) {
-        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation(), unit, false);
+        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation().clone().subtract(0, 1, 0), unit, false);
         jumper.setCurrentFails(0);
         // TODO: display messages
     }

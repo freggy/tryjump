@@ -14,7 +14,7 @@ public class TryjumpUnitMetadata {
     /**
      * Distance from the start point to the end point.
      */
-    public Vector getDistanceToEnd() {
+    public double getDistanceToEnd() {
         return distanceToEnd;
     }
 
@@ -46,9 +46,14 @@ public class TryjumpUnitMetadata {
         return name;
     }
 
+    public Vector getEndVector() {
+        return endVector;
+    }
+
     private long creationTime;
-    private Vector distanceToEnd;
+    private double distanceToEnd;
     private boolean isLite;
+    private Vector endVector;
     private int difficulty;
     private String name;
 
@@ -57,8 +62,9 @@ public class TryjumpUnitMetadata {
      * @param isLite        Whether the unit is lite.
      * @param difficulty    Difficulty of the module.
      */
-    public TryjumpUnitMetadata(String name, Vector distanceToEnd, boolean isLite, int difficulty, long creationTime) {
+    public TryjumpUnitMetadata(String name, Vector endVector, double distanceToEnd, boolean isLite, int difficulty, long creationTime) {
         this.distanceToEnd = distanceToEnd;
+        this.endVector = endVector;
         this.isLite = isLite;
         this.creationTime = creationTime;
         this.difficulty = difficulty;

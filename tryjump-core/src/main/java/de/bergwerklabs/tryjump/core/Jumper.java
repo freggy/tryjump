@@ -2,7 +2,9 @@ package de.bergwerklabs.tryjump.core;
 
 import com.google.common.base.Preconditions;
 import de.bergwerklabs.framework.bedrock.api.LabsPlayer;
+import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.TryJumpPlayer;
+import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.api.Unit;
 import org.bukkit.entity.Player;
 
@@ -18,11 +20,12 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     private Queue<TryJumpUnit> unitsAhead;
     private Set<TryJumpUnit> completed = new HashSet<>();
+    private LabsSchematic<TryjumpUnitMetadata> start;
     private Unit current;
     private int currentFails;
 
-    public Jumper(Player player) {
-        super(player);
+    Jumper(Player player) {
+        super(player.getUniqueId());
     }
 
     @Override
@@ -106,7 +109,15 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     }
 
     public void addCompletedUnit(TryJumpUnit unit) {
-        Preconditions.checkNotNull(unit);
+        if (unit == null) return;
         this.completed.add(unit);
+    }
+
+    public LabsSchematic<TryjumpUnitMetadata> getStart() {
+        return start;
+    }
+
+    public void setStart(LabsSchematic<TryjumpUnitMetadata> start) {
+        this.start = start;
     }
 }
