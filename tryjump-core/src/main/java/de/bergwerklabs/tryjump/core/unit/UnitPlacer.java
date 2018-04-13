@@ -10,6 +10,7 @@ import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
 import de.bergwerklabs.tryjump.core.unit.strategy.TimeBasedSelectionStrategy;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -24,10 +25,16 @@ import java.util.stream.Collectors;
  */
 public class UnitPlacer {
 
+    /**
+     *
+     */
     public LabsSchematic<TryjumpUnitMetadata> getStart() {
         return start;
     }
 
+    /**
+     *
+     */
     public Queue<TryJumpUnit> getSelectedUnits() {
         return selectedUnits;
     }
@@ -45,12 +52,12 @@ public class UnitPlacer {
      * @param extremeFolder folder containing subdirectories (../default, ../lite) of units with type EXTREME
      */
     public UnitPlacer(
-            File easyFolder,
-            File mediumFolder,
-            File hardFolder,
-            File extremeFolder,
-            File startSchematic,
-            SelectionStrategy type
+            @NotNull File easyFolder,
+            @NotNull File mediumFolder,
+            @NotNull File hardFolder,
+            @NotNull File extremeFolder,
+            @NotNull File startSchematic,
+            @NotNull SelectionStrategy type
     ) {
         this.start = this.service.createSchematic(startSchematic);
 
@@ -90,7 +97,7 @@ public class UnitPlacer {
                                .collect(Collectors.toList()); */
     }
 
-    public void placeUnit(Location location, TryJumpUnit unit, boolean toggleLite) {
+    public void placeUnit(@NotNull Location location, @NotNull TryJumpUnit unit, boolean toggleLite) {
         LabsSchematic<TryjumpUnitMetadata> schematic;
         if (toggleLite) {
             schematic = unit.getLiteVersion();
@@ -104,13 +111,13 @@ public class UnitPlacer {
         schematic.pasteAsync("jump", location.toVector());
     }
 
-    private UnitList createUnitList(File normalFolder, File liteFolder) {
+    private UnitList createUnitList(@NotNull File normalFolder, @NotNull File liteFolder) {
         final Map<String, LabsSchematic<TryjumpUnitMetadata>> normal = this.fromDirectory(normalFolder);
         final Map<String, LabsSchematic<TryjumpUnitMetadata>> lite = this.fromDirectory(liteFolder);
         return new UnitList(lite, normal);
     }
 
-    private Map<String, LabsSchematic<TryjumpUnitMetadata>> fromDirectory(File dir) {
+    private Map<String, LabsSchematic<TryjumpUnitMetadata>> fromDirectory(@NotNull File dir) {
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
                      .map(this.service::createSchematic)
                      .collect(Collectors.toMap(schem ->  schem.getMetadata().getName(), Function.identity(), (s1, s2) -> s1));

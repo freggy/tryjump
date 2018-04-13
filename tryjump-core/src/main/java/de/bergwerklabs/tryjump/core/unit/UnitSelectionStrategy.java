@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.core.unit;
 
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Queue;
 
@@ -17,10 +18,11 @@ public abstract class UnitSelectionStrategy {
     protected UnitList hard;
     protected UnitList extreme;
 
-    public UnitSelectionStrategy(UnitList easy,
-                                 UnitList medium,
-                                 UnitList hard,
-                                 UnitList extreme
+    public UnitSelectionStrategy(
+            @NotNull UnitList easy,
+            @NotNull UnitList medium,
+            @NotNull UnitList hard,
+            @NotNull UnitList extreme
     ) {
         this.easy = easy;
         this.medium = medium;

@@ -6,7 +6,11 @@ import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.TryJumpPlayer;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.api.Unit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -21,8 +25,10 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     private Queue<TryJumpUnit> unitsAhead;
     private Set<TryJumpUnit> completed = new HashSet<>();
     private LabsSchematic<TryjumpUnitMetadata> start;
+    private Location unitSpawn;
     private Unit current;
     private int currentFails;
+    private int totalFails;
 
     Jumper(Player player) {
         super(player.getUniqueId());
@@ -94,7 +100,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
      *
      * @param unit unit to be set.
      */
-    public void setCurrentUnit(Unit unit) {
+    public void setCurrentUnit(@NotNull Unit unit) {
         Preconditions.checkNotNull(unit);
         this.current = unit;
     }
@@ -108,16 +114,58 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
         this.currentFails = currentFails;
     }
 
-    public void addCompletedUnit(TryJumpUnit unit) {
-        if (unit == null) return;
+    public void addCompletedUnit(@NotNull TryJumpUnit unit) {
+        Preconditions.checkNotNull(unit);
         this.completed.add(unit);
+    }
+
+    public void updateScoreboardProgress(Location location) {
+
     }
 
     public LabsSchematic<TryjumpUnitMetadata> getStart() {
         return start;
     }
 
-    public void setStart(LabsSchematic<TryjumpUnitMetadata> start) {
+    public void setStart(@NotNull LabsSchematic<TryjumpUnitMetadata> start) {
         this.start = start;
+    }
+
+    public String buildActionbarText() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("§6§l>> ");
+        builder.append("§7§lUnit ");
+        builder.append(this.completed.size() + 1);
+        builder.append(": §b");
+        builder.append(this.current.getName());
+        builder.append(" §6§l❘ ");
+        builder.append(this.current.getDifficulty().getDisplayName());
+        builder.append(" §6§l<<");
+        return builder.toString();
+    }
+
+    public void resetToSpawn() {
+        this.currentFails++;
+        this.totalFails++;
+        new PotionEffect(PotionEffectType.BLINDNESS, 22, 10, false, false).apply(this.getPlayer());
+        this.getPlayer().teleport(this.unitSpawn);
+    }
+
+    @Override
+    public int getTotalFails() {
+        return totalFails;
+    }
+
+    @Override
+    public boolean isLite() {
+        return this.currentFails >= 3;
+    }
+
+    public Location getUnitSpawn() {
+        return unitSpawn;
+    }
+
+    public void setUnitSpawn(Location unitSpawn) {
+        this.unitSpawn = unitSpawn;
     }
 }

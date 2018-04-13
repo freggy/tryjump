@@ -34,6 +34,23 @@ public interface TryJumpPlayer {
     int getLosses();
 
     /**
+     * Gets the current fails for the {@link Unit} the player is at.
+     * To know which unit is the current use {@link TryJumpPlayer#getCurrentUnit()}.
+     */
+    int getCurrentFails();
+
+    /**
+     * Gets the current total fails.
+     * To know which unit is the current use {@link TryJumpPlayer#getCurrentUnit()}.
+     */
+    int getTotalFails();
+
+    /**
+     * Determines whether or not the player currently plays a lite unit.
+     */
+    boolean isLite();
+
+    /**
      * Gets the current {@link Unit} the player is currently at.
      */
     Unit getCurrentUnit();
@@ -48,9 +65,4 @@ public interface TryJumpPlayer {
      */
     Queue<Unit> getUnitsAhead();
 
-    /**
-     * Gets the current fails for the {@link Unit} the player is at.
-     * To know which unit is the current use {@link TryJumpPlayer#getCurrentUnit()}.
-     */
-    int getCurrentFails();
 }

@@ -9,8 +9,10 @@ import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.Collection;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -61,6 +63,7 @@ public class TryJumpSession extends MinigameSession {
         );
 
         this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
+
         Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
     }
 }

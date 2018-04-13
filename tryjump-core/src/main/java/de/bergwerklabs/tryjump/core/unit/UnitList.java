@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.core.unit;
 
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -17,8 +18,8 @@ public class UnitList {
     private Map<String, LabsSchematic<TryjumpUnitMetadata>> defaultUnits;
 
     public UnitList(
-            Map<String, LabsSchematic<TryjumpUnitMetadata>> liteUnits,
-            Map<String, LabsSchematic<TryjumpUnitMetadata>> defaultUnits
+            @NotNull Map<String, LabsSchematic<TryjumpUnitMetadata>> liteUnits,
+            @NotNull Map<String, LabsSchematic<TryjumpUnitMetadata>> defaultUnits
     ) {
         this.liteUnits = liteUnits;
         this.defaultUnits = defaultUnits;

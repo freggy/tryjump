@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener;
+package de.bergwerklabs.tryjump.core.listener.deathmatch;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.

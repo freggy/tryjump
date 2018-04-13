@@ -7,6 +7,7 @@ import de.bergwerklabs.tryjump.api.Difficulty;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ModuleTypeSummary {
     private File liteFolder;
     private String diffString;
 
-    ModuleTypeSummary(List<LabsSchematic<TryjumpUnitMetadata>> schematics, Difficulty difficulty) {
+    ModuleTypeSummary(@NotNull List<LabsSchematic<TryjumpUnitMetadata>> schematics, @NotNull Difficulty difficulty) {
         Preconditions.checkNotNull(difficulty);
         Preconditions.checkNotNull(schematics);
 

@@ -55,6 +55,13 @@ public enum Difficulty {
         return this.difValue;
     }
 
+    /**
+     * Gets the colored name of this Difficulty.
+     */
+    public String getDisplayName() {
+        return this.color + "§l" + this.name();
+    }
+
     @Override
     public String toString() {
         return this.getColor().toString() + this.getDifValue() +"§7 -> " + this.name();

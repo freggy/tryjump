@@ -5,6 +5,7 @@ import de.bergwerklabs.framework.schematicservice.NbtUtil;
 import de.bergwerklabs.framework.schematicservice.metadata.MetadataDeserializer;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Yannic Rieger on 12.02.2018.
@@ -16,7 +17,7 @@ import org.bukkit.util.Vector;
 public class UnitDeserializer implements MetadataDeserializer<TryjumpUnitMetadata> {
 
     @Override
-    public TryjumpUnitMetadata deserialize(CompoundTag compoundTag) {
+    public TryjumpUnitMetadata deserialize(@NotNull CompoundTag compoundTag) {
         final CompoundMap map      = compoundTag.getValue();
         final String name          = map.get("Name").getValue().toString();
         final Boolean isLite       = Boolean.valueOf(map.get("IsLite").getValue().toString());
