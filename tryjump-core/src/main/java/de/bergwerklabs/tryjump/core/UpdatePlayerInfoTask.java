@@ -1,8 +1,7 @@
 package de.bergwerklabs.tryjump.core;
 
-import com.google.common.collect.Comparators;
+import de.bergwerklabs.framework.commons.math.SQRT;
 import de.bergwerklabs.framework.commons.spigot.title.ActionbarTitle;
-import de.bergwerklabs.tryjump.api.Unit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
  * @author Yannic Rieger
  */
 public class UpdatePlayerInfoTask implements Runnable {
-
     private Plugin plugin;
     private TryJump tryJump;
 
@@ -53,14 +51,10 @@ public class UpdatePlayerInfoTask implements Runnable {
     }
 
     private double calculateDistanceFast(Location location1, Location location2) {
-        return location1.distance(location2);
-        /*return SQRT.fast(
+        return SQRT.fast(
                 (location1.getX() - location2.getX()) +
                 (location1.getY() - location2.getY()) +
                 (location1.getZ() - location2.getZ())
-        );*/
+        );
     }
-
-
-
 }

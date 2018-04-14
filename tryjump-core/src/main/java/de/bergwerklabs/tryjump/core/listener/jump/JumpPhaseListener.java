@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.core.listener.jump;
 
 import de.bergwerklabs.tryjump.core.TryJump;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.util.HashSet;
@@ -14,12 +15,16 @@ import java.util.Set;
  */
 public abstract class JumpPhaseListener implements Listener {
 
-    public static final Set<Listener> LISTENERS = new HashSet<>();
+    private static final Set<Listener> LISTENERS = new HashSet<>();
 
     protected TryJump tryJump;
 
-    public JumpPhaseListener(TryJump tryJump) {
+    JumpPhaseListener(TryJump tryJump) {
         LISTENERS.add(this);
         this.tryJump = tryJump;
+    }
+
+    public static void unregisterListeners() {
+        LISTENERS.forEach(HandlerList::unregisterAll);
     }
 }
