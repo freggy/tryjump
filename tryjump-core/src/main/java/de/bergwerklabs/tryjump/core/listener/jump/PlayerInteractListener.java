@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.core.listener.jump;
 
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
+import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
@@ -15,6 +16,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -69,18 +72,36 @@ public class PlayerInteractListener extends JumpPhaseListener {
     }
 
     private void handleLast(Jumper jumper) {
+        final Player spigotPlayer = jumper.getPlayer();
+        final Collection<Jumper> jumpers = this.tryJump.getPlayerRegistry().getPlayerCollection();
         // TODO: add tokens
         // TODO: display messages
         // TODO: start deathmatch
 
+        jumpers.forEach(player -> {
+            final Player p = player.getPlayer();
+            p.playSound(p.getEyeLocation(), Sound.WITHER_SPAWN, 10, 1);
+            // TODO: use rank color
+            new Title( "§a" + p.getDisplayName(), "§7hat das Ziel erreicht", 40, 40 , 40).display(p);
+        });
+
         LabsTimer timer = new LabsTimer(5, timeLeft -> {
             // TODO: ausgabe
+            jumpers.forEach(player -> {
+                this.tryJump.getMessenger().message("§7Server startet in §b" + timeLeft + " Sekunden §7neu.", player
+                        .getPlayer());
+            });
         });
 
         timer.addStopListener(event -> {
             // TODO: tp players to deathmatch arena
             // TODO: register deathmatch listeners
             JumpPhaseListener.unregisterListeners();
+
+            // ONLY FOR TEST PURPOSES [START]
+            Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
+            Bukkit.getServer().spigot().restart();
+            // ONLY FOR TEST PURPOSES [END]
         });
 
         timer.start();

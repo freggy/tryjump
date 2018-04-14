@@ -112,7 +112,7 @@ public class CreatorSession {
 
             final TryjumpUnitMetadata metadata = new TryjumpUnitMetadata(
                     name,
-                    null,
+                    this.worldEditVectorToBukkitVector(start.subtract(end)),
                     start.distance(end),
                     isLite,
                     difficulty,

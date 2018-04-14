@@ -15,5 +15,4 @@ public class Config {
     // TODO: zero fails token boost
     // TODO: selection strategy
     // TODO:
-
 }

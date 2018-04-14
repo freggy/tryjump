@@ -9,6 +9,7 @@ import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
+import de.bergwerklabs.tryjump.core.task.UpdatePlayerInfoTask;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -70,10 +71,26 @@ public class TryJump extends LabsGame<Jumper> {
             });
         });
 
+        LabsTimer jumpTimer = new LabsTimer(60 * 10, timeLeft -> {
+            this.players.forEach(player -> {
+                final Player spigotPlayer = player.getPlayer();
+                String timeString = String.format("§b%02d:%02d", timeLeft / 60, timeLeft % 60);
+                player.getScoreboard().setTitle("§6>> §eTryJump §6❘ " + timeString);
+                if (((float)timeLeft / 60F) % 10 == 0) {
+                    this.getMessenger().message("Noch " + timeString + " §7Minuten.", spigotPlayer);
+                    spigotPlayer.playSound(spigotPlayer.getEyeLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
+                }
+                else if (timeLeft <= 5) {
+                    this.getMessenger().message("§b" + String.valueOf(timeLeft), spigotPlayer);
+                    spigotPlayer.playSound(spigotPlayer.getEyeLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
+                }
+            });
+        });
+
         countdown.addStopListener(event -> {
             this.messenger.messageAll("LOS!");
             final TryJumpSession session = TryJumpSession.getInstance();
-            this.updatePlayerInfoTask = Bukkit.getScheduler().runTaskTimerAsynchronously(session, new UpdatePlayerInfoTask(session, this), 0, 10L);
+            this.updatePlayerInfoTask = Bukkit.getScheduler().runTaskTimerAsynchronously(session, new UpdatePlayerInfoTask(session), 0, 10L);
             this.players.forEach(jumper -> {
                 final Player spigotPlayer = jumper.getPlayer();
                 final UnitPlacer placer = session.getPlacer();
@@ -90,7 +107,15 @@ public class TryJump extends LabsGame<Jumper> {
                 Location to = spigotPlayer.getLocation().clone().subtract(end);
                 jumper.setCurrentUnit(unit);
                 placer.placeUnit(to, (TryJumpUnit) unit, false);
+                jumpTimer.start();
             });
+        });
+
+        jumpTimer.addStopListener(event -> {
+            // ONLY FOR TEST PURPOSES [START]
+            Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
+            Bukkit.getServer().spigot().restart();
+            // ONLY FOR TEST PURPOSES [END]
         });
 
         countdown.start();
@@ -109,7 +134,8 @@ public class TryJump extends LabsGame<Jumper> {
     }
 
     private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {
-        LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ §b%02d:%02d", "distance");
+        String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
+        LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ " + timeString, "distance");
         scoreboard.addRow(players.size() + 5, new Row(scoreboard, "§a§a§a§a"));
         scoreboard.addRow(players.size() + 4, new Row(scoreboard, "§eTokens: §b0"));
         scoreboard.addRow(players.size() + 3, new Row(scoreboard, "§a§a§a"));

@@ -17,11 +17,14 @@ public class UnitSerializer implements MetadataSerializer<TryjumpUnitMetadata> {
     @Override
     public CompoundTag serialize(TryjumpUnitMetadata tryjumpModuleMetadata) {
         final CompoundMap map = new CompoundMap();
+        final Vector vector = tryjumpModuleMetadata.getEndVector();
+        final CompoundMap compoundMap = NbtUtil.vectorToNbt("DistanceVector", vector.getX(), vector.getY(), vector.getZ()).getValue();
 
         map.put(new StringTag("Name", tryjumpModuleMetadata.getName()));
         map.put(new IntTag("Difficulty", tryjumpModuleMetadata.getDifficulty()));
         map.put(new StringTag("IsLite", String.valueOf(tryjumpModuleMetadata.isLite())));
         map.put(new DoubleTag("DistanceToEnd", tryjumpModuleMetadata.getDistanceToEnd()));
+        map.put(new CompoundTag("DistanceVector", compoundMap));
         map.put(new LongTag("Created", tryjumpModuleMetadata.getCreationTime()));
 
         return new CompoundTag("Metadata", map);

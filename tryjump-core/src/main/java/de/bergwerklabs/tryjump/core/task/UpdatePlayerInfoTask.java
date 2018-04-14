@@ -1,7 +1,10 @@
-package de.bergwerklabs.tryjump.core;
+package de.bergwerklabs.tryjump.core.task;
 
 import de.bergwerklabs.framework.commons.math.SQRT;
 import de.bergwerklabs.framework.commons.spigot.title.ActionbarTitle;
+import de.bergwerklabs.tryjump.core.Jumper;
+import de.bergwerklabs.tryjump.core.TryJump;
+import de.bergwerklabs.tryjump.core.TryJumpSession;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -15,18 +18,15 @@ import java.util.stream.Collectors;
  *
  * @author Yannic Rieger
  */
-public class UpdatePlayerInfoTask implements Runnable {
-    private Plugin plugin;
-    private TryJump tryJump;
+public class UpdatePlayerInfoTask extends TryJumpTask {
 
-    public UpdatePlayerInfoTask(Plugin plugin, TryJump tryJump) {
-        this.plugin = plugin;
-        this.tryJump = tryJump;
+    public UpdatePlayerInfoTask(TryJumpSession session) {
+        super(session);
     }
 
     @Override
     public void run() {
-        final Collection<Jumper> jumpers = this.tryJump.getPlayerRegistry().getPlayerCollection();
+        final Collection<Jumper> jumpers = this.game.getPlayerRegistry().getPlayerCollection();
         jumpers.forEach(jumper -> {
             final Player spigotPlayer = jumper.getPlayer();
             ActionbarTitle.send(spigotPlayer, jumper.buildActionbarText());
@@ -45,16 +45,12 @@ public class UpdatePlayerInfoTask implements Runnable {
 
     private void calculateProgress(Jumper jumper) {
         double currentDistance = this.calculateDistanceFast(jumper.getStartSpawn(), jumper.getPlayer().getLocation());
-        double totalDistance = TryJumpSession.getInstance().getPlacer().getParkourLength();
+        double totalDistance = this.session.getPlacer().getParkourLength();
         int i = new Long(Math.round((currentDistance / totalDistance) * 100)).intValue();
         jumper.setJumpProgress(i);
     }
 
     private double calculateDistanceFast(Location location1, Location location2) {
-        return SQRT.fast(
-                (location1.getX() - location2.getX()) +
-                (location1.getY() - location2.getY()) +
-                (location1.getZ() - location2.getZ())
-        );
+        return location1.distance(location2);
     }
 }
