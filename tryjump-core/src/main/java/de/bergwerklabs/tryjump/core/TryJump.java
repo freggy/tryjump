@@ -4,6 +4,8 @@ import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.item.ItemStackBuilder;
+import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
+import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
@@ -49,6 +51,7 @@ public class TryJump extends LabsGame<Jumper> {
             final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0.5, 0.5);
             TryJumpSession.getInstance().getPlacer().getStart().pasteAsync("jump", playerSpawn.toVector());
             jumper.setUnitSpawn(playerSpawn);
+            jumper.setStartSpawn(playerSpawn);
             count[0] += 35;
 
         });
@@ -81,6 +84,8 @@ public class TryJump extends LabsGame<Jumper> {
                                                                                       .setData((byte)1)
                                                                                       .create();
 
+                jumper.setScoreboard(this.createScoreboard(spigotPlayer, this.players, 10 * 60));
+
                 spigotPlayer.getInventory().setItem(4, instantDeath);
                 Location to = spigotPlayer.getLocation().clone().subtract(end);
                 jumper.setCurrentUnit(unit);
@@ -101,5 +106,30 @@ public class TryJump extends LabsGame<Jumper> {
         final PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new PlayerInteractListener(this), plugin);
         manager.registerEvents(new PlayerDamageListener(this), plugin);
+    }
+
+    private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {
+        LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ §b%02d:%02d", "distance");
+        scoreboard.addRow(players.size() + 5, new Row(scoreboard, "§a§a§a§a"));
+        scoreboard.addRow(players.size() + 4, new Row(scoreboard, "§eTokens: §b0"));
+        scoreboard.addRow(players.size() + 3, new Row(scoreboard, "§a§a§a"));
+        scoreboard.addRow(2, new Row(scoreboard, "§a§a"));
+        scoreboard.addRow(1, new Row(scoreboard, "§6§m-------------"));
+        scoreboard.addRow(0, new Row(scoreboard, "§ebergwerkLABS.de"));
+
+        final int[] count = {2};
+
+        players.forEach(jumper -> {
+            final Player spigotPlayer = jumper.getPlayer();
+            if (spigotPlayer.getUniqueId().equals(self.getUniqueId())) {
+                scoreboard.addPlayerSpecificRow(count[0]++, spigotPlayer, new Row(scoreboard, "§7§n" + spigotPlayer
+                        .getDisplayName() + "§r" + " §b0%"));
+
+            }
+            else scoreboard.addPlayerSpecificRow(count[0]++, spigotPlayer, new Row(scoreboard, "§7" + spigotPlayer
+                    .getDisplayName() + "§r" + " §b0%"));
+
+        });
+        return scoreboard;
     }
 }

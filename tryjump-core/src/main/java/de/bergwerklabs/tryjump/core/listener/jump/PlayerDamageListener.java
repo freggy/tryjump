@@ -4,6 +4,7 @@ import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 /**
@@ -18,6 +19,7 @@ public class PlayerDamageListener extends JumpPhaseListener {
         super(tryJump);
     }
 
+    @EventHandler
     private void onPlayerDamage(EntityDamageEvent event) {
         final Entity entity = event.getEntity();
         if (!(entity instanceof Player)) return;

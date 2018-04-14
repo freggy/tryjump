@@ -42,6 +42,7 @@ public class UnitPlacer {
     private Queue<TryJumpUnit> selectedUnits;
     private LabsSchematic<TryjumpUnitMetadata> start;
     private UnitSelectionStrategy strategy;
+    private double parkourLength;
     private final SchematicService<TryjumpUnitMetadata> service = new SchematicServiceBuilder<TryjumpUnitMetadata>().setDeserializer(new UnitDeserializer()).build();
 
 
@@ -92,6 +93,10 @@ public class UnitPlacer {
 
         this.selectedUnits = this.strategy.createParkour();
 
+        this.parkourLength = this.selectedUnits.stream()
+                                               .mapToDouble(unit -> unit.getNormalVersion().getMetadata().getEndVector().length())
+                                               .sum();
+
                 /*
         schematics = schematics.stream().sorted(Comparator.comparingLong(t -> t.getMetadata().getCreationTime()))
                                .collect(Collectors.toList()); */
@@ -121,5 +126,9 @@ public class UnitPlacer {
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
                      .map(this.service::createSchematic)
                      .collect(Collectors.toMap(schem ->  schem.getMetadata().getName(), Function.identity(), (s1, s2) -> s1));
+    }
+
+    public double getParkourLength() {
+        return parkourLength;
     }
 }

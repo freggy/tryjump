@@ -2,6 +2,8 @@ package de.bergwerklabs.tryjump.core;
 
 import com.google.common.base.Preconditions;
 import de.bergwerklabs.framework.bedrock.api.LabsPlayer;
+import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
+import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.tryjump.api.TryJumpPlayer;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
@@ -24,11 +26,12 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     private Queue<TryJumpUnit> unitsAhead;
     private Set<TryJumpUnit> completed = new HashSet<>();
-    private LabsSchematic<TryjumpUnitMetadata> start;
-    private Location unitSpawn;
+    private Location unitSpawn, startSpawn;
     private Unit current;
+    private LabsScoreboard scoreboard;
     private int currentFails;
     private int totalFails;
+    private int jumpProgress;
 
     Jumper(Player player) {
         super(player.getUniqueId());
@@ -119,16 +122,20 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
         this.completed.add(unit);
     }
 
-    public void updateScoreboardProgress(Location location) {
+    public void updateScoreboardProgress(List<Jumper> sorted) {
+        final int[] min = {3};
 
-    }
-
-    public LabsSchematic<TryjumpUnitMetadata> getStart() {
-        return start;
-    }
-
-    public void setStart(@NotNull LabsSchematic<TryjumpUnitMetadata> start) {
-        this.start = start;
+        sorted.forEach(jumper -> {
+            final Player spigotPlayer = jumper.getPlayer();
+            Row row = this.scoreboard.getPlayerSpecificRows().get(spigotPlayer.getUniqueId());
+            if (row != null) {
+                if (spigotPlayer.getUniqueId().equals(this.getPlayer().getUniqueId())) {
+                    row.setText("§7§n" + spigotPlayer.getDisplayName() + "§r §b" + this.jumpProgress + "%");
+                }
+                else row.setText("§7" + spigotPlayer.getDisplayName() + "§r §b" + jumper.getJumpProgress() + "%");
+                row.setScore(min[0]++);
+            }
+        });
     }
 
     public String buildActionbarText() {
@@ -167,5 +174,30 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     public void setUnitSpawn(Location unitSpawn) {
         this.unitSpawn = unitSpawn;
+    }
+
+    public LabsScoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    public void setScoreboard(LabsScoreboard scoreboard) {
+        this.scoreboard = scoreboard;
+        this.scoreboard.apply(this.getPlayer());
+    }
+
+    public Location getStartSpawn() {
+        return startSpawn;
+    }
+
+    public void setStartSpawn(Location startSpawn) {
+        this.startSpawn = startSpawn;
+    }
+
+    public int getJumpProgress() {
+        return jumpProgress;
+    }
+
+    public void setJumpProgress(int jumpProgress) {
+        this.jumpProgress = jumpProgress;
     }
 }
