@@ -169,7 +169,9 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
         this.totalFails++;
 
         if (this.currentFails <= 3) {
-            new Title("", StringUtils.repeat("§c✖", this.currentFails), 20, 20,20).display(player);
+            String red = StringUtils.repeat("§c✖", this.currentFails);
+            String grey = StringUtils.repeat("§7✖", 3 - this.currentFails);
+            new Title("", red + grey, 20, 20,20).display(player);
         }
 
         if (this.currentFails == 3) {

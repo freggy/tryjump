@@ -18,7 +18,7 @@ public class PlayerJoinListener implements Listener {
     private void onPlayerJoin(PlayerJoinEvent event) {
         final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
         location.setYaw(0);
-        location.setYaw(50);
+        location.setYaw(-50);
         event.getPlayer().teleport(location);
     }
 

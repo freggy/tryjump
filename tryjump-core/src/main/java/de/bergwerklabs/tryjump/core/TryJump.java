@@ -7,6 +7,7 @@ import de.bergwerklabs.framework.commons.spigot.item.ItemStackBuilder;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.tryjump.api.Unit;
+import de.bergwerklabs.tryjump.core.listener.jump.DropItemListener;
 import de.bergwerklabs.tryjump.core.listener.jump.FoodLevelChangeListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
@@ -58,7 +59,7 @@ public class TryJump extends LabsGame<Jumper> {
 
 
             jumper.setUnits(units);
-            final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0.5, 0.5);
+            final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0, 0.5);
             TryJumpSession.getInstance().getPlacer().getStart().pasteAsync("jump", playerSpawn.toVector());
             jumper.setUnitSpawn(playerSpawn);
             jumper.setStartSpawn(playerSpawn);
@@ -69,6 +70,7 @@ public class TryJump extends LabsGame<Jumper> {
         this.players.forEach(jumper -> {
             final Player player = jumper.getPlayer();
             new PotionEffect(PotionEffectType.BLINDNESS, 35, 10, false, false).apply(player.getPlayer());
+            jumper.freeze();
             player.teleport(jumper.getUnitSpawn());
         });
 
@@ -111,7 +113,7 @@ public class TryJump extends LabsGame<Jumper> {
                                                                                       .create();
 
                 jumper.setScoreboard(this.createScoreboard(spigotPlayer, this.players, 10 * 60));
-
+                jumper.unfreeze();
                 spigotPlayer.getInventory().setItem(4, instantDeath);
                 Location to = jumper.getStartSpawn().clone().subtract(end);
                 jumper.setCurrentUnit(unit);
@@ -143,6 +145,7 @@ public class TryJump extends LabsGame<Jumper> {
         final PluginManager manager = Bukkit.getPluginManager();
         manager.registerEvents(new PlayerDamageListener(this), plugin);
         manager.registerEvents(new FoodLevelChangeListener(this), plugin);
+        manager.registerEvents(new DropItemListener(this), plugin);
     }
 
     private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {

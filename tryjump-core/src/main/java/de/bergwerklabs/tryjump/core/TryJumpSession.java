@@ -4,6 +4,7 @@ import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.event.session.SessionDonePreparationEvent;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
+import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import de.bergwerklabs.tryjump.core.unit.UnitSelectionStrategy;
 import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
@@ -55,16 +56,6 @@ public class TryJumpSession extends MinigameSession {
         //  - /${datafolder}/units/hard/lite/myUnit_hard_lite.schematic
         //  - /${datafolder}/units/hard/default/myUnit_hard.schematic
 
-
-        // ONLY FOR TEST PURPOSES [START]
-        try {
-            FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        // ONLY FOR TEST PURPOSES [END]
-
         final String basePath = this.getDataFolder().getAbsolutePath() + "/units/";
 
         this.placer = new UnitPlacer(
@@ -76,10 +67,17 @@ public class TryJumpSession extends MinigameSession {
                 SelectionStrategy.RANDOM // TODO: make configurable
         );
 
-        World world = this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
+
+        World world = new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false)
+                                 .environment(World.Environment.NORMAL).createWorld();
+
+        //World world = this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings
+                //("2;0").generateStructures(false));
         world.setGameRuleValue("keepInventory", "true");
-        world.setGameRuleValue("doTileDrops ", "false");
+        world.setGameRuleValue("doTileDrops", "false");
+        world.setGameRuleValue("showDeathMessages", "false");
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
         Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
     }
 }

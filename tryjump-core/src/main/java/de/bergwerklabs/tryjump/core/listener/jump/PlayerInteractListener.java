@@ -6,6 +6,7 @@ import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -40,18 +42,17 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
         Player player = event.getPlayer();
         Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
+        if (jumper == null) return;
 
         final Action action = event.getAction();
         final Block clicked = event.getClickedBlock();
         final Material inHand = player.getItemInHand().getType();
 
         if (action == Action.PHYSICAL && clicked.getType() == Material.GOLD_PLATE) {
-            System.out.println("phys");
             this.handleUnitCompletion(jumper, event.getClickedBlock());
         }
         else if (inHand == Material.INK_SACK && (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)) {
-            System.out.println("ink");
-            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - jumper.getLastUse()) <= 5 && !jumper.isLite()) {
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - jumper.getLastUse()) <= 2 && !jumper.isLite()) {
                 this.tryJump.getMessenger().message("§cBitte warte noch einen Moment, bevor du den Instant Tod ausführst!", player);
                 return;
             }
@@ -109,6 +110,13 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
             // ONLY FOR TEST PURPOSES [START]
             Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
+            try {
+                FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
+                Thread.sleep(2000);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             Bukkit.getServer().spigot().restart();
             // ONLY FOR TEST PURPOSES [END]
         });

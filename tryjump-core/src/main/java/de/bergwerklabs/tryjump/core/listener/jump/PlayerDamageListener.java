@@ -21,9 +21,16 @@ public class PlayerDamageListener extends JumpPhaseListener {
     }
 
     @EventHandler
-    private void onPlayerDamage(PlayerDeathEvent event) {
-        final Player player = event.getEntity();
-        final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
-        jumper.resetToSpawn();
+    private void onPlayerDamage(EntityDamageEvent event) {
+        final Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) return;
+        final Player player = (Player)entity;
+
+        if (event.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+            final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
+            if (jumper == null) return;
+            jumper.resetToSpawn();
+        }
+        event.setCancelled(true);
     }
 }
