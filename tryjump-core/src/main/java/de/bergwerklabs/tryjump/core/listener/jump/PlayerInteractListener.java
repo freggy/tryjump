@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.io.File;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -45,9 +46,16 @@ public class PlayerInteractListener extends JumpPhaseListener {
         final Material inHand = player.getItemInHand().getType();
 
         if (action == Action.PHYSICAL && clicked.getType() == Material.GOLD_PLATE) {
+            System.out.println("phys");
             this.handleUnitCompletion(jumper, event.getClickedBlock());
         }
         else if (inHand == Material.INK_SACK && (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)) {
+            System.out.println("ink");
+            if (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - jumper.getLastUse()) <= 5 && !jumper.isLite()) {
+                this.tryJump.getMessenger().message("§cBitte warte noch einen Moment, bevor du den Instant Tod ausführst!", player);
+                return;
+            }
+            jumper.setLastUse(System.currentTimeMillis());
             jumper.resetToSpawn();
         }
     }
@@ -59,7 +67,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
         if (unitOptional.isPresent()) {
             TryJumpUnit next = unitOptional.get();
-            this.handleNext(jumper, next);
+            this.handleNext(jumper, clicked.getLocation(), next);
             jumper.setCurrentUnit(next);
             jumper.addCompletedUnit(current);
 
@@ -78,11 +86,13 @@ public class PlayerInteractListener extends JumpPhaseListener {
         // TODO: display messages
         // TODO: start deathmatch
 
+        JumpPhaseListener.unregisterListeners();
+
         jumpers.forEach(player -> {
             final Player p = player.getPlayer();
             p.playSound(p.getEyeLocation(), Sound.WITHER_SPAWN, 10, 1);
             // TODO: use rank color
-            new Title( "§a" + p.getDisplayName(), "§7hat das Ziel erreicht", 40, 40 , 40).display(p);
+            new Title( "§a" + spigotPlayer.getDisplayName(), "§7hat das Ziel erreicht", 40, 40 , 40).display(p);
         });
 
         LabsTimer timer = new LabsTimer(5, timeLeft -> {
@@ -96,7 +106,6 @@ public class PlayerInteractListener extends JumpPhaseListener {
         timer.addStopListener(event -> {
             // TODO: tp players to deathmatch arena
             // TODO: register deathmatch listeners
-            JumpPhaseListener.unregisterListeners();
 
             // ONLY FOR TEST PURPOSES [START]
             Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
@@ -107,10 +116,10 @@ public class PlayerInteractListener extends JumpPhaseListener {
         timer.start();
     }
 
-    private void handleNext(Jumper jumper, TryJumpUnit unit) {
+    private void handleNext(Jumper jumper, Location blockLoc, TryJumpUnit unit) {
         final Player spigotPlayer = jumper.getPlayer();
         spigotPlayer.playSound(spigotPlayer.getEyeLocation(), Sound.LEVEL_UP, 100, 10);
-        TryJumpSession.getInstance().getPlacer().placeUnit(jumper.getPlayer().getLocation().clone().subtract(0, 1, 0), unit, false);
+        TryJumpSession.getInstance().getPlacer().placeUnit(blockLoc.clone().subtract(0, 1, 0), unit, false);
         jumper.setCurrentFails(0);
         // TODO: display messages
     }

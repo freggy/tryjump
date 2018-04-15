@@ -135,9 +135,15 @@ public class CreatorSession {
      */
     void loadOld(Location loc, String schemName) {
         removeUnit();
-        final File file = new File(FOLDER + "/" + schemName + ".schematic");
+        final File unit = this.find(schemName);
+
+        if (unit == null) {
+            player.sendMessage(Main.CHAT_PREFIX + "§cUnit konnte nicht gefunden werden.");
+            return;
+        }
+
         try {
-            final Schematic schematic = ClipboardFormat.SCHEMATIC.load(file);
+            final Schematic schematic = ClipboardFormat.SCHEMATIC.load(unit);
             this.current = schematic.paste(FaweAPI.getWorld(loc.getWorld().getName()), new Vector(loc.getX(), loc.getY(), loc.getBlockZ()));
         }
         catch (IOException e) {
@@ -153,6 +159,10 @@ public class CreatorSession {
         player.sendMessage(Main.CHAT_PREFIX + "Unit entfernt.");
         this.current.undo(this.current);
         this.current = null;
+    }
+
+    private File find(String schemName) {
+        return Common.findModule(schemName, FOLDER);
     }
 
     /**

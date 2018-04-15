@@ -1,8 +1,10 @@
 package de.bergwerklabs.tryjump.unitcreator;
 
 import com.boydti.fawe.FaweAPI;
+import com.google.common.collect.Lists;
 import com.sk89q.worldedit.regions.Region;
 import de.bergwerklabs.tryjump.api.Difficulty;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,10 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Yannic Rieger on 23.09.2017.
@@ -151,6 +150,61 @@ public class Main extends JavaPlugin implements Listener {
             }
             else if (label.equalsIgnoreCase("remove")) {
                 creator.getSession().removeUnit();
+            }
+            else if (label.equalsIgnoreCase("delete")) {
+                final String name = args[0];
+
+                if (name.isEmpty()) {
+                    player.sendMessage(CHAT_PREFIX + "Usage: " + ChatColor.AQUA + "/delete [name]");
+                    return false;
+                }
+
+                File unit = Common.findModule(name, Main.getInstance().getDataFolder().getAbsolutePath());
+
+                if (unit == null) {
+                    player.sendMessage(CHAT_PREFIX + "§cUnit konnte nicht gefunden werden.");
+                    return false;
+                }
+
+                boolean done = unit.delete();
+
+                if (!done) {
+                    player.sendMessage(CHAT_PREFIX + "§cUnit konnte nicht gelöscht werden.");
+                    return false;
+                }
+
+            }
+            else if (label.equalsIgnoreCase("listu")) {
+                String page = args[0];
+
+                if (page.isEmpty()) {
+                    player.sendMessage(CHAT_PREFIX + "Usage: " + ChatColor.AQUA + "/listu [page]");
+                    return false;
+                }
+
+                int pageInt = 0;
+
+                try {
+                    pageInt = Integer.valueOf(page);
+                }
+                catch (Exception ex) {
+                    player.sendMessage(CHAT_PREFIX + "§cEingabe muss eine Zahl sein.");
+                    return false;
+                }
+
+                final String folder = Main.getInstance().getDataFolder().getAbsolutePath();
+                final List<List<File>> pages = Lists.partition(Common.list(folder), 10);
+
+                if (pages.size() == 0) {
+                    player.sendMessage(CHAT_PREFIX + "§7Keine Units vorhanden.");
+                    return false;
+                }
+
+                pages.get(pageInt - 1).forEach(file -> {
+                    player.sendMessage("§a" + file.getName());
+                });
+
+                player.sendMessage(CHAT_PREFIX + "§7Seite §b" + page + " §7von §b" + pages.size());
             }
             return true;
         }

@@ -7,6 +7,7 @@ import de.bergwerklabs.framework.commons.spigot.item.ItemStackBuilder;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.tryjump.api.Unit;
+import de.bergwerklabs.tryjump.core.listener.jump.FoodLevelChangeListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
 import de.bergwerklabs.tryjump.core.task.UpdatePlayerInfoTask;
@@ -48,7 +49,15 @@ public class TryJump extends LabsGame<Jumper> {
         final double[] count = {35};
 
         this.players.forEach(jumper -> {
-            jumper.setUnits(new LinkedList<>(TryJumpSession.getInstance().getPlacer().getSelectedUnits()));
+
+            Queue<TryJumpUnit> units = new LinkedList<>();
+
+            TryJumpSession.getInstance().getPlacer().getSelectedUnits().forEach(blub -> {
+                units.add(blub.clone());
+            });
+
+
+            jumper.setUnits(units);
             final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0.5, 0.5);
             TryJumpSession.getInstance().getPlacer().getStart().pasteAsync("jump", playerSpawn.toVector());
             jumper.setUnitSpawn(playerSpawn);
@@ -104,10 +113,13 @@ public class TryJump extends LabsGame<Jumper> {
                 jumper.setScoreboard(this.createScoreboard(spigotPlayer, this.players, 10 * 60));
 
                 spigotPlayer.getInventory().setItem(4, instantDeath);
-                Location to = spigotPlayer.getLocation().clone().subtract(end);
+                Location to = jumper.getStartSpawn().clone().subtract(end);
                 jumper.setCurrentUnit(unit);
                 placer.placeUnit(to, (TryJumpUnit) unit, false);
                 jumpTimer.start();
+
+                // Register at this point so players cannot use instant death.
+                Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(this), session);
             });
         });
 
@@ -129,8 +141,8 @@ public class TryJump extends LabsGame<Jumper> {
     private void registerListeners() {
         final Plugin plugin = TryJumpSession.getInstance();
         final PluginManager manager = Bukkit.getPluginManager();
-        manager.registerEvents(new PlayerInteractListener(this), plugin);
         manager.registerEvents(new PlayerDamageListener(this), plugin);
+        manager.registerEvents(new FoodLevelChangeListener(this), plugin);
     }
 
     private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {

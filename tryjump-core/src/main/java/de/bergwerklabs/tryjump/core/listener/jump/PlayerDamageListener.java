@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
  * Created by Yannic Rieger on 14.04.2018.
@@ -20,17 +21,9 @@ public class PlayerDamageListener extends JumpPhaseListener {
     }
 
     @EventHandler
-    private void onPlayerDamage(EntityDamageEvent event) {
-        final Entity entity = event.getEntity();
-        if (!(entity instanceof Player)) return;
-
-        System.out.println(event.getCause());
-
-        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-            final Player player = (Player)entity;
-            final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
-            jumper.resetToSpawn();
-        }
-        event.setCancelled(true);
+    private void onPlayerDamage(PlayerDeathEvent event) {
+        final Player player = event.getEntity();
+        final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
+        jumper.resetToSpawn();
     }
 }

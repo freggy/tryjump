@@ -23,7 +23,18 @@ public class UnitDeserializer implements MetadataDeserializer<TryjumpUnitMetadat
         final Boolean isLite       = Boolean.valueOf(map.get("IsLite").getValue().toString());
         final Integer diff         = ((IntTag)map.get("Difficulty")).getValue();
         final Long created         = ((LongTag)map.get("Created")).getValue();
-        final Vector distanceToEnd = NbtUtil.vectorFromNbt((CompoundTag)map.get("DistanceToEnd"));
-        return new TryjumpUnitMetadata(name, distanceToEnd, 0.0, isLite, diff, created);
+
+        Vector vector;
+        double distanceToEnd = 0;
+        if (compoundTag.getValue().containsKey("DistanceVector")) {
+            vector = NbtUtil.vectorFromNbt(((CompoundTag)map.get("DistanceVector")));
+            distanceToEnd = ((DoubleTag)map.get("DistanceToEnd")).getValue();
+        }
+        else {
+            vector = NbtUtil.vectorFromNbt(((CompoundTag)map.get("DistanceToEnd")));
+        }
+
+        //final long distanceToEnd = ((LongTag)map.get("DistanceToEnd")).getValue();
+        return new TryjumpUnitMetadata(name, vector, distanceToEnd, isLite, diff, created);
     }
 }

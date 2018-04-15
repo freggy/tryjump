@@ -9,6 +9,7 @@ import de.bergwerklabs.tryjump.core.unit.UnitSelectionStrategy;
 import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.scheduler.BukkitTask;
@@ -54,6 +55,7 @@ public class TryJumpSession extends MinigameSession {
         //  - /${datafolder}/units/hard/lite/myUnit_hard_lite.schematic
         //  - /${datafolder}/units/hard/default/myUnit_hard.schematic
 
+
         // ONLY FOR TEST PURPOSES [START]
         try {
             FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
@@ -74,7 +76,9 @@ public class TryJumpSession extends MinigameSession {
                 SelectionStrategy.RANDOM // TODO: make configurable
         );
 
-        this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
+        World world = this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false));
+        world.setGameRuleValue("keepInventory", "true");
+        world.setGameRuleValue("doTileDrops ", "false");
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
     }

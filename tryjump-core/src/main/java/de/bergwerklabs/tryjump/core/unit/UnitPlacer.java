@@ -4,12 +4,16 @@ import de.bergwerklabs.framework.schematicservice.LabsSchematic;
 import de.bergwerklabs.framework.schematicservice.SchematicService;
 import de.bergwerklabs.framework.schematicservice.SchematicServiceBuilder;
 import de.bergwerklabs.tryjump.api.TryjumpUnitMetadata;
+import de.bergwerklabs.tryjump.core.Jumper;
+import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import de.bergwerklabs.tryjump.core.unit.strategy.RandomSelectionStrategies;
 import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
 import de.bergwerklabs.tryjump.core.unit.strategy.TimeBasedSelectionStrategy;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -106,11 +110,24 @@ public class UnitPlacer {
         LabsSchematic<TryjumpUnitMetadata> schematic;
         if (toggleLite) {
             schematic = unit.getLiteVersion();
+            LabsSchematic<TryjumpUnitMetadata> normal = unit.getNormalVersion();
+            normal.remove(unit.getPlaceLocation());
+
+            Location end = location.clone().subtract(normal.getMetadata().getEndVector()).add(0, 1, 0);
+            end.getBlock().setType(Material.AIR);
+
+           // Bukkit.getScheduler().runTaskLater(TryJumpSession.getInstance(), () -> {
+                this.place(unit.getPlaceLocation(), schematic);
+            //}, 20 * 2);
         }
         else {
             schematic = unit.getNormalVersion();
+            unit.setPlaceLocation(location);
+            this.place(location, schematic);
         }
+    }
 
+    private void place(Location location, LabsSchematic<TryjumpUnitMetadata> schematic) {
         Location end = location.clone().subtract(schematic.getMetadata().getEndVector()).add(0, 1, 0);
         end.getBlock().setType(Material.GOLD_PLATE);
         schematic.pasteAsync("jump", location.toVector());
