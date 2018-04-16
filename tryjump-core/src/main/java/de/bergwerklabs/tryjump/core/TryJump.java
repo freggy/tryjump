@@ -46,25 +46,25 @@ public class TryJump extends LabsGame<Jumper> {
         this.playerRegistry = registry;
         this.players = registry.getPlayerCollection();
 
+        final TryJumpSession session = TryJumpSession.getInstance();
         final Location spawn = new Location(Bukkit.getWorld("jump"), 0, 100, 0);
         final double[] count = {35};
 
         this.players.forEach(jumper -> {
 
+            // TODO: remove this nonsense
             Queue<TryJumpUnit> units = new LinkedList<>();
 
             TryJumpSession.getInstance().getPlacer().getSelectedUnits().forEach(blub -> {
                 units.add(blub.clone());
             });
 
-
             jumper.setUnits(units);
             final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0, 0.5);
-            TryJumpSession.getInstance().getPlacer().getStart().pasteAsync("jump", playerSpawn.toVector());
+            session.getPlacer().getStart().pasteAsync("jump", playerSpawn.toVector());
             jumper.setUnitSpawn(playerSpawn);
             jumper.setStartSpawn(playerSpawn);
             count[0] += 35;
-
         });
 
         this.players.forEach(jumper -> {
@@ -100,7 +100,6 @@ public class TryJump extends LabsGame<Jumper> {
 
         countdown.addStopListener(event -> {
             this.messenger.messageAll("LOS!");
-            final TryJumpSession session = TryJumpSession.getInstance();
             this.updatePlayerInfoTask = Bukkit.getScheduler().runTaskTimerAsynchronously(session, new UpdatePlayerInfoTask(session), 0, 10L);
             this.players.forEach(jumper -> {
                 final Player spigotPlayer = jumper.getPlayer();
@@ -112,7 +111,7 @@ public class TryJump extends LabsGame<Jumper> {
                                                                                       .setData((byte)1)
                                                                                       .create();
 
-                jumper.setScoreboard(this.createScoreboard(spigotPlayer, this.players, 10 * 60));
+                jumper.setScoreboard(this.createScoreboard(spigotPlayer, this.players, session.getTryJumpConfig().getJumpPhaseDuration()));
                 jumper.unfreeze();
                 spigotPlayer.getInventory().setItem(4, instantDeath);
                 Location to = jumper.getStartSpawn().clone().subtract(end);
@@ -172,5 +171,9 @@ public class TryJump extends LabsGame<Jumper> {
 
         });
         return scoreboard;
+    }
+
+    public BukkitTask getUpdatePlayerInfoTask() {
+        return updatePlayerInfoTask;
     }
 }

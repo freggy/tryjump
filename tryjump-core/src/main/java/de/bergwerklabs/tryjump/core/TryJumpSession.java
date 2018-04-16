@@ -1,8 +1,12 @@
 package de.bergwerklabs.tryjump.core;
 
+import com.google.gson.Gson;
+import de.bergwerklabs.atlantis.client.bukkit.GamestateManager;
+import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Gamestate;
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.event.session.SessionDonePreparationEvent;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
+import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
 import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
@@ -15,9 +19,11 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -35,8 +41,13 @@ public class TryJumpSession extends MinigameSession {
         return placer;
     }
 
+    public Config getTryJumpConfig() {
+        return config;
+    }
+
     private static TryJumpSession instance;
     private UnitPlacer placer;
+    private Config config;
 
     @Override
     public LabsGame getGame() {
@@ -44,10 +55,22 @@ public class TryJumpSession extends MinigameSession {
     }
 
     private TryJump tryJump = new TryJump();
+    private final Logger LOGGER = Bukkit.getLogger();
 
     @Override
     public void prepare() {
         instance = this;
+        Optional<Config> optional = Config.read(new File(this.getDataFolder() + "/config.json"));
+
+        if (optional.isPresent()) {
+            this.config = optional.get();
+        }
+        else {
+            LOGGER.warning("Error while reading config, aborting...");
+            GamestateManager.setGamestate(Gamestate.FAILED);
+            Bukkit.getServer().shutdown();
+        }
+
         // Folder structure is:
         //  - /${datafolder}/units/${difficulty}/lite/
         //  - /${datafolder}/units/${difficulty}/default/
@@ -64,20 +87,26 @@ public class TryJumpSession extends MinigameSession {
                 new File(basePath + "hard"),
                 new File(basePath + "extreme"),
                 new File(basePath + "start.schematic"),
-                SelectionStrategy.RANDOM // TODO: make configurable
+                this.config.getSelectionStrategy()
         );
 
+        this.createAndPrepareWorld();
 
-        World world = new WorldCreator("jump").type(WorldType.FLAT).generatorSettings("2;0").generateStructures(false)
-                                 .environment(World.Environment.NORMAL).createWorld();
-
-        //World world = this.getServer().createWorld(new WorldCreator("jump").type(WorldType.FLAT).generatorSettings
-                //("2;0").generateStructures(false));
-        world.setGameRuleValue("keepInventory", "true");
-        world.setGameRuleValue("doTileDrops", "false");
-        world.setGameRuleValue("showDeathMessages", "false");
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
         Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
     }
+
+    private void createAndPrepareWorld() {
+        World world = new WorldCreator("jump")
+                .type(WorldType.FLAT)
+                .generatorSettings("2;0")
+                .generateStructures(false)
+                .environment(World.Environment.NORMAL)
+                .createWorld();
+        world.setGameRuleValue("keepInventory", "true");
+        world.setGameRuleValue("doTileDrops", "false");
+        world.setGameRuleValue("showDeathMessages", "false");
+    }
+
 }

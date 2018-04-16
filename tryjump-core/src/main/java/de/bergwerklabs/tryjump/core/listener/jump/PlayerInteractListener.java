@@ -87,8 +87,6 @@ public class PlayerInteractListener extends JumpPhaseListener {
         // TODO: display messages
         // TODO: start deathmatch
 
-        JumpPhaseListener.unregisterListeners();
-
         jumpers.forEach(player -> {
             final Player p = player.getPlayer();
             p.playSound(p.getEyeLocation(), Sound.WITHER_SPAWN, 10, 1);
@@ -105,9 +103,10 @@ public class PlayerInteractListener extends JumpPhaseListener {
         });
 
         timer.addStopListener(event -> {
+            JumpPhaseListener.unregisterListeners();
+            this.tryJump.getUpdatePlayerInfoTask().cancel();
             // TODO: tp players to deathmatch arena
             // TODO: register deathmatch listeners
-
             // ONLY FOR TEST PURPOSES [START]
             Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
             try {
