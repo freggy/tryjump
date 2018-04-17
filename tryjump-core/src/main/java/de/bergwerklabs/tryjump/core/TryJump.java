@@ -6,6 +6,7 @@ import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.item.ItemStackBuilder;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
+import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.core.listener.jump.DropItemListener;
 import de.bergwerklabs.tryjump.core.listener.jump.FoodLevelChangeListener;
@@ -37,8 +38,17 @@ public class TryJump extends LabsGame<Jumper> {
         super("TryJump");
     }
 
+    public BukkitTask getUpdatePlayerInfoTask() {
+        return updatePlayerInfoTask;
+    }
+
+    public DeathmatchArena getArena() {
+        return arena;
+    }
+
     private Collection<Jumper> players;
     private BukkitTask updatePlayerInfoTask;
+    private DeathmatchArena arena;
 
     @Override
     public void start(PlayerRegistry<Jumper> registry) {
@@ -171,9 +181,5 @@ public class TryJump extends LabsGame<Jumper> {
 
         });
         return scoreboard;
-    }
-
-    public BukkitTask getUpdatePlayerInfoTask() {
-        return updatePlayerInfoTask;
     }
 }

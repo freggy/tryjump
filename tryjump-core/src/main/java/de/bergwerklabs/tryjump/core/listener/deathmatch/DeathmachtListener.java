@@ -1,6 +1,6 @@
 package de.bergwerklabs.tryjump.core.listener.deathmatch;
 
-import org.bukkit.Bukkit;
+import de.bergwerklabs.tryjump.core.TryJump;
 import org.bukkit.event.Listener;
 
 import java.util.HashSet;
@@ -12,6 +12,13 @@ import java.util.Set;
  *
  * @author Yannic Rieger
  */
-public class DeathmachtListener {
+public class DeathmachtListener implements Listener {
 
+    private static final Set<Listener> LISTENERS = new HashSet<>();
+    protected TryJump tryJump;
+
+    public DeathmachtListener(TryJump tryJump) {
+        LISTENERS.add(this);
+        this.tryJump = tryJump;
+    }
 }

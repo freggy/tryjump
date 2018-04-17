@@ -1,6 +1,6 @@
 package de.bergwerklabs.tryjump.core.config;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.bergwerklabs.tryjump.core.unit.strategy.SelectionStrategy;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,55 +14,93 @@ import java.util.Optional;
 /**
  * Created by Yannic Rieger on 12.02.2018.
  * <p>
+ * Contains all configurable settings of TryJump. This class will be created by using the {@link ConfigDeserializer}.
+ * Custom instantiation should be avoided.
  *
  * @author Yannic Rieger
  */
 public class Config {
 
+    /**
+     * Gets the amount of ranking points given to a player per unit.
+     */
     public int getRankingPointsPerUnit() {
         return rankingPointsPerUnit;
     }
 
+    /**
+     * Gets the amount of coins given to a player per unit.
+     */
     public int getCoinsPerUnit() {
         return coinsPerUnit;
     }
 
+    /**
+     * The duration in seconds the jump phase will last.
+     */
     public int getJumpPhaseDuration() {
         return jumpPhaseDuration;
     }
 
+    /**
+     * The duration in seconds the deathmatch will last.
+     */
     public int getDeathmatchDuration() {
         return deathmatchDuration;
     }
 
+    /**
+     * The amount of tokens given to a player that finishes the jump phase with 0 fails.
+     */
     public int getZeroFailsTokenBoost() {
         return zeroFailsTokenBoost;
     }
 
+    /**
+     * The {@link SelectionStrategy} used for selecting the units that will be spawned in the jump phase.
+     */
     public SelectionStrategy getSelectionStrategy() {
         return selectionStrategy;
     }
 
+    /**
+     * Gets the list of messages that can be displayed when a player finishes the jump phase with zero fails.
+     */
     public List<String> getZeroFailsMessages() {
         return zeroFailsMessages;
     }
 
-    public UnitTokens getEasy() {
+    /**
+     * Gets the tokens that will be given to player when he finishes a unit of type EASY.
+     */
+    public UnitTokens getEasyTokens() {
         return easy;
     }
 
-    public UnitTokens getMedium() {
+    /**
+     * Gets the tokens that will be given to player when he finishes a unit of type MEDIUM.
+     */
+    public UnitTokens getMediumTokens() {
         return medium;
     }
 
-    public UnitTokens getHard() {
+    /**
+     * Gets the tokens that will be given to player when he finishes a unit of type HARD.
+     */
+    public UnitTokens getHardTokens() {
         return hard;
     }
 
-    public UnitTokens getExtreme() {
+    /**
+     * Gets the tokens that will be given to player when he finishes a unit of type EXTREME.
+     */
+    public UnitTokens getExtremeTokens() {
         return extreme;
     }
 
+    /**
+     * Whether the running game is a session where teams are allowed.
+     */
     public boolean isTeamSession() {
         return isTeamSession;
     }
@@ -108,9 +146,17 @@ public class Config {
         this.isTeamSession = isTeamSession;
     }
 
+    /**
+     * Reads the config from a JSON file.
+     *
+     * @param config {@link File} containing configuration in JSON format.
+     * @return {@link Optional#empty()} if an error occurs while loading.
+     */
     public static Optional<Config> read(@NotNull File config) {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(config), StandardCharsets.UTF_8)) {
-            return Optional.of(new Gson().fromJson(reader, Config.class));
+            return Optional.of(new GsonBuilder().registerTypeAdapter(Config.class, new ConfigDeserializer())
+                                                .create()
+                                                .fromJson(reader, Config.class));
         }
         catch (Exception ex) {
             ex.printStackTrace();

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by Yannic Rieger on 16.04.2018.
  * <p>
+ * Creates an {@link Config} from a {@link JsonObject}.
  *
  * @author Yannic Rieger
  */
@@ -28,7 +29,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
         final int zeroFailsTokenBoost = object.get("zero-fails-token-boost").getAsInt();
         final String selectionStrategy = object.get("selection-strategy").getAsString();
         final List<String> messages = JsonUtil.jsonArrayToStringList(object.get("zero-fails-messages").getAsJsonArray());
-        final UnitTokens easy = UnitTokens.fromJson(object.get("easy-tokens").getAsJsonObject());
+        final UnitTokens easy = UnitTokens.fromJson(object.get("easy").getAsJsonObject());
         final UnitTokens medium = UnitTokens.fromJson(object.get("medium-tokens").getAsJsonObject());
         final UnitTokens hard = UnitTokens.fromJson(object.get("hard-tokens").getAsJsonObject());
         final UnitTokens extreme = UnitTokens.fromJson(object.get("extreme-tokens").getAsJsonObject());

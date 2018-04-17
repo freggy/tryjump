@@ -71,6 +71,17 @@ public class TryJumpSession extends MinigameSession {
             Bukkit.getServer().shutdown();
         }
 
+        // ONLY FOR TEST PURPOSES [START]
+        try {
+            FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
+            Thread.sleep(2000);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        // ONLY FOR TEST PURPOSES [END]
+
+
         // Folder structure is:
         //  - /${datafolder}/units/${difficulty}/lite/
         //  - /${datafolder}/units/${difficulty}/default/

@@ -40,7 +40,7 @@ public class UpdatePlayerInfoTask extends TryJumpTask {
                                            .sorted(Comparator.comparingLong(Jumper::getJumpProgress))
                                            .collect(Collectors.toList());
 
-        jumpers.forEach(jumper ->  jumper.updateScoreboardProgress(sorted));
+        jumpers.forEach(jumper -> jumper.updateScoreboardProgress(sorted));
     }
 
     private void calculateProgress(Jumper jumper) {

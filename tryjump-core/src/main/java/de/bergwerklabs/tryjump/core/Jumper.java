@@ -38,7 +38,8 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     private int currentFails;
     private int totalFails;
     private int jumpProgress;
-    private long lastUse = System.currentTimeMillis();
+    private long lastUse;
+    private long lastRespawn;
 
     Jumper(Player player) {
         super(player.getUniqueId());
@@ -234,5 +235,13 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
     public void setLastUse(long lastUse) {
         this.lastUse = lastUse;
+    }
+
+    public long getLastRespawn() {
+        return lastRespawn;
+    }
+
+    public void setLastRespawn(long lastRespawn) {
+        this.lastRespawn = lastRespawn;
     }
 }
