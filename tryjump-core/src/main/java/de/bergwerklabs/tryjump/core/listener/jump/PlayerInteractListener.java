@@ -2,10 +2,12 @@ package de.bergwerklabs.tryjump.core.listener.jump;
 
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
+import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import de.bergwerklabs.tryjump.core.listener.deathmatch.DeathmachtListener;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -107,6 +109,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
             this.tryJump.getUpdatePlayerInfoTask().cancel();
             // TODO: tp players to deathmatch arena
             // TODO: register deathmatch listeners
+
             // ONLY FOR TEST PURPOSES [START]
             Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
             try {
@@ -121,6 +124,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
         });
 
         timer.start();
+        Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
     }
 
     private void handleNext(Jumper jumper, Location blockLoc, TryJumpUnit unit) {

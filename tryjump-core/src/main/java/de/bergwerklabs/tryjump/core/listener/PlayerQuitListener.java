@@ -12,26 +12,32 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Created by Yannic Rieger on 15.04.2018.
+ *
  * <p>
  *
  * @author Yannic Rieger
  */
 public class PlayerQuitListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    private void onPlayerQuit(PlayerQuitEvent event) {
-        final TryJumpSession session = TryJumpSession.getInstance();
-        final TryJump tryJump = (TryJump) session.getGame();
-        final Player player = event.getPlayer();
+  @EventHandler(priority = EventPriority.LOWEST)
+  private void onPlayerQuit(PlayerQuitEvent event) {
+    final TryJumpSession session = TryJumpSession.getInstance();
+    final TryJump tryJump = (TryJump) session.getGame();
+    final Player player = event.getPlayer();
 
-        if (tryJump != null) {
-            tryJump.getPlayerRegistry().getPlayerCollection().forEach(jumper -> {
+    if (tryJump != null) {
+      tryJump
+          .getPlayerRegistry()
+          .getPlayerCollection()
+          .forEach(
+              jumper -> {
                 final LabsScoreboard scoreboard = jumper.getScoreboard();
                 final Row row = scoreboard.getPlayerSpecificRows().get(player.getUniqueId());
                 scoreboard.removeRow(row);
-            });
-        }
-        // TODO: use rank color
-        event.setQuitMessage("§6>> §eTryJump §e❘ §a" + player.getDisplayName() + " §7hat das Spiel verlassen.");
+              });
     }
+    // TODO: use rank color
+    event.setQuitMessage(
+        "§6>> §eTryJump §e❘ §a" + player.getDisplayName() + " §7hat das Spiel verlassen.");
+  }
 }
