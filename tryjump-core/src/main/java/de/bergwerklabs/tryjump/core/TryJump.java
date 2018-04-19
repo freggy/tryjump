@@ -11,6 +11,7 @@ import de.bergwerklabs.tryjump.api.Unit;
 import de.bergwerklabs.tryjump.core.listener.deathmatch.DeathmachtListener;
 import de.bergwerklabs.tryjump.core.listener.jump.DropItemListener;
 import de.bergwerklabs.tryjump.core.listener.jump.FoodLevelChangeListener;
+import de.bergwerklabs.tryjump.core.listener.jump.JumpPhaseListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
 import de.bergwerklabs.tryjump.core.task.UpdatePlayerInfoTask;
@@ -58,13 +59,14 @@ public class TryJump extends LabsGame<Jumper> {
 
   @Override
   public void start(PlayerRegistry<Jumper> registry) {
-    this.registerListeners();
     this.playerRegistry = registry;
     this.players = registry.getPlayerCollection();
 
     final TryJumpSession session = TryJumpSession.getInstance();
     final Location spawn = new Location(Bukkit.getWorld("jump"), 0, 100, 0);
     final double[] count = {35};
+
+    JumpPhaseListener.registerListeners(session);
 
     this.players.forEach(
         jumper -> {
@@ -183,14 +185,6 @@ public class TryJump extends LabsGame<Jumper> {
   public void stop() {
     // TODO: save stats
     DeathmachtListener.unregisterListeners();
-  }
-
-  private void registerListeners() {
-    final Plugin plugin = TryJumpSession.getInstance();
-    final PluginManager manager = Bukkit.getPluginManager();
-    manager.registerEvents(new PlayerDamageListener(this), plugin);
-    manager.registerEvents(new FoodLevelChangeListener(this), plugin);
-    manager.registerEvents(new DropItemListener(this), plugin);
   }
 
   private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {

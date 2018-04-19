@@ -49,7 +49,8 @@ public class TryJumpSession extends MinigameSession {
   }
 
   private TryJump tryJump = new TryJump();
-  private final Logger LOGGER = Bukkit.getLogger();
+  private final Logger logger = Bukkit.getLogger();
+  private MapManager mapManager;
 
   @Override
   public void prepare() {
@@ -59,7 +60,7 @@ public class TryJumpSession extends MinigameSession {
     if (optional.isPresent()) {
       this.config = optional.get();
     } else {
-      LOGGER.warning("Error while reading config, aborting...");
+      logger.warning("Error while reading config, aborting...");
       GamestateManager.setGamestate(Gamestate.FAILED);
       Bukkit.getServer().shutdown();
     }
@@ -82,6 +83,9 @@ public class TryJumpSession extends MinigameSession {
     //  - /${datafolder}/units/hard/default/myUnit_hard.schematic
 
     final String basePath = this.getDataFolder().getAbsolutePath() + "/units/";
+
+
+    this.mapManager = new MapManager(new File(this.getDataFolder().getAbsolutePath() + "/arenas"));
 
     this.placer =
         new UnitPlacer(
