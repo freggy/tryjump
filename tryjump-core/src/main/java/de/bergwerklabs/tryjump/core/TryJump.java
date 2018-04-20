@@ -49,12 +49,21 @@ public class TryJump extends LabsGame<Jumper> {
     return updatePlayerInfoTask;
   }
 
+  public BukkitTask getShopDisplayTimeTask() {
+    return shopDisplayTimeTask;
+  }
+
   public DeathmatchArena getArena() {
     return arena;
   }
 
+  public void setArena(DeathmatchArena arena) {
+    this.arena = arena;
+  }
+
   private Collection<Jumper> players;
   private BukkitTask updatePlayerInfoTask;
+  private BukkitTask shopDisplayTimeTask;
   private DeathmatchArena arena;
 
   @Override

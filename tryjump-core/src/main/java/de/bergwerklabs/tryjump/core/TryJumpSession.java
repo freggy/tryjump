@@ -5,6 +5,7 @@ import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Ga
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.event.session.SessionDonePreparationEvent;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
+import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
 import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
@@ -96,14 +97,25 @@ public class TryJumpSession extends MinigameSession {
             new File(basePath + "start.schematic"),
             this.config.getSelectionStrategy());
 
-    this.createAndPrepareWorld();
+    this.createAndPrepareJumpWorld();
+
+    Optional<DeathmatchArena> arenaOptional = this.mapManager.chooseArenaRandomlyAndLoad();
+
+    if (arenaOptional.isPresent()) {
+      DeathmatchArena arena = arenaOptional.get();
+      this.tryJump.setArena(arena);
+    }
+    else {
+      this.logger.warning("No Arena could be found.");
+      this.getServer().shutdown();
+    }
 
     Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
     Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
     Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
   }
 
-  private void createAndPrepareWorld() {
+  private void createAndPrepareJumpWorld() {
     World world =
         new WorldCreator("jump")
             .type(WorldType.FLAT)
@@ -114,5 +126,6 @@ public class TryJumpSession extends MinigameSession {
     world.setGameRuleValue("keepInventory", "true");
     world.setGameRuleValue("doTileDrops", "false");
     world.setGameRuleValue("showDeathMessages", "false");
+    world.setGameRuleValue("doDaylightCycle", "false");
   }
 }

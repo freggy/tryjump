@@ -21,19 +21,19 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
   public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
     final JsonObject object = json.getAsJsonObject();
 
-    final int rankingPointsPerUnit = object.get("ranking-points-per-unit").getAsInt();
-    final int coinsPerUnit = object.get("coins-per-unit").getAsInt();
-    final int jumpPhaseDuration = object.get("jump-phase-duration").getAsInt();
-    final int deathmatchDuration = object.get("deathmach-duration").getAsInt();
-    final int zeroFailsTokenBoost = object.get("zero-fails-token-boost").getAsInt();
-    final String selectionStrategy = object.get("selection-strategy").getAsString();
+    final int rankingPointsPerUnit = object.get("rankingPointsPerUnit").getAsInt();
+    final int coinsPerUnit = object.get("coinsPerUnit").getAsInt();
+    final int jumpPhaseDuration = object.get("jumpPhaseDuration").getAsInt();
+    final int deathmatchDuration = object.get("deathmachDuration").getAsInt();
+    final int zeroFailsTokenBoost = object.get("zeroFailsTokenBoost").getAsInt();
+    final String selectionStrategy = object.get("selectionStrategy").getAsString();
     final List<String> messages =
-        JsonUtil.jsonArrayToStringList(object.get("zero-fails-messages").getAsJsonArray());
-    final UnitTokens easy = UnitTokens.fromJson(object.get("easy").getAsJsonObject());
-    final UnitTokens medium = UnitTokens.fromJson(object.get("medium-tokens").getAsJsonObject());
-    final UnitTokens hard = UnitTokens.fromJson(object.get("hard-tokens").getAsJsonObject());
-    final UnitTokens extreme = UnitTokens.fromJson(object.get("extreme-tokens").getAsJsonObject());
-    final boolean isTeamSession = object.get("team-session").getAsBoolean();
+        JsonUtil.jsonArrayToStringList(object.get("zeroFailsMessages").getAsJsonArray());
+    final UnitTokens easy = UnitTokens.fromJson(object.get("easyTokens").getAsJsonObject());
+    final UnitTokens medium = UnitTokens.fromJson(object.get("mediumTokens").getAsJsonObject());
+    final UnitTokens hard = UnitTokens.fromJson(object.get("hardTokens").getAsJsonObject());
+    final UnitTokens extreme = UnitTokens.fromJson(object.get("extremeTokens").getAsJsonObject());
+    final boolean isTeamSession = object.get("teamSession").getAsBoolean();
 
     return new Config(
         rankingPointsPerUnit,

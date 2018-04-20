@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.bergwerklabs.tryjump</groupId>
-    <artifactId>tryjump-parent</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>de.bergwerklabs.tryjump</groupId>
+  <artifactId>tryjump-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
 
-    <repositories>
-        <repository>
-            <id>labs_nexus_releases</id>
-            <url>http://devs.bergwerklabs.de:8081/repository/maven-releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-        </repository>
-        <repository>
-            <id>labs_nexus</id>
-            <url>http://devs.bergwerklabs.de:8081/repository/maven-snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>labs_nexus_releases</id>
+      <url>http://devs.bergwerklabs.de:8081/repository/maven-releases/</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+    </repository>
+    <repository>
+      <id>labs_nexus</id>
+      <url>http://devs.bergwerklabs.de:8081/repository/maven-snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
 
-    <modules>
-        <module>unit-creator</module>
-        <module>tryjump-core</module>
-        <module>tryjump-api</module>
-        <module>arena-creator</module>
-    </modules>
+  <modules>
+    <module>unit-creator</module>
+    <module>tryjump-core</module>
+    <module>tryjump-api</module>
+    <module>arena-creator</module>
+  </modules>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.8.8</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
+      <version>1.8.8</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
