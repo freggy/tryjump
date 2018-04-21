@@ -8,12 +8,10 @@ import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import de.bergwerklabs.tryjump.core.command.SkipCommand;
-import java.io.File;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -119,18 +117,18 @@ public class PlayerInteractListener extends JumpPhaseListener {
     timer.addStopListener(
         event -> {
           JumpPhaseListener.unregisterListeners();
-          this.tryJump.getUpdatePlayerInfoTask().cancel();
+          this.tryJump.getUpdatePlayerInfoTask().stop();
           // TODO: tp players to deathmatch arena
           // TODO: register deathmatch listeners
 
           // ONLY FOR TEST PURPOSES [START]
-          //Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
-          //try {
-           // FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
-            //Thread.sleep(2000);
-          //} catch (Exception e) {
-           // e.printStackTrace();
-          //}
+          // Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
+          // try {
+          // FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
+          // Thread.sleep(2000);
+          // } catch (Exception e) {
+          // e.printStackTrace();
+          // }
           // Bukkit.getServer().spigot().restart();
           // ONLY FOR TEST PURPOSES [END]
 
@@ -149,6 +147,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
           jumpers.forEach(
               player -> {
                 player.getPlayer().teleport(location);
+                player.getPlayer().setScoreboard(null);
               });
         });
 

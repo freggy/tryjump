@@ -14,6 +14,7 @@ import de.bergwerklabs.tryjump.core.listener.jump.FoodLevelChangeListener;
 import de.bergwerklabs.tryjump.core.listener.jump.JumpPhaseListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerDamageListener;
 import de.bergwerklabs.tryjump.core.listener.jump.PlayerInteractListener;
+import de.bergwerklabs.tryjump.core.task.TryJumpTask;
 import de.bergwerklabs.tryjump.core.task.UpdatePlayerInfoTask;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import java.util.Collection;
@@ -45,7 +46,7 @@ public class TryJump extends LabsGame<Jumper> {
     super("TryJump");
   }
 
-  public BukkitTask getUpdatePlayerInfoTask() {
+  public TryJumpTask getUpdatePlayerInfoTask() {
     return updatePlayerInfoTask;
   }
 
@@ -62,7 +63,7 @@ public class TryJump extends LabsGame<Jumper> {
   }
 
   private Collection<Jumper> players;
-  private BukkitTask updatePlayerInfoTask;
+  private TryJumpTask updatePlayerInfoTask;
   private BukkitTask shopDisplayTimeTask;
   private DeathmatchArena arena;
 
@@ -121,34 +122,11 @@ public class TryJump extends LabsGame<Jumper> {
                   });
             });
 
-    LabsTimer jumpTimer =
-        new LabsTimer(
-            60 * 10,
-            timeLeft -> {
-              this.players.forEach(
-                  player -> {
-                    final Player spigotPlayer = player.getPlayer();
-                    String timeString = String.format("§b%02d:%02d", timeLeft / 60, timeLeft % 60);
-                    player.getScoreboard().setTitle("§6>> §eTryJump §6❘ " + timeString);
-                    if (((float) timeLeft / 60F) % 10 == 0) {
-                      this.getMessenger()
-                          .message("Noch " + timeString + " §7Minuten.", spigotPlayer);
-                      spigotPlayer.playSound(
-                          spigotPlayer.getEyeLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
-                    } else if (timeLeft <= 5) {
-                      this.getMessenger().message("§b" + String.valueOf(timeLeft), spigotPlayer);
-                      spigotPlayer.playSound(
-                          spigotPlayer.getEyeLocation(), Sound.NOTE_BASS, 1.0F, 1.0F);
-                    }
-                  });
-            });
 
     countdown.addStopListener(
         event -> {
           this.messenger.messageAll("LOS!");
-          this.updatePlayerInfoTask =
-              Bukkit.getScheduler()
-                  .runTaskTimerAsynchronously(session, new UpdatePlayerInfoTask(session), 0, 10L);
+          this.updatePlayerInfoTask = new UpdatePlayerInfoTask(session);
           this.players.forEach(
               jumper -> {
                 final Player spigotPlayer = jumper.getPlayer();
@@ -172,19 +150,11 @@ public class TryJump extends LabsGame<Jumper> {
                 Location to = jumper.getStartSpawn().clone().subtract(end);
                 jumper.setCurrentUnit(unit);
                 placer.placeUnit(to, (TryJumpUnit) unit, false);
-                jumpTimer.start();
 
                 // Register at this point so players cannot use instant death.
                 Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(this), session);
               });
-        });
-
-    jumpTimer.addStopListener(
-        event -> {
-          // ONLY FOR TEST PURPOSES [START]
-          Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
-          Bukkit.getServer().spigot().restart();
-          // ONLY FOR TEST PURPOSES [END]
+          this.updatePlayerInfoTask.start(0, 10);
         });
 
     countdown.start();
