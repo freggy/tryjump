@@ -4,6 +4,8 @@ import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimerStopCause;
 import de.bergwerklabs.framework.commons.spigot.title.ActionbarTitle;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
+import de.bergwerklabs.tryjump.core.command.SkipCommand;
+import org.bukkit.Bukkit;
 
 /**
  * Created by Yannic Rieger on 20.04.2018.
@@ -46,6 +48,8 @@ public class SkipDisplayTask extends TryJumpTask {
         event -> {
           if (event.getCause() != LabsTimerStopCause.TIMES_UP) return;
           // TOOD: teleport to deathmatch arena.
+          SkipCommand.unregister();
+          Bukkit.broadcastMessage("VORBEI");
         });
   }
 }

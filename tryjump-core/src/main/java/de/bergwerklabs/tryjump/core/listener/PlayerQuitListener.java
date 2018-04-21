@@ -2,8 +2,10 @@ package de.bergwerklabs.tryjump.core.listener;
 
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
+import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
+import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,17 +26,17 @@ public class PlayerQuitListener implements Listener {
     final TryJumpSession session = TryJumpSession.getInstance();
     final TryJump tryJump = (TryJump) session.getGame();
     final Player player = event.getPlayer();
+    final Collection<Jumper> jumpers = tryJump.getPlayerRegistry().getPlayerCollection();
 
-    if (tryJump != null) {
-      tryJump
-          .getPlayerRegistry()
-          .getPlayerCollection()
-          .forEach(
-              jumper -> {
-                final LabsScoreboard scoreboard = jumper.getScoreboard();
-                final Row row = scoreboard.getPlayerSpecificRows().get(player.getUniqueId());
-                scoreboard.removeRow(row);
-              });
+    if (jumpers != null) {
+      jumpers.forEach(
+          jumper -> {
+            final LabsScoreboard scoreboard = jumper.getScoreboard();
+            final Row row = scoreboard.getPlayerSpecificRows().get(player.getUniqueId());
+            if (row != null) {
+              scoreboard.removeRow(row);
+            }
+          });
     }
     // TODO: use rank color
     event.setQuitMessage(

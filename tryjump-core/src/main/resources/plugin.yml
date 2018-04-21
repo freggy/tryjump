@@ -7,20 +7,8 @@ depend: [SpigotCommons, BedrockSessionService, SchematicService]
 
 commands:
      start:
-          description: Start
-          usage: /start
      stats:
-          description: Stats
-          usage: /stats
      skip:
-          description: Skip
-          usage: /skip
      fix:
-          description: Fix
-          usage: /fix
      log:
-          description: Log
-          usage: /log
      force:
-           description: Log
-           usage: /log

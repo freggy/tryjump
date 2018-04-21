@@ -7,12 +7,12 @@ import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
-import de.bergwerklabs.tryjump.core.listener.deathmatch.DeathmachtListener;
+import de.bergwerklabs.tryjump.core.command.SkipCommand;
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -87,6 +87,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
   private void handleLast(Jumper jumper) {
     final Player spigotPlayer = jumper.getPlayer();
     final Collection<Jumper> jumpers = this.tryJump.getPlayerRegistry().getPlayerCollection();
+    final TryJumpSession session = TryJumpSession.getInstance();
     // TODO: add tokens
     // TODO: display messages
     // TODO: start deathmatch
@@ -123,24 +124,32 @@ public class PlayerInteractListener extends JumpPhaseListener {
           // TODO: register deathmatch listeners
 
           // ONLY FOR TEST PURPOSES [START]
-          Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
-          try {
-            FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
-            Thread.sleep(2000);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
+          //Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
+          //try {
+           // FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
+            //Thread.sleep(2000);
+          //} catch (Exception e) {
+           // e.printStackTrace();
+          //}
           // Bukkit.getServer().spigot().restart();
           // ONLY FOR TEST PURPOSES [END]
 
+          session
+              .getCommand("skip")
+              .setExecutor(
+                  new SkipCommand(
+                      jumpers.size(),
+                      this.tryJump.getMessenger(),
+                      jumpers.stream().map(Jumper::getPlayer).collect(Collectors.toList())));
 
           final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
           location.setYaw(0);
           location.setYaw(-50);
 
-          this.tryJump.getPlayerRegistry().getPlayerCollection().forEach(player -> {
-            player.getPlayer().teleport(location);
-          });
+          jumpers.forEach(
+              player -> {
+                player.getPlayer().teleport(location);
+              });
         });
 
     timer.start();
