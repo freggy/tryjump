@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener.jump;
+package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
@@ -99,59 +99,8 @@ public class PlayerInteractListener extends JumpPhaseListener {
               .display(p);
         });
 
-    LabsTimer timer =
-        new LabsTimer(
-            5,
-            timeLeft -> {
-              // TODO: ausgabe
-              jumpers.forEach(
-                  player -> {
-                    this.tryJump
-                        .getMessenger()
-                        .message(
-                            "§7Server startet in §b" + timeLeft + " Sekunden §7neu.",
-                            player.getPlayer());
-                  });
-            });
+    // TODO: stop jump phase
 
-    timer.addStopListener(
-        event -> {
-          JumpPhaseListener.unregisterListeners();
-          this.tryJump.getUpdatePlayerInfoTask().stop();
-          // TODO: tp players to deathmatch arena
-          // TODO: register deathmatch listeners
-
-          // ONLY FOR TEST PURPOSES [START]
-          // Bukkit.getOnlinePlayers().forEach(p -> p.kickPlayer("Restart..."));
-          // try {
-          // FileUtils.deleteDirectory(new File("/development/gameserver/tryjump_rework/jump"));
-          // Thread.sleep(2000);
-          // } catch (Exception e) {
-          // e.printStackTrace();
-          // }
-          // Bukkit.getServer().spigot().restart();
-          // ONLY FOR TEST PURPOSES [END]
-
-          session
-              .getCommand("skip")
-              .setExecutor(
-                  new SkipCommand(
-                      jumpers.size(),
-                      this.tryJump.getMessenger(),
-                      jumpers.stream().map(Jumper::getPlayer).collect(Collectors.toList())));
-
-          final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
-          location.setYaw(0);
-          location.setYaw(-50);
-
-          jumpers.forEach(
-              player -> {
-                player.getPlayer().teleport(location);
-                player.getPlayer().setScoreboard(null);
-              });
-        });
-
-    timer.start();
     Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
   }
 

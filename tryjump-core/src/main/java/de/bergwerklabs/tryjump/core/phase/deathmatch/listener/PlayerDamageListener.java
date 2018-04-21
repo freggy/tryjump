@@ -1,20 +1,21 @@
-package de.bergwerklabs.tryjump.core.listener.jump;
+package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJump;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 /**
- * Created by Yannic Rieger on 14.04.2018.
+ * Created by Yannic Rieger on 17.04.2018.
  *
  * <p>
  *
  * @author Yannic Rieger
  */
-public class PlayerDamageListener extends JumpPhaseListener {
+public class PlayerDamageListener extends DeathmachtListener {
 
   public PlayerDamageListener(TryJump tryJump) {
     super(tryJump);
@@ -24,13 +25,13 @@ public class PlayerDamageListener extends JumpPhaseListener {
   private void onPlayerDamage(EntityDamageEvent event) {
     final Entity entity = event.getEntity();
     if (!(entity instanceof Player)) return;
-    final Player player = (Player) entity;
 
-    if (event.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-      final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
-      if (jumper == null) return;
-      jumper.resetToSpawn();
+    final Player player = (Player) entity;
+    final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
+
+    // TODO: make configurable
+    if (TimeUnit.MILLISECONDS.toSeconds(jumper.getLastRespawn()) <= 3) {
+      event.setCancelled(true);
     }
-    event.setCancelled(true);
   }
 }

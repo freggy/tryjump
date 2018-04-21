@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener.deathmatch;
+package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import com.google.common.collect.Iterators;
 import de.bergwerklabs.tryjump.core.Jumper;

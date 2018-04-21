@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener.jump;
+package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -16,27 +17,31 @@ import org.bukkit.plugin.PluginManager;
  *
  * @author Yannic Rieger
  */
-public abstract class JumpPhaseListener implements Listener {
+public class DeathmachtListener implements Listener {
 
   private static final Set<Listener> LISTENERS = new HashSet<>();
-
   protected TryJump tryJump;
 
-  JumpPhaseListener(TryJump tryJump) {
+  DeathmachtListener(TryJump tryJump) {
     LISTENERS.add(this);
     this.tryJump = tryJump;
   }
 
+  /** Unregister all deathmatch listeners. */
   public static void unregisterListeners() {
     LISTENERS.forEach(HandlerList::unregisterAll);
   }
 
+  /**
+   * Registers listeners needed for the deathmatch phase.
+   *
+   * @param session {@link Plugin} intance.
+   */
   public static void registerListeners(TryJumpSession session) {
     final PluginManager manager = Bukkit.getPluginManager();
     final TryJump tryJump = (TryJump) session.getGame();
-    manager.registerEvents(new FoodLevelChangeListener(tryJump), session);
-    manager.registerEvents(new DropItemListener(tryJump), session);
     manager.registerEvents(new PlayerDamageListener(tryJump), session);
-    manager.registerEvents(new PlayerInteractListener(tryJump), session);
+    manager.registerEvents(new PlayerRespawnListener(tryJump), session);
+    manager.registerEvents(new EntityDamageByEntityEventListener(tryJump), session);
   }
 }

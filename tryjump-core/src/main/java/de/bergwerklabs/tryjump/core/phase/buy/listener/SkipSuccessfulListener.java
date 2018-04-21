@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener;
+package de.bergwerklabs.tryjump.core.phase.buy.listener;
 
 import de.bergwerklabs.tryjump.api.event.skip.SkipSuccessfulEvent;
 import de.bergwerklabs.tryjump.core.TryJumpSession;

@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener.jump;
+package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
 import de.bergwerklabs.tryjump.core.TryJump;
 import org.bukkit.event.EventHandler;

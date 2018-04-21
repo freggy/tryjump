@@ -9,7 +9,7 @@ import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
 import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
-import de.bergwerklabs.tryjump.core.listener.SkipSuccessfulListener;
+import de.bergwerklabs.tryjump.core.phase.buy.listener.SkipSuccessfulListener;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import java.io.File;
 import java.util.Optional;

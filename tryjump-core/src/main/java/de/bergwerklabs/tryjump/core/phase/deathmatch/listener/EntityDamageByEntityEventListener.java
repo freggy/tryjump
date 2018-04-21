@@ -1,4 +1,4 @@
-package de.bergwerklabs.tryjump.core.listener.deathmatch;
+package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import de.bergwerklabs.tryjump.core.TryJump;
 import org.bukkit.entity.Entity;
