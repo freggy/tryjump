@@ -2,6 +2,7 @@ package de.bergwerklabs.tryjump.core.task;
 
 import de.bergwerklabs.framework.commons.spigot.chat.messenger.PluginMessenger;
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
+import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimerStopCause;
 import de.bergwerklabs.framework.commons.spigot.title.ActionbarTitle;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
@@ -51,6 +52,10 @@ public class UpdatePlayerInfoTask extends TryJumpTask {
                     }
                   });
             });
+    this.timer.addStopListener(event -> {
+      if (event.getCause() != LabsTimerStopCause.TIMES_UP) return;
+      // TODO: init buy phase
+    });
   }
 
   @Override
@@ -66,13 +71,13 @@ public class UpdatePlayerInfoTask extends TryJumpTask {
   }
 
   @Override
-  void stop() {
+  public void stop() {
     this.timer.stop();
     this.bukkitTask.cancel();
   }
 
   @Override
-  void start(long delay, long interval) {
+  public void start(long delay, long interval) {
     this.bukkitTask =
         Bukkit.getScheduler().runTaskTimerAsynchronously(this.session, this, delay, interval);
   }

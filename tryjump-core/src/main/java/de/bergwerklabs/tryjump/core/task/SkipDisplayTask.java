@@ -40,6 +40,16 @@ public class SkipDisplayTask extends TryJumpTask {
   }
 
   @Override
+  public void stop() {
+
+  }
+
+  @Override
+  public void start(long delay, long interval) {
+
+  }
+
+  @Override
   public void run() {
 
     if (!timer.isRunning()) timer.start();
