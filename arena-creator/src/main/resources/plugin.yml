@@ -1,0 +1,9 @@
+name: TryJumpArenaCreator
+author: freggy
+version: 1.0
+webiste: http://bergwerklabs.de
+main: de.bergwerklabs.tryjump.arenacreator.Main
+
+commands:
+    save:
+    cm:
