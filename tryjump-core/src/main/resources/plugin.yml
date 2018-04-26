@@ -1,0 +1,14 @@
+name: TryJumpCoreModule
+author: freggy
+version: 1.0
+main: de.bergwerklabs.tryjump.core.TryJumpSession
+
+depend: [SpigotCommons, BedrockSessionService, SchematicService]
+
+commands:
+     start:
+     stats:
+     skip:
+     fix:
+     log:
+     force:
