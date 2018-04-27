@@ -1,7 +1,14 @@
 bergwerkLABS - TryJump
 ============================
 
-This is the complete Rework of the famous minigame TryJump.
+This is the complete Rework of the famous minigame TryJump. 
+**NOTE**: This project is still a WIÜ
+
+Why is this Open Source?
+------------------------
+
+Since the server closed, I decided to open source my work for other people to see how things were done.
+Feel free to use this code for your own Minecraft network, if you have one. 
 
 Code Style and Conventions
 --------------------------
