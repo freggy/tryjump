@@ -88,7 +88,9 @@ public class JumpPhase extends Phase {
 
                 // Register at this point so players cannot use instant death.
                 Bukkit.getPluginManager()
-                    .registerEvents(new PlayerInteractListener(this.tryJump), session);
+                    .registerEvents(
+                        new PlayerInteractListener(this.session.getJumpPhase(), this.session),
+                        this.session);
               });
           this.updatePlayerInfoTask.start(0, 10);
         });
@@ -146,7 +148,7 @@ public class JumpPhase extends Phase {
                 player.getPlayer().setScoreboard(null);
               });
 
-          // TODO: start buy phase
+          this.session.getBuyPhase().start();
         });
 
     timer.start();

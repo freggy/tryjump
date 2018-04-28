@@ -142,9 +142,10 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
             if (spigotPlayer.getUniqueId().equals(this.getPlayer().getUniqueId())) {
               row.setText(
                   "§7§n" + spigotPlayer.getDisplayName() + "§r §b" + this.jumpProgress + "%");
-            } else
+            } else {
               row.setText(
                   "§7" + spigotPlayer.getDisplayName() + "§r §b" + jumper.getJumpProgress() + "%");
+            }
             row.setScore(min[0]++);
           }
         });

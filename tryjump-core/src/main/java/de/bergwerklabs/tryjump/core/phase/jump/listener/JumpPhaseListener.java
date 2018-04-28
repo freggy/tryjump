@@ -1,7 +1,8 @@
 package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
-import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
+import de.bergwerklabs.tryjump.core.phase.PhaseListener;
+import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import java.util.HashSet;
 import java.util.Set;
 import org.bukkit.Bukkit;
@@ -16,27 +17,24 @@ import org.bukkit.plugin.PluginManager;
  *
  * @author Yannic Rieger
  */
-public abstract class JumpPhaseListener implements Listener {
+public abstract class JumpPhaseListener extends PhaseListener<JumpPhase> {
 
   private static final Set<Listener> LISTENERS = new HashSet<>();
 
-  protected TryJump tryJump;
-
-  JumpPhaseListener(TryJump tryJump) {
+  public JumpPhaseListener(JumpPhase phase, TryJumpSession session) {
+    super(phase, session);
     LISTENERS.add(this);
-    this.tryJump = tryJump;
   }
 
   public static void unregisterListeners() {
     LISTENERS.forEach(HandlerList::unregisterAll);
   }
 
-  public static void registerListeners(TryJumpSession session) {
+  public static void registerListeners(TryJumpSession session, JumpPhase phase) {
     final PluginManager manager = Bukkit.getPluginManager();
-    final TryJump tryJump = (TryJump) session.getGame();
-    manager.registerEvents(new FoodLevelChangeListener(tryJump), session);
-    manager.registerEvents(new DropItemListener(tryJump), session);
-    manager.registerEvents(new PlayerDamageListener(tryJump), session);
-    manager.registerEvents(new PlayerInteractListener(tryJump), session);
+    manager.registerEvents(new FoodLevelChangeListener(phase, session), session);
+    manager.registerEvents(new DropItemListener(phase, session), session);
+    manager.registerEvents(new PlayerDamageListener(phase, session), session);
+    manager.registerEvents(new PlayerInteractListener(phase, session), session);
   }
 }

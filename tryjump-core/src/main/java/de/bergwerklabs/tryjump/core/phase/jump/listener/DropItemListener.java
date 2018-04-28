@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
-import de.bergwerklabs.tryjump.core.TryJump;
+import de.bergwerklabs.tryjump.core.TryJumpSession;
+import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
@@ -11,10 +12,10 @@ import org.bukkit.event.player.PlayerDropItemEvent;
  *
  * @author Yannic Rieger
  */
-public class DropItemListener extends JumpPhaseListener {
+class DropItemListener extends JumpPhaseListener {
 
-  public DropItemListener(TryJump tryJump) {
-    super(tryJump);
+  DropItemListener(JumpPhase phase, TryJumpSession session) {
+    super(phase, session);
   }
 
   @EventHandler

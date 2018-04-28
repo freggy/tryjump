@@ -9,7 +9,11 @@ import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
 import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
+import de.bergwerklabs.tryjump.core.phase.Phase;
+import de.bergwerklabs.tryjump.core.phase.buy.BuyPhase;
 import de.bergwerklabs.tryjump.core.phase.buy.listener.SkipSuccessfulListener;
+import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
+import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import java.io.File;
 import java.util.Optional;
@@ -41,9 +45,24 @@ public class TryJumpSession extends MinigameSession {
     return config;
   }
 
+  public JumpPhase getJumpPhase() {
+    return jumpPhase;
+  }
+
+  public BuyPhase getBuyPhase() {
+    return buyPhase;
+  }
+
+  public DeathmatchPhase getDeathmatchPhase() {
+    return deathmatchPhase;
+  }
+
   private static TryJumpSession instance;
   private UnitPlacer placer;
   private Config config;
+  private JumpPhase jumpPhase;
+  private DeathmatchPhase deathmatchPhase;
+  private BuyPhase buyPhase;
 
   @Override
   public LabsGame getGame() {
@@ -86,7 +105,6 @@ public class TryJumpSession extends MinigameSession {
 
     final String basePath = this.getDataFolder().getAbsolutePath() + "/units/";
 
-
     this.mapManager = new MapManager(new File(this.getDataFolder().getAbsolutePath() + "/arenas"));
 
     this.placer =
@@ -105,11 +123,14 @@ public class TryJumpSession extends MinigameSession {
     if (arenaOptional.isPresent()) {
       DeathmatchArena arena = arenaOptional.get();
       this.tryJump.setArena(arena);
-    }
-    else {
+    } else {
       this.logger.warning("No Arena could be found.");
       this.getServer().shutdown();
     }
+
+    this.jumpPhase = new JumpPhase(this);
+    this.buyPhase = new BuyPhase(this);
+    this.deathmatchPhase = new DeathmatchPhase(this);
 
     Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
     Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);

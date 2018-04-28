@@ -4,6 +4,7 @@ import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
 import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.listener.DeathmachtListener;
+import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import de.bergwerklabs.tryjump.core.phase.jump.listener.JumpPhaseListener;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -79,7 +80,7 @@ public class TryJump extends LabsGame<Jumper> {
           player.teleport(jumper.getUnitSpawn());
         });
 
-    // TODO: start jump phase
+    session.getJumpPhase().start();
   }
 
   @Override

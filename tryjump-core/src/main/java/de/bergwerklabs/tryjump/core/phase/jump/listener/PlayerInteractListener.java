@@ -1,17 +1,13 @@
 package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
-import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
-import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
-import de.bergwerklabs.tryjump.core.command.SkipCommand;
-import java.util.Collection;
+import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,8 +27,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class PlayerInteractListener extends JumpPhaseListener {
 
-  public PlayerInteractListener(TryJump tryJump) {
-    super(tryJump);
+  public PlayerInteractListener(JumpPhase phase, TryJumpSession session) {
+    super(phase, session);
   }
 
   @EventHandler
@@ -84,13 +80,12 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
   private void handleLast(Jumper jumper) {
     final Player spigotPlayer = jumper.getPlayer();
-    final Collection<Jumper> jumpers = this.tryJump.getPlayerRegistry().getPlayerCollection();
-    final TryJumpSession session = TryJumpSession.getInstance();
+
     // TODO: add tokens
     // TODO: display messages
     // TODO: start deathmatch
 
-    jumpers.forEach(
+    this.jumpers.forEach(
         player -> {
           final Player p = player.getPlayer();
           p.playSound(p.getEyeLocation(), Sound.WITHER_SPAWN, 10, 1);
@@ -99,8 +94,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
               .display(p);
         });
 
-    // TODO: stop jump phase
-
+    this.phase.stop();
     Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
   }
 

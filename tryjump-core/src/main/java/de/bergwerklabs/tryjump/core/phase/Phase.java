@@ -26,5 +26,4 @@ public abstract class Phase {
   public abstract void start();
 
   public abstract void stop();
-
 }
