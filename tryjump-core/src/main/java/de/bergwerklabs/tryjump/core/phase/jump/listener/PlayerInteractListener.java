@@ -2,9 +2,11 @@ package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
 import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
+import de.bergwerklabs.tryjump.api.event.TokensReceiveEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import de.bergwerklabs.tryjump.core.config.UnitTokens;
 import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -71,11 +73,19 @@ public class PlayerInteractListener extends JumpPhaseListener {
       jumper.setCurrentUnit(next);
       jumper.addCompletedUnit(current);
 
+      final UnitTokens tokens =
+          UnitTokens.fromDifficulty(current.getDifficulty(), session.getTryJumpConfig());
+      final int amount = jumper.isLite() ? tokens.getLite() : tokens.getNormal();
+      jumper.updateJumpPhaseTokenDisplay(amount);
+      Bukkit.getPluginManager().callEvent(new TokensReceiveEvent(jumper, amount));
+
       Location unitSpawn = clicked.getLocation().clone().add(0.5, 0, 0.5);
       unitSpawn.setYaw(0);
       unitSpawn.setYaw(0);
       jumper.setUnitSpawn(unitSpawn);
-    } else this.handleLast(jumper);
+    } else {
+      this.handleLast(jumper);
+    }
   }
 
   private void handleLast(Jumper jumper) {

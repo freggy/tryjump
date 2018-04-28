@@ -38,6 +38,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
   private int currentFails;
   private int totalFails;
   private int jumpProgress;
+  private int tokens;
   private long lastUse;
   private long lastRespawn;
 
@@ -191,6 +192,17 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     player.teleport(this.unitSpawn);
   }
 
+  /**
+   * Updates the Token display in the jump phase scoreboard.
+   *
+   * @param amount amount of tokens
+   */
+  public void updateJumpPhaseTokenDisplay(int amount) {
+    final Row row = this.scoreboard.getRowsByContent().get("§eTokens: §b" + this.tokens);
+    this.addTokens(amount);
+    row.setText("§eTokens: §b" + this.getTokens());
+  }
+
   @Override
   public int getTotalFails() {
     return totalFails;
@@ -226,6 +238,10 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
   public void setStartSpawn(Location startSpawn) {
     this.startSpawn = startSpawn;
     this.getPlayer().setBedSpawnLocation(startSpawn, true);
+  }
+
+  public void addTokens(int amount) {
+    this.tokens += amount;
   }
 
   public int getJumpProgress() {
