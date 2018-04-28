@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
  *
  * @author Yannic Rieger
  */
-public class PhaseListener<T extends Phase> implements Listener {
+public abstract class PhaseListener<T extends Phase> implements Listener {
 
   protected T phase;
   protected TryJumpSession session;

@@ -1,7 +1,8 @@
 package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import de.bergwerklabs.tryjump.core.Jumper;
-import de.bergwerklabs.tryjump.core.TryJump;
+import de.bergwerklabs.tryjump.core.TryJumpSession;
+import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,10 +16,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
  *
  * @author Yannic Rieger
  */
-public class PlayerDamageListener extends DeathmachtListener {
+class PlayerDamageListener extends DeathmachtListener {
 
-  public PlayerDamageListener(TryJump tryJump) {
-    super(tryJump);
+  PlayerDamageListener(DeathmatchPhase phase, TryJumpSession session) {
+    super(phase, session);
   }
 
   @EventHandler

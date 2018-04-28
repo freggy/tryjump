@@ -2,7 +2,8 @@ package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import com.google.common.collect.Iterators;
 import de.bergwerklabs.tryjump.core.Jumper;
-import de.bergwerklabs.tryjump.core.TryJump;
+import de.bergwerklabs.tryjump.core.TryJumpSession;
+import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
 import java.util.Iterator;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,12 +19,12 @@ import org.bukkit.potion.PotionEffectType;
  *
  * @author Yannic Rieger
  */
-public class PlayerRespawnListener extends DeathmachtListener {
+class PlayerRespawnListener extends DeathmachtListener {
 
   private Iterator<Location> spawns;
 
-  public PlayerRespawnListener(TryJump tryJump) {
-    super(tryJump);
+  PlayerRespawnListener(DeathmatchPhase phase, TryJumpSession session) {
+    super(phase, session);
     this.spawns = Iterators.cycle(this.tryJump.getArena().getSpawns());
   }
 
