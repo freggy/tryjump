@@ -3,6 +3,8 @@ package de.bergwerklabs.tryjump.core;
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
 import de.bergwerklabs.tryjump.api.DeathmatchArena;
+import de.bergwerklabs.tryjump.core.phase.buy.BuyPhase;
+import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.listener.DeathmachtListener;
 import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import de.bergwerklabs.tryjump.core.phase.jump.listener.JumpPhaseListener;
@@ -24,6 +26,11 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class TryJump extends LabsGame<Jumper> {
 
+  private DeathmatchArena arena;
+  private DeathmatchPhase deathmatchPhase;
+  private BuyPhase buyPhase;
+  private JumpPhase jumpPhase;
+
   public TryJump() {
     super("TryJump");
   }
@@ -36,7 +43,17 @@ public class TryJump extends LabsGame<Jumper> {
     this.arena = arena;
   }
 
-  private DeathmatchArena arena;
+  public JumpPhase getJumpPhase() {
+    return jumpPhase;
+  }
+
+  public BuyPhase getBuyPhase() {
+    return buyPhase;
+  }
+
+  public DeathmatchPhase getDeathmatchPhase() {
+    return deathmatchPhase;
+  }
 
   @Override
   public void start(PlayerRegistry<Jumper> registry) {
@@ -47,7 +64,11 @@ public class TryJump extends LabsGame<Jumper> {
     final Location spawn = new Location(Bukkit.getWorld("jump"), 0, 100, 0);
     final double[] count = {35};
 
-    JumpPhaseListener.registerListeners(session);
+    this.jumpPhase = new JumpPhase(session);
+    this.buyPhase = new BuyPhase(session);
+    this.deathmatchPhase = new DeathmatchPhase(session);
+
+    JumpPhaseListener.registerListeners(session, this.getJumpPhase());
 
     players.forEach(
         jumper -> {
@@ -80,7 +101,7 @@ public class TryJump extends LabsGame<Jumper> {
           player.teleport(jumper.getUnitSpawn());
         });
 
-    session.getJumpPhase().start();
+    this.getJumpPhase().start();
   }
 
   @Override

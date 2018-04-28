@@ -3,7 +3,6 @@ package de.bergwerklabs.tryjump.core.task;
 import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import org.bukkit.scheduler.BukkitTask;
-import sun.plugin2.main.server.Plugin;
 
 /**
  * Created by Yannic Rieger on 14.04.2018.

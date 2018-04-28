@@ -49,9 +49,11 @@ public class JumpPhase extends Phase {
         new LabsTimer(
             5,
             timeLeft -> {
+              System.out.println(jumpers.size());
               this.jumpers.forEach(
                   jumper -> {
                     final Player spigotPlayer = jumper.getPlayer();
+                    System.out.println(spigotPlayer.getName());
                     spigotPlayer.playSound(spigotPlayer.getEyeLocation(), Sound.CLICK, 100, 1);
                     messenger.message(
                         "Das Spiel startet in §b" + timeLeft + " Sekunden§7.", spigotPlayer);
@@ -60,8 +62,8 @@ public class JumpPhase extends Phase {
 
     countdown.addStopListener(
         event -> {
-          messenger.messageAll("LOS!");
           this.updatePlayerInfoTask = new UpdatePlayerInfoTask(session);
+          messenger.messageAll("LOS!");
           this.jumpers.forEach(
               jumper -> {
                 final Player spigotPlayer = jumper.getPlayer();
@@ -89,7 +91,7 @@ public class JumpPhase extends Phase {
                 // Register at this point so players cannot use instant death.
                 Bukkit.getPluginManager()
                     .registerEvents(
-                        new PlayerInteractListener(this.session.getJumpPhase(), this.session),
+                        new PlayerInteractListener(this.tryJump.getJumpPhase(), this.session),
                         this.session);
               });
           this.updatePlayerInfoTask.start(0, 10);
@@ -145,10 +147,10 @@ public class JumpPhase extends Phase {
           jumpers.forEach(
               player -> {
                 player.getPlayer().teleport(location);
-                player.getPlayer().setScoreboard(null);
+                player.setScoreboard(this.createTokenScoreboard(this.jumpers, 10));
               });
 
-          this.session.getBuyPhase().start();
+          this.tryJump.getBuyPhase().start();
         });
 
     timer.start();
@@ -181,6 +183,24 @@ public class JumpPhase extends Phase {
                 spigotPlayer,
                 new Row(scoreboard, "§7" + spigotPlayer.getDisplayName() + "§r" + " §b0%"));
           }
+        });
+    return scoreboard;
+  }
+
+  private LabsScoreboard createTokenScoreboard(Collection<Jumper> jumpers, int duration) {
+    String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
+    LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ " + timeString, "distance");
+    scoreboard.addRow(jumpers.size() + 1, new Row(scoreboard, "§a§a"));
+    scoreboard.addRow(1, new Row(scoreboard, "§6§m-------------"));
+    scoreboard.addRow(0, new Row(scoreboard, "§ebergwerkLABS.de"));
+    final int[] count = {2};
+    jumpers.forEach(
+        jumper -> {
+          final Player spigotPlayer = jumper.getPlayer();
+          scoreboard.addRow(
+              count[0]++,
+              new Row(
+                  scoreboard, "§7" + spigotPlayer.getDisplayName() + ": §b" + jumper.getTokens()));
         });
     return scoreboard;
   }
