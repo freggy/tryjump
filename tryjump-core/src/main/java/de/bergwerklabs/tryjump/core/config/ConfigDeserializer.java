@@ -25,6 +25,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
     final int coinsPerUnit = object.get("coinsPerUnit").getAsInt();
     final int jumpPhaseDuration = object.get("jumpPhaseDuration").getAsInt();
     final int deathmatchDuration = object.get("deathmachDuration").getAsInt();
+    final int buyPhaseDuration = object.get("buyPhaseDuration").getAsInt();
     final int zeroFailsTokenBoost = object.get("zeroFailsTokenBoost").getAsInt();
     final String selectionStrategy = object.get("selectionStrategy").getAsString();
     final List<String> messages =
@@ -40,6 +41,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
         coinsPerUnit,
         jumpPhaseDuration,
         deathmatchDuration,
+        buyPhaseDuration,
         zeroFailsTokenBoost,
         selectionStrategy,
         messages,

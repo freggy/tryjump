@@ -40,6 +40,11 @@ public class Config {
     return deathmatchDuration;
   }
 
+  /** The duration in seconds the buy phase will last. */
+  public int getBuyPhaseDuration() {
+    return buyPhaseDuration;
+  }
+
   /** The amount of tokens given to a player that finishes the jump phase with 0 fails. */
   public int getZeroFailsTokenBoost() {
     return zeroFailsTokenBoost;
@@ -90,6 +95,7 @@ public class Config {
   private int coinsPerUnit;
   private int jumpPhaseDuration;
   private int deathmatchDuration;
+  private int buyPhaseDuration;
   private int zeroFailsTokenBoost;
   private SelectionStrategy selectionStrategy;
   private List<String> zeroFailsMessages;
@@ -104,6 +110,7 @@ public class Config {
       int coinsPerUnit,
       int jumpPhaseDuration,
       int deathmatchDuration,
+      int buyPhaseDuration,
       int zeroFailsTokenBoost,
       @NotNull String selectionStrategy,
       @NotNull List<String> zeroFailsMessages,
@@ -116,6 +123,7 @@ public class Config {
     this.coinsPerUnit = coinsPerUnit;
     this.jumpPhaseDuration = jumpPhaseDuration;
     this.deathmatchDuration = deathmatchDuration;
+    this.buyPhaseDuration = buyPhaseDuration;
     this.zeroFailsTokenBoost = zeroFailsTokenBoost;
     this.selectionStrategy = SelectionStrategy.valueOf(selectionStrategy);
     this.zeroFailsMessages = zeroFailsMessages;

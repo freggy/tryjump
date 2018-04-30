@@ -30,6 +30,7 @@ public class BuyPhase extends Phase {
 
   @Override
   public void start() {
+    final int duration = this.session.getTryJumpConfig().getBuyPhaseDuration();
     final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
     location.setYaw(0);
     location.setYaw(-50);
@@ -38,12 +39,12 @@ public class BuyPhase extends Phase {
         player -> {
           player.getPlayer().teleport(location);
           // TODO: make configurable
-          player.setScoreboard(this.createTokenScoreboard(this.jumpers, 10));
+          player.setScoreboard(this.createTokenScoreboard(this.jumpers, duration));
         });
 
     this.timer =
         new LabsTimer(
-            10,
+            duration,
             timeLeft -> {
               String prefix = this.tryJump.getMessenger().getPrefix();
               String timeString =
