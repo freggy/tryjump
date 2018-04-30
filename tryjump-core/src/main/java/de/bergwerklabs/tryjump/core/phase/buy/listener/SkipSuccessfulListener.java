@@ -13,9 +13,9 @@ import org.bukkit.event.EventHandler;
  *
  * @author Yannic Rieger
  */
-public class SkipSuccessfulListener extends BuyListener {
+class SkipSuccessfulListener extends BuyListener {
 
-  public SkipSuccessfulListener(BuyPhase phase, TryJumpSession session) {
+  SkipSuccessfulListener(BuyPhase phase, TryJumpSession session) {
     super(phase, session);
   }
 

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Optional;
 import org.apache.commons.io.FileUtils;
@@ -21,7 +22,7 @@ import org.bukkit.WorldCreator;
  *
  * @author Yannic Rieger
  */
-public class MapManager {
+class MapManager {
 
   private File[] arenas;
   private File arenaDir;
@@ -31,7 +32,7 @@ public class MapManager {
           .create();
 
   /** @param arenaDir directory where the deathmatch arenas are located. */
-  public MapManager(File arenaDir) {
+  MapManager(File arenaDir) {
     this.arenaDir = arenaDir;
     this.arenas = arenaDir.listFiles(File::isDirectory);
   }
@@ -46,18 +47,10 @@ public class MapManager {
     final File arena = this.arenas[random.nextInt(this.arenas.length)];
 
     try {
-      final File destination = new File(arena.getName());
-      final Optional<DeathmatchArena> arenaOptional =
-          this.readMapConfig(new File(arena.getAbsolutePath() + "/config.json"));
-
-      if (!arenaOptional.isPresent()) return Optional.empty();
-
-      destination.mkdir();
+      final File destination = new File(Paths.get("").toAbsolutePath().toString());
       FileUtils.copyDirectory(this.arenaDir, destination);
-
-      this.prepareAndCreateArenaWorld(arenaOptional.get().getName());
-
-      return arenaOptional;
+      this.prepareAndCreateArenaWorld(arena.getName());
+      return this.readMapConfig(new File(arena.getAbsolutePath() + "/config.json"));
     } catch (Exception ex) {
       ex.printStackTrace();
       return Optional.empty();

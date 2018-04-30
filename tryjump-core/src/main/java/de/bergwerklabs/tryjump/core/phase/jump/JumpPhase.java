@@ -1,5 +1,6 @@
 package de.bergwerklabs.tryjump.core.phase.jump;
 
+import de.bergwerklabs.framework.commons.misc.Tuple;
 import de.bergwerklabs.framework.commons.spigot.chat.messenger.PluginMessenger;
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.item.ItemStackBuilder;
@@ -16,6 +17,7 @@ import de.bergwerklabs.tryjump.core.phase.jump.listener.PlayerInteractListener;
 import de.bergwerklabs.tryjump.core.task.TryJumpTask;
 import de.bergwerklabs.tryjump.core.task.UpdatePlayerInfoTask;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
+import de.bergwerklabs.tryjump.core.util.Scoreboards;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -148,15 +150,18 @@ public class JumpPhase extends Phase {
 
   private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {
     String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
-    LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ " + timeString, "distance");
-    scoreboard.addRow(players.size() + 5, new Row(scoreboard, "§a§a§a§a"));
-    scoreboard.addRow(players.size() + 4, new Row(scoreboard, "§eTokens: §b0"));
-    scoreboard.addRow(players.size() + 3, new Row(scoreboard, "§a§a§a"));
-    scoreboard.addRow(2, new Row(scoreboard, "§a§a"));
-    scoreboard.addRow(1, new Row(scoreboard, "§6§m-------------"));
-    scoreboard.addRow(0, new Row(scoreboard, "§ebergwerkLABS.de"));
 
-    final int[] count = {2};
+    Tuple<LabsScoreboard, Integer> result =
+        Scoreboards.withFooter(
+            "§6>> §eTryJump §6❘ " + timeString, "distance", players.size(), players.size() + 2);
+
+    LabsScoreboard scoreboard = result.getValue1();
+
+    scoreboard.addRow(
+        players.size() + result.getValue2() + 1, new Row(scoreboard, "§eTokens: §b0"));
+    scoreboard.addRow(players.size() + result.getValue2(), new Row(scoreboard, "§e§e§e"));
+
+    final int[] count = {result.getValue2()};
 
     players.forEach(
         jumper -> {
