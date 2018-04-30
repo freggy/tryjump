@@ -72,10 +72,10 @@ public class BuyPhase extends Phase {
   private LabsScoreboard createTokenScoreboard(Collection<Jumper> jumpers, int duration) {
     String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
     LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ " + timeString, "distance");
-    scoreboard.addRow(jumpers.size() + 2, new Row(scoreboard, "§a§a"));
+    scoreboard.addRow(jumpers.size() + 3, new Row(scoreboard, "§a§a"));
     scoreboard.addRow(1, new Row(scoreboard, "§6§m-------------"));
     scoreboard.addRow(0, new Row(scoreboard, "§ebergwerkLABS.de"));
-    final int[] count = {2};
+    final int[] count = {3};
     jumpers.forEach(
         jumper -> {
           final Player spigotPlayer = jumper.getPlayer();
