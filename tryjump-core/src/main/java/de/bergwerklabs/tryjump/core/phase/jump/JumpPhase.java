@@ -149,19 +149,19 @@ public class JumpPhase extends Phase {
   }
 
   private LabsScoreboard createScoreboard(Player self, Collection<Jumper> players, int duration) {
-    String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
+    final String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
+    final int size = players.size();
+    final String prefix = this.tryJump.getMessenger().getPrefix();
+    final Tuple<LabsScoreboard, Integer> result =
+        Scoreboards.withFooter(prefix + timeString, "distance", size, size + 2);
 
-    Tuple<LabsScoreboard, Integer> result =
-        Scoreboards.withFooter(
-            "§6>> §eTryJump §6❘ " + timeString, "distance", players.size(), players.size() + 2);
+    final int start = result.getValue2();
 
-    LabsScoreboard scoreboard = result.getValue1();
+    final LabsScoreboard scoreboard = result.getValue1();
+    scoreboard.addRow(size + start + 1, new Row(scoreboard, "§eTokens: §b0"));
+    scoreboard.addRow(size + start, new Row(scoreboard, "§e§e§e"));
 
-    scoreboard.addRow(
-        players.size() + result.getValue2() + 1, new Row(scoreboard, "§eTokens: §b0"));
-    scoreboard.addRow(players.size() + result.getValue2(), new Row(scoreboard, "§e§e§e"));
-
-    final int[] count = {result.getValue2()};
+    final int[] count = {start};
 
     players.forEach(
         jumper -> {
