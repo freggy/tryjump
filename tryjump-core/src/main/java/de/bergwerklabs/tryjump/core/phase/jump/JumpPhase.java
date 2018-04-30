@@ -140,16 +140,6 @@ public class JumpPhase extends Phase {
                       this.tryJump.getMessenger(),
                       jumpers.stream().map(Jumper::getPlayer).collect(Collectors.toList())));
 
-          final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
-          location.setYaw(0);
-          location.setYaw(-50);
-
-          jumpers.forEach(
-              player -> {
-                player.getPlayer().teleport(location);
-                player.setScoreboard(this.createTokenScoreboard(this.jumpers, 10));
-              });
-
           this.tryJump.getBuyPhase().start();
         });
 
@@ -183,24 +173,6 @@ public class JumpPhase extends Phase {
                 spigotPlayer,
                 new Row(scoreboard, "§7" + spigotPlayer.getDisplayName() + "§r" + " §b0%"));
           }
-        });
-    return scoreboard;
-  }
-
-  private LabsScoreboard createTokenScoreboard(Collection<Jumper> jumpers, int duration) {
-    String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
-    LabsScoreboard scoreboard = new LabsScoreboard("§6>> §eTryJump §6❘ " + timeString, "distance");
-    scoreboard.addRow(jumpers.size() + 1, new Row(scoreboard, "§a§a"));
-    scoreboard.addRow(1, new Row(scoreboard, "§6§m-------------"));
-    scoreboard.addRow(0, new Row(scoreboard, "§ebergwerkLABS.de"));
-    final int[] count = {2};
-    jumpers.forEach(
-        jumper -> {
-          final Player spigotPlayer = jumper.getPlayer();
-          scoreboard.addRow(
-              count[0]++,
-              new Row(
-                  scoreboard, "§7" + spigotPlayer.getDisplayName() + ": §b" + jumper.getTokens()));
         });
     return scoreboard;
   }

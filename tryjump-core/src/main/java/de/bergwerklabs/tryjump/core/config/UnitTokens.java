@@ -41,6 +41,7 @@ public class UnitTokens {
    * @return the {@link UnitTokens} instance based on the {@link Difficulty}.
    */
   public static UnitTokens fromDifficulty(Difficulty difficulty, Config config) {
+    System.out.println(difficulty);
     switch (difficulty) {
       case EASY:
         return config.getEasyTokens();

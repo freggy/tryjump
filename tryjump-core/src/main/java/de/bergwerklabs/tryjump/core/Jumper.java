@@ -53,7 +53,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
   @Override
   public int getTokens() {
-    return 0;
+    return this.tokens;
   }
 
   @Override
@@ -83,7 +83,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
   @Override
   public int getCurrentFails() {
-    return currentFails;
+    return this.currentFails;
   }
 
   /**
@@ -132,7 +132,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     this.completed.add(unit);
   }
 
-  public void updateScoreboardProgress(List<Jumper> sorted) {
+  public void updateScoreboardProgress(@NotNull List<Jumper> sorted) {
     final int[] min = {3};
 
     sorted.forEach(

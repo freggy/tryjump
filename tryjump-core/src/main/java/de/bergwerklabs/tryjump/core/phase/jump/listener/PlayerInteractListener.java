@@ -69,15 +69,16 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
     if (unitOptional.isPresent()) {
       TryJumpUnit next = unitOptional.get();
-      this.handleNext(jumper, clicked.getLocation(), next);
-      jumper.setCurrentUnit(next);
-      jumper.addCompletedUnit(current);
 
       final UnitTokens tokens =
           UnitTokens.fromDifficulty(current.getDifficulty(), session.getTryJumpConfig());
       final int amount = jumper.isLite() ? tokens.getLite() : tokens.getNormal();
       jumper.updateJumpPhaseTokenDisplay(amount);
       Bukkit.getPluginManager().callEvent(new TokensReceiveEvent(jumper, amount));
+
+      this.handleNext(jumper, clicked.getLocation(), next);
+      jumper.setCurrentUnit(next);
+      jumper.addCompletedUnit(current);
 
       Location unitSpawn = clicked.getLocation().clone().add(0.5, 0, 0.5);
       unitSpawn.setYaw(0);
@@ -115,6 +116,7 @@ public class PlayerInteractListener extends JumpPhaseListener {
         .getPlacer()
         .placeUnit(blockLoc.clone().subtract(0, 1, 0), unit, false);
     jumper.setCurrentFails(0);
+    // TODO: unit finished event
     // TODO: display messages
   }
 }
