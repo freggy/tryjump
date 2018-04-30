@@ -4,6 +4,7 @@ import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.phase.Phase;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 /**
@@ -22,7 +23,9 @@ public class DeathmatchPhase extends Phase {
   }
 
   @Override
-  public void start() {}
+  public void start() {
+    Bukkit.broadcastMessage("DEATHMATCH");
+  }
 
   @Override
   public void stop() {}

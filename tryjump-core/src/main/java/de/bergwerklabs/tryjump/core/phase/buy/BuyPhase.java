@@ -26,6 +26,8 @@ public class BuyPhase extends Phase {
     super(session);
   }
 
+  private LabsTimer timer;
+
   @Override
   public void start() {
     final Location location = new Location(Bukkit.getWorld("spawn"), -29.5, 108.5, -21.5);
@@ -35,14 +37,17 @@ public class BuyPhase extends Phase {
     jumpers.forEach(
         player -> {
           player.getPlayer().teleport(location);
+          // TODO: make configurable
           player.setScoreboard(this.createTokenScoreboard(this.jumpers, 10));
         });
 
-    LabsTimer timer =
+    this.timer =
         new LabsTimer(
             10,
             timeLeft -> {
-              String timeString = String.format("§b%02d:%02d", timeLeft / 60, timeLeft % 60);
+              String prefix = this.tryJump.getMessenger().getPrefix();
+              String timeString =
+                  prefix + String.format("§b%02d:%02d", timeLeft / 60, timeLeft % 60);
               this.jumpers.forEach(jumper -> jumper.getScoreboard().setTitle(timeString));
             });
 
@@ -53,11 +58,13 @@ public class BuyPhase extends Phase {
           this.stop();
         });
 
+    timer.start();
     BuyListener.registerListeners(session, this);
   }
 
   @Override
   public void stop() {
+    this.timer.stop();
     this.tryJump.getDeathmatchPhase().start();
   }
 

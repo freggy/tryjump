@@ -4,7 +4,6 @@ import de.bergwerklabs.tryjump.api.event.skip.SkipSuccessfulEvent;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.command.SkipCommand;
 import de.bergwerklabs.tryjump.core.phase.buy.BuyPhase;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 
 /**
@@ -22,9 +21,7 @@ public class SkipSuccessfulListener extends BuyListener {
 
   @EventHandler
   private void onSuccessfulSkip(SkipSuccessfulEvent event) {
-    // TODO: stop displayShopTimeTask
-    // TODO: teleport players to deathmatch arena
     SkipCommand.unregister();
-    Bukkit.broadcastMessage("VORBEI");
+    this.tryJump.getBuyPhase().stop();
   }
 }
