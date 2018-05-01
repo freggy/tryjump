@@ -1,6 +1,7 @@
 package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
 import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
+import de.bergwerklabs.framework.bedrock.api.event.game.SpectatorEvent;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.tryjump.core.Jumper;
@@ -37,10 +38,18 @@ class PlayerDeathListener extends DeathmachtListener {
     final int livesLeft = killedJumper.decrementLife();
 
     if (livesLeft <= 0) {
-      // TODO: set spectator since player has no lives left.
-      Bukkit.getServer().broadcastMessage("TOT");
+      registry.unregisterPlayer(killedJumper);
+      registry.registerSpectator(killedJumper);
+      Bukkit.getPluginManager().callEvent(new SpectatorEvent<>(this.tryJump, killedJumper));
+
+      // If this is false it indicates that only one player is alive so the killer has won the game.
+      if (!(registry.getPlayers().size() == 1)) return;
+
+      // TODO: announce winner
+      this.phase.stop();
     }
 
+    // TODO: make configurable
     new PotionEffect(PotionEffectType.REGENERATION, 20 * 3, 20, false, false).apply(killer);
 
     killingJumper.updateKills();

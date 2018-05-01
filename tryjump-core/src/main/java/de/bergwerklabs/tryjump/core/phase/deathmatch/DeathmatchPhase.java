@@ -44,6 +44,7 @@ public class DeathmatchPhase extends Phase {
   @Override
   public void stop() {
     DeathmachtListener.unregisterListeners();
+    // TODO: stop game after x seconds.
   }
 
   private LabsScoreboard createDeathmatchScoreboard(int duration) {
