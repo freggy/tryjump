@@ -112,12 +112,12 @@ public class JumpPhase extends Phase {
             timeLeft -> {
               // TODO: ausgabe
               jumpers.forEach(
-                  player -> {
+                  jumper -> {
+                    final Player player = jumper.getPlayer();
+                    player.getInventory().clear();
                     this.tryJump
                         .getMessenger()
-                        .message(
-                            "§7Server startet in §b" + timeLeft + " Sekunden §7neu.",
-                            player.getPlayer());
+                        .message("§7Server startet in §b" + timeLeft + " Sekunden §7neu.", player);
                   });
             });
 

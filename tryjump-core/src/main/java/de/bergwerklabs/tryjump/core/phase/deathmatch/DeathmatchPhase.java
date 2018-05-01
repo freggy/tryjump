@@ -31,7 +31,6 @@ public class DeathmatchPhase extends Phase {
     this.jumpers.forEach(
         jumper -> {
           final Player player = jumper.getPlayer();
-          player.getInventory().clear();
           if (iterator.hasNext()) {
             player.teleport(iterator.next());
           }

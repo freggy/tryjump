@@ -5,6 +5,7 @@ import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
 import java.util.Iterator;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,20 +34,27 @@ class PlayerRespawnListener extends DeathmachtListener {
     final Player player = event.getPlayer();
     final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
 
-    // TODO: make configurable
-    new PotionEffect(
-            PotionEffectType.INVISIBILITY,
-            20 * this.session.getTryJumpConfig().getInvulerableDuration(),
-            100,
-            false,
-            false)
-        .apply(player);
+    // We have to delay this by 10 ticks because otherwise the player would not be invisible.
+    // This is strange Mincraft behavior, which I can't change so keep it like that.
+    Bukkit.getScheduler()
+        .runTaskLater(
+            this.session,
+            () -> {
+              player.addPotionEffect(
+                  new PotionEffect(
+                      PotionEffectType.INVISIBILITY,
+                      20 * this.session.getTryJumpConfig().getInvulerableDuration(),
+                      100,
+                      false,
+                      false));
+            },
+            10);
 
     // By using a circular iterator players should not spawn in the same spot
     // the side effect is that, if one knows all the spawn points, he could predict the spawn of the
     // next player,
     // but that is highly unlikely and does not provide him with a big advantage in my opinion.
-    event.setRespawnLocation(this.spawns.next());
     jumper.setLastRespawn(System.currentTimeMillis());
+    event.setRespawnLocation(this.spawns.next());
   }
 }

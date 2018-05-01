@@ -49,7 +49,6 @@ class PlayerDeathListener extends DeathmachtListener {
       this.phase.stop();
     }
 
-    // TODO: make configurable
     new PotionEffect(
             PotionEffectType.REGENERATION,
             20 * this.session.getTryJumpConfig().getRegenerationDuration(),
