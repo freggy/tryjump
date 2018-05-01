@@ -4,6 +4,7 @@ import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
 import de.bergwerklabs.framework.bedrock.api.event.game.SpectatorEvent;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
+import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
@@ -45,7 +46,15 @@ class PlayerDeathListener extends DeathmachtListener {
       // If this is false it indicates that only one player is alive so the killer has won the game.
       if (!(registry.getPlayers().size() == 1)) return;
 
-      // TODO: announce winner
+      this.jumpers.forEach(
+          jumper -> {
+            new Title("§a" + killer.getDisplayName(), "§7hat das Spiel gewonnen", 20, 40, 20)
+                .display(jumper.getPlayer());
+          });
+
+      // TODO: give ranking points to winner
+      // TODO: give coins to winner
+
       this.phase.stop();
     }
 

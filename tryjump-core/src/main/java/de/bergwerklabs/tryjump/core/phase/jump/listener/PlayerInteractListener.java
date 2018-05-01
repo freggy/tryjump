@@ -1,11 +1,13 @@
 package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
 import de.bergwerklabs.framework.commons.spigot.title.Title;
+import de.bergwerklabs.tryjump.api.event.CoinsReceiveEvent;
 import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
 import de.bergwerklabs.tryjump.api.event.TokensReceiveEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.TryJumpUnit;
+import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.config.UnitTokens;
 import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -64,17 +67,21 @@ public class PlayerInteractListener extends JumpPhaseListener {
 
   private void handleUnitCompletion(Jumper jumper, Block clicked) {
     clicked.setType(Material.AIR);
-    Optional<TryJumpUnit> unitOptional = jumper.getNextUnit();
-    TryJumpUnit current = (TryJumpUnit) jumper.getCurrentUnit();
+    final Optional<TryJumpUnit> unitOptional = jumper.getNextUnit();
+    final TryJumpUnit current = (TryJumpUnit) jumper.getCurrentUnit();
+    final Config config = this.session.getTryJumpConfig();
 
     if (unitOptional.isPresent()) {
       TryJumpUnit next = unitOptional.get();
 
       final UnitTokens tokens =
-          UnitTokens.fromDifficulty(current.getDifficulty(), session.getTryJumpConfig());
+          UnitTokens.fromDifficulty(current.getDifficulty(), config);
       final int amount = jumper.isLite() ? tokens.getLite() : tokens.getNormal();
       jumper.updateJumpPhaseTokenDisplay(amount);
-      Bukkit.getPluginManager().callEvent(new TokensReceiveEvent(jumper, amount));
+
+      final PluginManager manager = Bukkit.getPluginManager();
+      manager.callEvent(new TokensReceiveEvent(jumper, amount));
+      manager.callEvent(new CoinsReceiveEvent(jumper, config.getCoinsPerUnit()));
 
       this.handleNext(jumper, clicked.getLocation(), next);
       jumper.setCurrentUnit(next);
