@@ -32,7 +32,7 @@ class PlayerRespawnListener extends DeathmachtListener {
   private void onPlayerRespawn(PlayerRespawnEvent event) {
     final Player player = event.getPlayer();
     final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
-    new PotionEffect(PotionEffectType.INVISIBILITY, 20, 20, false, false).apply(player);
+    new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 3, 20, false, false).apply(player);
 
     // By using a circular iterator players should not spawn in the same spot
     // the side effect is that, if one knows all the spawn points, he could predict the spawn of the
