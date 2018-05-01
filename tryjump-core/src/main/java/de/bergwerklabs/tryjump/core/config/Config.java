@@ -45,6 +45,16 @@ public class Config {
     return buyPhaseDuration;
   }
 
+  /** Gets the duration in seconds the regeneration effect will last. */
+  public int getRegenerationDuration() {
+    return regenerationDuration;
+  }
+
+  /** Gets the duration in seconds of the invulnerability effect. */
+  public int getInvulerableDuration() {
+    return invulerableDuration;
+  }
+
   /** The amount of tokens given to a player that finishes the jump phase with 0 fails. */
   public int getZeroFailsTokenBoost() {
     return zeroFailsTokenBoost;
@@ -97,6 +107,8 @@ public class Config {
   private int deathmatchDuration;
   private int buyPhaseDuration;
   private int zeroFailsTokenBoost;
+  private int regenerationDuration; // TODO: document
+  private int invulerableDuration; // TODO: document
   private SelectionStrategy selectionStrategy;
   private List<String> zeroFailsMessages;
   private UnitTokens easy;
@@ -112,6 +124,8 @@ public class Config {
       int deathmatchDuration,
       int buyPhaseDuration,
       int zeroFailsTokenBoost,
+      int regenerationDuration,
+      int invulerableDuration,
       @NotNull String selectionStrategy,
       @NotNull List<String> zeroFailsMessages,
       @NotNull UnitTokens easy,
@@ -125,6 +139,8 @@ public class Config {
     this.deathmatchDuration = deathmatchDuration;
     this.buyPhaseDuration = buyPhaseDuration;
     this.zeroFailsTokenBoost = zeroFailsTokenBoost;
+    this.invulerableDuration = invulerableDuration;
+    this.regenerationDuration = regenerationDuration;
     this.selectionStrategy = SelectionStrategy.valueOf(selectionStrategy);
     this.zeroFailsMessages = zeroFailsMessages;
     this.easy = easy;

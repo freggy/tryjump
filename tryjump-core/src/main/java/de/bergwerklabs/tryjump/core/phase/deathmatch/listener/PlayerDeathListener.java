@@ -50,7 +50,13 @@ class PlayerDeathListener extends DeathmachtListener {
     }
 
     // TODO: make configurable
-    new PotionEffect(PotionEffectType.REGENERATION, 20 * 3, 20, false, false).apply(killer);
+    new PotionEffect(
+            PotionEffectType.REGENERATION,
+            20 * this.session.getTryJumpConfig().getRegenerationDuration(),
+            20,
+            false,
+            false)
+        .apply(killer);
 
     killingJumper.updateKills();
 

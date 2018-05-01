@@ -27,13 +27,13 @@ public class DeathmatchPhase extends Phase {
   @Override
   public void start() {
     final Iterator<Location> iterator = this.tryJump.getArena().getSpawns().iterator();
-    System.out.println(this.tryJump.getArena());
-    System.out.println(this.tryJump.getArena().getSpawns());
     DeathmachtListener.registerListeners(this.session, this);
     this.jumpers.forEach(
         jumper -> {
+          final Player player = jumper.getPlayer();
+          player.getInventory().clear();
           if (iterator.hasNext()) {
-            jumper.getPlayer().teleport(iterator.next());
+            player.teleport(iterator.next());
           }
           jumper.setScoreboard(
               this.createDeathmatchScoreboard(

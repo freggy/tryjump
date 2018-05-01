@@ -60,7 +60,7 @@ class MapManager {
   private void prepareAndCreateArenaWorld(String mapName) {
     World world = new WorldCreator(mapName).createWorld();
     world.setAutoSave(false);
-    world.setDifficulty(Difficulty.PEACEFUL);
+    world.setDifficulty(Difficulty.NORMAL);
     world.setGameRuleValue("doDaylightCycle", "false");
     world.setGameRuleValue("mobGriefing", "false");
     world.setGameRuleValue("doMobSpawning", "false");
