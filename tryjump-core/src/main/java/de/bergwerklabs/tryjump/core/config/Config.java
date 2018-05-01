@@ -55,6 +55,16 @@ public class Config {
     return invulerableDuration;
   }
 
+  /** Gets the ranking points a player will receive when winning the game. */
+  public int getRankingPointsForWinning() {
+    return rankingPointsForWinning;
+  }
+
+  /** Gets the coins a player will receive when winning the game. */
+  public int getCoinsForWinning() {
+    return coinsForWinning;
+  }
+
   /** The amount of tokens given to a player that finishes the jump phase with 0 fails. */
   public int getZeroFailsTokenBoost() {
     return zeroFailsTokenBoost;
@@ -107,8 +117,10 @@ public class Config {
   private int deathmatchDuration;
   private int buyPhaseDuration;
   private int zeroFailsTokenBoost;
-  private int regenerationDuration; // TODO: document
-  private int invulerableDuration; // TODO: document
+  private int regenerationDuration;
+  private int invulerableDuration;
+  private int coinsForWinning;
+  private int rankingPointsForWinning;
   private SelectionStrategy selectionStrategy;
   private List<String> zeroFailsMessages;
   private UnitTokens easy;
@@ -126,6 +138,8 @@ public class Config {
       int zeroFailsTokenBoost,
       int regenerationDuration,
       int invulerableDuration,
+      int coinsForWinning,
+      int rankingPointsForWinning,
       @NotNull String selectionStrategy,
       @NotNull List<String> zeroFailsMessages,
       @NotNull UnitTokens easy,
@@ -139,6 +153,8 @@ public class Config {
     this.deathmatchDuration = deathmatchDuration;
     this.buyPhaseDuration = buyPhaseDuration;
     this.zeroFailsTokenBoost = zeroFailsTokenBoost;
+    this.coinsForWinning = coinsForWinning;
+    this.rankingPointsForWinning = rankingPointsForWinning;
     this.invulerableDuration = invulerableDuration;
     this.regenerationDuration = regenerationDuration;
     this.selectionStrategy = SelectionStrategy.valueOf(selectionStrategy);

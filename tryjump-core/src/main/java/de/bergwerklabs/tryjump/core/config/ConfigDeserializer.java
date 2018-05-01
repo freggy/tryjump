@@ -23,19 +23,26 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
 
     final int rankingPointsPerUnit = object.get("rankingPointsPerUnit").getAsInt();
     final int coinsPerUnit = object.get("coinsPerUnit").getAsInt();
+    final int coinsForWinning = object.get("coinsForWinning").getAsInt();
+    final int rankingPointsForWinning = object.get("rankingPointsForWinning").getAsInt();
+    final int zeroFailsTokenBoost = object.get("zeroFailsTokenBoost").getAsInt();
+
     final int jumpPhaseDuration = object.get("jumpPhaseDuration").getAsInt();
     final int deathmatchDuration = object.get("deathmachDuration").getAsInt();
     final int buyPhaseDuration = object.get("buyPhaseDuration").getAsInt();
     final int regenerationDuration = object.get("regenerationDuration").getAsInt();
     final int invulnerableDuration = object.get("invulnerableDuration").getAsInt();
-    final int zeroFailsTokenBoost = object.get("zeroFailsTokenBoost").getAsInt();
+
     final String selectionStrategy = object.get("selectionStrategy").getAsString();
+
     final List<String> messages =
         JsonUtil.jsonArrayToStringList(object.get("zeroFailsMessages").getAsJsonArray());
+
     final UnitTokens easy = UnitTokens.fromJson(object.get("easyTokens").getAsJsonObject());
     final UnitTokens medium = UnitTokens.fromJson(object.get("mediumTokens").getAsJsonObject());
     final UnitTokens hard = UnitTokens.fromJson(object.get("hardTokens").getAsJsonObject());
     final UnitTokens extreme = UnitTokens.fromJson(object.get("extremeTokens").getAsJsonObject());
+
     final boolean isTeamSession = object.get("teamSession").getAsBoolean();
 
     return new Config(
@@ -47,6 +54,8 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
         zeroFailsTokenBoost,
         regenerationDuration,
         invulnerableDuration,
+        coinsForWinning,
+        rankingPointsForWinning,
         selectionStrategy,
         messages,
         easy,
