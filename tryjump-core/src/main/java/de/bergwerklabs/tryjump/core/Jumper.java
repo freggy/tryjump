@@ -38,6 +38,9 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
   private int currentFails;
   private int totalFails;
   private int jumpProgress;
+  private int totalKills;
+  private int currentKills;
+  private int livesLeft = 3;
   private int tokens;
   private long lastUse;
   private long lastRespawn;
@@ -57,13 +60,23 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
   }
 
   @Override
-  public int getKills() {
-    return 0;
+  public int getTotalKills() {
+    return this.totalKills;
+  }
+
+  @Override
+  public int getCurrentKills() {
+    return this.currentKills;
   }
 
   @Override
   public int getLosses() {
     return 0;
+  }
+
+  @Override
+  public int getLivesLeft() {
+    return this.livesLeft;
   }
 
   @Override
@@ -201,6 +214,17 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     final Row row = this.scoreboard.getRowsByContent().get("§eTokens: §b" + this.tokens);
     this.addTokens(amount);
     row.setText("§eTokens: §b" + this.getTokens());
+  }
+
+  public void updateKills() {
+    final Row row = this.scoreboard.getRowsByContent().get("§eKills: §b" + this.currentKills);
+    this.currentKills++;
+    this.totalKills++;
+    row.setText("§eKills: §b" + this.currentKills);
+  }
+
+  public int decrementLife() {
+    return --this.livesLeft;
   }
 
   @Override

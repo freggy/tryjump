@@ -27,7 +27,9 @@ public class DeathmatchPhase extends Phase {
   @Override
   public void start() {
     final Iterator<Location> iterator = this.tryJump.getArena().getSpawns().iterator();
-
+    System.out.println(this.tryJump.getArena());
+    System.out.println(this.tryJump.getArena().getSpawns());
+    DeathmachtListener.registerListeners(this.session, this);
     this.jumpers.forEach(
         jumper -> {
           if (iterator.hasNext()) {
@@ -63,7 +65,11 @@ public class DeathmatchPhase extends Phase {
         jumper -> {
           final Player spigotPlayer = jumper.getPlayer();
           scoreboard.addPlayerSpecificRow(
-              count[0]++, spigotPlayer, new Row(scoreboard, "§7" + spigotPlayer.getDisplayName()));
+              count[0]++,
+              spigotPlayer,
+              new Row(
+                  scoreboard,
+                  "§7" + spigotPlayer.getDisplayName() + ": §b" + jumper.getLivesLeft()));
         });
 
     return scoreboard;

@@ -1,6 +1,5 @@
 package de.bergwerklabs.tryjump.core.phase.deathmatch.listener;
 
-import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.phase.PhaseListener;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
@@ -22,7 +21,6 @@ import org.bukkit.plugin.PluginManager;
 public class DeathmachtListener extends PhaseListener<DeathmatchPhase> {
 
   private static final Set<Listener> LISTENERS = new HashSet<>();
-  protected TryJump tryJump;
 
   DeathmachtListener(DeathmatchPhase phase, TryJumpSession session) {
     super(phase, session);
@@ -43,6 +41,6 @@ public class DeathmachtListener extends PhaseListener<DeathmatchPhase> {
     final PluginManager manager = Bukkit.getPluginManager();
     manager.registerEvents(new PlayerDamageListener(phase, session), session);
     manager.registerEvents(new PlayerRespawnListener(phase, session), session);
-    manager.registerEvents(new EntityDamageByEntityEventListener(phase, session), session);
+    manager.registerEvents(new PlayerDeathListener(phase, session), session);
   }
 }

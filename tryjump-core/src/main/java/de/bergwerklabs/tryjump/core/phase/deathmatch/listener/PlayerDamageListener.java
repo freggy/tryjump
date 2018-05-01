@@ -29,9 +29,10 @@ class PlayerDamageListener extends DeathmachtListener {
 
     final Player player = (Player) entity;
     final Jumper jumper = this.tryJump.getPlayerRegistry().getPlayer(player.getUniqueId());
+    final long timeSinceRespawn = System.currentTimeMillis() - jumper.getLastRespawn();
 
     // TODO: make configurable
-    if (TimeUnit.MILLISECONDS.toSeconds(jumper.getLastRespawn()) <= 3) {
+    if (TimeUnit.MILLISECONDS.toSeconds(timeSinceRespawn) <= 3) {
       event.setCancelled(true);
     }
   }

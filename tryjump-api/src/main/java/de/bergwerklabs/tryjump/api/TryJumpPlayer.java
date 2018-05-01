@@ -20,10 +20,16 @@ public interface TryJumpPlayer {
   int getTokens();
 
   /** Gets the total amount of kills of this player. */
-  int getKills();
+  int getTotalKills();
+
+  /** Gets the current amount of kills. */
+  int getCurrentKills();
 
   /** Gets the total amount of losses of this player. */
   int getLosses();
+
+  /** Gets the amount of lives left. */
+  int getLivesLeft();
 
   /**
    * Gets the current fails for the {@link Unit} the player is at. To know which unit is the current
