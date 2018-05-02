@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -66,17 +67,16 @@ public class PlayerInteractListener extends JumpPhaseListener {
     }
   }
 
-  private void handleUnitCompletion(Jumper jumper, Block clicked) {
+  private void handleUnitCompletion(@NotNull Jumper jumper, @NotNull Block clicked) {
     clicked.setType(Material.AIR);
     final Optional<TryJumpUnit> unitOptional = jumper.getNextUnit();
     final TryJumpUnit current = (TryJumpUnit) jumper.getCurrentUnit();
     final Config config = this.session.getTryJumpConfig();
 
     if (unitOptional.isPresent()) {
-      TryJumpUnit next = unitOptional.get();
+      final TryJumpUnit next = unitOptional.get();
 
-      final UnitTokens tokens = UnitTokens.fromDifficulty(current.getDifficulty(), config);
-      final int amount = jumper.isLite() ? tokens.getLite() : tokens.getNormal();
+      final int amount = UnitTokens.getTokens(current.getDifficulty(), config, jumper.isLite());
       jumper.updateJumpPhaseTokenDisplay(amount);
 
       final PluginManager manager = Bukkit.getPluginManager();
@@ -93,16 +93,23 @@ public class PlayerInteractListener extends JumpPhaseListener {
       unitSpawn.setYaw(0);
       jumper.setUnitSpawn(unitSpawn);
     } else {
-      this.handleLast(jumper);
+      this.handleLast(jumper, config);
     }
   }
 
-  private void handleLast(Jumper jumper) {
+  private void handleLast(Jumper jumper, Config config) {
     final Player spigotPlayer = jumper.getPlayer();
+    final int amount =
+        UnitTokens.getTokens(jumper.getCurrentUnit().getDifficulty(), config, jumper.isLite());
 
-    // TODO: add tokens
-    // TODO: display messages
-    // TODO: start deathmatch
+    jumper.updateJumpPhaseTokenDisplay(amount);
+
+    if (jumper.getFailsInSession() == 0) {
+      // TODO: token boost message
+      jumper.updateJumpPhaseTokenDisplay(this.session.getTryJumpConfig().getZeroFailsTokenBoost());
+    }
+
+    Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
 
     this.jumpers.forEach(
         player -> {
@@ -114,7 +121,6 @@ public class PlayerInteractListener extends JumpPhaseListener {
         });
 
     this.phase.stop();
-    Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
   }
 
   private void handleNext(Jumper jumper, Location blockLoc, TryJumpUnit unit) {
@@ -124,7 +130,5 @@ public class PlayerInteractListener extends JumpPhaseListener {
         .getPlacer()
         .placeUnit(blockLoc.clone().subtract(0, 1, 0), unit, false);
     jumper.setCurrentFails(0);
-    // TODO: unit finished event
-    // TODO: display messages
   }
 }

@@ -40,6 +40,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
   private int jumpProgress;
   private int totalKills;
   private int currentKills;
+  private int failsInSession;
   private int livesLeft = 3;
   private int tokens;
   private long lastUse;
@@ -187,6 +188,7 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
     final Player player = this.getPlayer();
     this.currentFails++;
     this.totalFails++;
+    this.failsInSession++;
 
     if (this.currentFails <= 3) {
       String red = StringUtils.repeat("§c✖", this.currentFails);
@@ -290,5 +292,9 @@ public class Jumper extends LabsPlayer implements TryJumpPlayer {
 
   public void setLastRespawn(long lastRespawn) {
     this.lastRespawn = lastRespawn;
+  }
+
+  public int getFailsInSession() {
+    return failsInSession;
   }
 }

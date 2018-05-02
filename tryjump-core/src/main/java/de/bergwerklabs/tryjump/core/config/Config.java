@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,52 +23,57 @@ public class Config {
 
   /** Gets the amount of ranking points given to a player per unit. */
   public int getRankingPointsPerUnit() {
-    return rankingPointsPerUnit;
+    return this.rankingPointsPerUnit;
   }
 
   /** Gets the amount of coins given to a player per unit. */
   public int getCoinsPerUnit() {
-    return coinsPerUnit;
+    return this.coinsPerUnit;
   }
 
   /** The duration in seconds the jump phase will last. */
   public int getJumpPhaseDuration() {
-    return jumpPhaseDuration;
+    return this.jumpPhaseDuration;
   }
 
   /** The duration in seconds the deathmatch will last. */
   public int getDeathmatchDuration() {
-    return deathmatchDuration;
+    return this.deathmatchDuration;
   }
 
   /** The duration in seconds the buy phase will last. */
   public int getBuyPhaseDuration() {
-    return buyPhaseDuration;
+    return this.buyPhaseDuration;
   }
 
   /** Gets the duration in seconds the regeneration effect will last. */
   public int getRegenerationDuration() {
-    return regenerationDuration;
+    return this.regenerationDuration;
   }
 
   /** Gets the duration in seconds of the invulnerability effect. */
   public int getInvulerableDuration() {
-    return invulerableDuration;
+    return this.invulerableDuration;
   }
 
   /** Gets the ranking points a player will receive when winning the game. */
   public int getRankingPointsForWinning() {
-    return rankingPointsForWinning;
+    return this.rankingPointsForWinning;
   }
 
   /** Gets the coins a player will receive when winning the game. */
   public int getCoinsForWinning() {
-    return coinsForWinning;
+    return this.coinsForWinning;
   }
 
   /** The amount of tokens given to a player that finishes the jump phase with 0 fails. */
   public int getZeroFailsTokenBoost() {
-    return zeroFailsTokenBoost;
+    return this.zeroFailsTokenBoost;
+  }
+
+  /** Gets the time in seconds when {@link Server#shutdown()} will be invoked. */
+  public int getStopAfter() {
+    return this.stopAfter;
   }
 
   /**
@@ -75,7 +81,7 @@ public class Config {
    * phase.
    */
   public SelectionStrategy getSelectionStrategy() {
-    return selectionStrategy;
+    return this.selectionStrategy;
   }
 
   /**
@@ -83,32 +89,32 @@ public class Config {
    * fails.
    */
   public List<String> getZeroFailsMessages() {
-    return zeroFailsMessages;
+    return this.zeroFailsMessages;
   }
 
   /** Gets the tokens that will be given to player when he finishes a unit of type EASY. */
   public UnitTokens getEasyTokens() {
-    return easy;
+    return this.easy;
   }
 
   /** Gets the tokens that will be given to player when he finishes a unit of type MEDIUM. */
   public UnitTokens getMediumTokens() {
-    return medium;
+    return this.medium;
   }
 
   /** Gets the tokens that will be given to player when he finishes a unit of type HARD. */
   public UnitTokens getHardTokens() {
-    return hard;
+    return this.hard;
   }
 
   /** Gets the tokens that will be given to player when he finishes a unit of type EXTREME. */
   public UnitTokens getExtremeTokens() {
-    return extreme;
+    return this.extreme;
   }
 
   /** Whether the running game is a session where teams are allowed. */
   public boolean isTeamSession() {
-    return isTeamSession;
+    return this.isTeamSession;
   }
 
   private int rankingPointsPerUnit;
@@ -121,6 +127,7 @@ public class Config {
   private int invulerableDuration;
   private int coinsForWinning;
   private int rankingPointsForWinning;
+  private int stopAfter;
   private SelectionStrategy selectionStrategy;
   private List<String> zeroFailsMessages;
   private UnitTokens easy;
@@ -137,9 +144,10 @@ public class Config {
       int buyPhaseDuration,
       int zeroFailsTokenBoost,
       int regenerationDuration,
-      int invulerableDuration,
+      int invulerableDuration, // TODO fix typo
       int coinsForWinning,
       int rankingPointsForWinning,
+      int stopAfter,
       @NotNull String selectionStrategy,
       @NotNull List<String> zeroFailsMessages,
       @NotNull UnitTokens easy,
@@ -155,6 +163,7 @@ public class Config {
     this.zeroFailsTokenBoost = zeroFailsTokenBoost;
     this.coinsForWinning = coinsForWinning;
     this.rankingPointsForWinning = rankingPointsForWinning;
+    this.stopAfter = stopAfter;
     this.invulerableDuration = invulerableDuration;
     this.regenerationDuration = regenerationDuration;
     this.selectionStrategy = SelectionStrategy.valueOf(selectionStrategy);

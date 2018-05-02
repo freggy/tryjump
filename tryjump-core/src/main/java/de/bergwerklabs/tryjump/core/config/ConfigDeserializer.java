@@ -32,6 +32,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
     final int buyPhaseDuration = object.get("buyPhaseDuration").getAsInt();
     final int regenerationDuration = object.get("regenerationDuration").getAsInt();
     final int invulnerableDuration = object.get("invulnerableDuration").getAsInt();
+    final int stopAfter = object.get("stopAfter").getAsInt();
 
     final String selectionStrategy = object.get("selectionStrategy").getAsString();
 
@@ -56,6 +57,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
         invulnerableDuration,
         coinsForWinning,
         rankingPointsForWinning,
+        stopAfter,
         selectionStrategy,
         messages,
         easy,

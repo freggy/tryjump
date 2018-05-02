@@ -8,6 +8,7 @@ import de.bergwerklabs.tryjump.core.phase.Phase;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.listener.DeathmachtListener;
 import de.bergwerklabs.tryjump.core.util.Scoreboards;
 import java.util.Iterator;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -43,7 +44,19 @@ public class DeathmatchPhase extends Phase {
   @Override
   public void stop() {
     DeathmachtListener.unregisterListeners();
-    // TODO: stop game after x seconds.
+    final int stopAfter = this.session.getTryJumpConfig().getStopAfter();
+    this.jumpers.forEach(
+        jumper -> {
+          this.tryJump
+              .getMessenger()
+              .message(
+                  "Der Server startet in §b" + stopAfter + " Sekunden " + "§7neu.",
+                  jumper.getPlayer());
+        });
+
+    Bukkit.getScheduler().runTaskLater(this.session, () -> {
+      Bukkit.getServer().shutdown();
+    }, 20 * this.session.getTryJumpConfig().getStopAfter());
   }
 
   private LabsScoreboard createDeathmatchScoreboard(int duration) {
