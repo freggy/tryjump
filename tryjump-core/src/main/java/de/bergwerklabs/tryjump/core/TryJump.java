@@ -2,10 +2,10 @@ package de.bergwerklabs.tryjump.core;
 
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.PlayerRegistry;
+import de.bergwerklabs.framework.bedrock.api.event.game.GameStopEvent;
 import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.phase.buy.BuyPhase;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
-import de.bergwerklabs.tryjump.core.phase.deathmatch.listener.DeathmachtListener;
 import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
 import de.bergwerklabs.tryjump.core.phase.jump.listener.JumpPhaseListener;
 import java.util.Collection;
@@ -106,7 +106,6 @@ public class TryJump extends LabsGame<Jumper> {
 
   @Override
   public void stop() {
-    // TODO: save stats
-    DeathmachtListener.unregisterListeners();
+    Bukkit.getPluginManager().callEvent(new GameStopEvent<>(this));
   }
 }

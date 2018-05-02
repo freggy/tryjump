@@ -1,5 +1,6 @@
 package de.bergwerklabs.tryjump.core.phase.jump.listener;
 
+import de.bergwerklabs.framework.commons.spigot.chat.messenger.PluginMessenger;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.api.event.CoinsReceiveEvent;
 import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
@@ -11,7 +12,9 @@ import de.bergwerklabs.tryjump.core.TryJumpUnit;
 import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.config.UnitTokens;
 import de.bergwerklabs.tryjump.core.phase.jump.JumpPhase;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -97,8 +100,10 @@ public class PlayerInteractListener extends JumpPhaseListener {
     }
   }
 
-  private void handleLast(Jumper jumper, Config config) {
+  private void handleLast(@NotNull Jumper jumper, @NotNull Config config) {
     final Player spigotPlayer = jumper.getPlayer();
+    final PluginMessenger messenger = this.tryJump.getMessenger();
+    int boost = 0;
     final int amount =
         UnitTokens.getTokens(jumper.getCurrentUnit().getDifficulty(), config, jumper.isLite());
 
@@ -107,9 +112,15 @@ public class PlayerInteractListener extends JumpPhaseListener {
     if (jumper.getFailsInSession() == 0) {
       // TODO: token boost message
       jumper.updateJumpPhaseTokenDisplay(this.session.getTryJumpConfig().getZeroFailsTokenBoost());
+
+      final List<String> messages = config.getZeroFailsMessages();
+      final String message = messages.get(new Random().nextInt(messages.size() - 1));
+      boost = config.getZeroFailsTokenBoost();
+
+      messenger.message("§b" + message + " §d§l(+" + boost + " Tokens)", spigotPlayer);
     }
 
-    Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper));
+    Bukkit.getPluginManager().callEvent(new LastUnitReachedEvent(jumper, boost));
 
     this.jumpers.forEach(
         player -> {

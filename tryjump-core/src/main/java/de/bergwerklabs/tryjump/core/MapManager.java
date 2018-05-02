@@ -67,6 +67,7 @@ class MapManager {
     world.setGameRuleValue("doFireTick", "false");
     world.setGameRuleValue("keepInventory", "true");
     world.setGameRuleValue("commandBlockOutput", "false");
+    world.setTime(3000);
     world.setSpawnFlags(false, false);
   }
 

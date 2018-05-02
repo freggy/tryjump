@@ -5,6 +5,7 @@ import de.bergwerklabs.framework.bedrock.api.event.game.SpectatorEvent;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.LabsScoreboard;
 import de.bergwerklabs.framework.commons.spigot.scoreboard.Row;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
+import de.bergwerklabs.tryjump.api.event.RankingPointsReceiveEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import de.bergwerklabs.tryjump.core.phase.deathmatch.DeathmatchPhase;
@@ -52,9 +53,8 @@ class PlayerDeathListener extends DeathmachtListener {
                 .display(jumper.getPlayer());
           });
 
-      // TODO: give ranking points to winner
-      // TODO: give coins to winner
-
+      // TODO: specify amount for winning
+      Bukkit.getPluginManager().callEvent(new RankingPointsReceiveEvent(killingJumper, 0));
       this.phase.stop();
     }
 
@@ -68,19 +68,12 @@ class PlayerDeathListener extends DeathmachtListener {
 
     killingJumper.updateKills();
 
+    // TOOD: use rank color
+    event.setDeathMessage(
+        "§a" + killer.getDisplayName() + " §7hat §a" + killed.getDisplayName() + " §7getötet.");
+
     this.jumpers.forEach(
         jumper -> {
-          // TODO: use rank color and maybe use different messages each time a player dies.
-          this.tryJump
-              .getMessenger()
-              .message(
-                  "§a"
-                      + killer.getDisplayName()
-                      + " §7hat §a"
-                      + killed.getDisplayName()
-                      + " §7getötet.",
-                  jumper.getPlayer());
-
           final LabsScoreboard scoreboard = jumper.getScoreboard();
           final Row row = scoreboard.getPlayerSpecificRows().get(killed.getUniqueId());
           row.setText("§7" + killed.getDisplayName() + ": §b" + livesLeft);

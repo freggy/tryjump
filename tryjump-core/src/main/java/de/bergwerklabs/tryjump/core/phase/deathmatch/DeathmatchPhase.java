@@ -11,6 +11,7 @@ import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Yannic Rieger on 22.04.2018.
@@ -21,7 +22,7 @@ import org.bukkit.entity.Player;
  */
 public class DeathmatchPhase extends Phase {
 
-  public DeathmatchPhase(TryJumpSession session) {
+  public DeathmatchPhase(@NotNull TryJumpSession session) {
     super(session);
   }
 
@@ -54,9 +55,13 @@ public class DeathmatchPhase extends Phase {
                   jumper.getPlayer());
         });
 
-    Bukkit.getScheduler().runTaskLater(this.session, () -> {
-      Bukkit.getServer().shutdown();
-    }, 20 * this.session.getTryJumpConfig().getStopAfter());
+    Bukkit.getScheduler()
+        .runTaskLater(
+            this.session,
+            () -> {
+              this.tryJump.stop();
+            },
+            20 * this.session.getTryJumpConfig().getStopAfter());
   }
 
   private LabsScoreboard createDeathmatchScoreboard(int duration) {

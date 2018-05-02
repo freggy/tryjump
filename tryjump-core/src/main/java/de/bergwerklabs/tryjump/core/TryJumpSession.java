@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * Created by Yannic Rieger on 11.02.2018.
@@ -107,9 +108,12 @@ public class TryJumpSession extends MinigameSession {
       this.getServer().shutdown();
     }
 
-    Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
-    Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
-    Bukkit.getPluginManager().callEvent(new SessionDonePreparationEvent(this));
+    final PluginManager manager = Bukkit.getPluginManager();
+    manager.registerEvents(new PlayerJoinListener(), this);
+    manager.registerEvents(new PlayerQuitListener(), this);
+    manager.callEvent(new SessionDonePreparationEvent(this));
+
+    Bukkit.getWorld("spawn").setTime(3000);
   }
 
   private void createAndPrepareJumpWorld() {
@@ -120,6 +124,7 @@ public class TryJumpSession extends MinigameSession {
             .generateStructures(false)
             .environment(World.Environment.NORMAL)
             .createWorld();
+    world.setTime(3000);
     world.setGameRuleValue("keepInventory", "true");
     world.setGameRuleValue("doTileDrops", "false");
     world.setGameRuleValue("showDeathMessages", "false");
