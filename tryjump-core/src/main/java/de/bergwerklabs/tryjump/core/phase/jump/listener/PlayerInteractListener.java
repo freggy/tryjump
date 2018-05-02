@@ -3,6 +3,7 @@ package de.bergwerklabs.tryjump.core.phase.jump.listener;
 import de.bergwerklabs.framework.commons.spigot.title.Title;
 import de.bergwerklabs.tryjump.api.event.CoinsReceiveEvent;
 import de.bergwerklabs.tryjump.api.event.LastUnitReachedEvent;
+import de.bergwerklabs.tryjump.api.event.RankingPointsReceiveEvent;
 import de.bergwerklabs.tryjump.api.event.TokensReceiveEvent;
 import de.bergwerklabs.tryjump.core.Jumper;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
@@ -74,14 +75,14 @@ public class PlayerInteractListener extends JumpPhaseListener {
     if (unitOptional.isPresent()) {
       TryJumpUnit next = unitOptional.get();
 
-      final UnitTokens tokens =
-          UnitTokens.fromDifficulty(current.getDifficulty(), config);
+      final UnitTokens tokens = UnitTokens.fromDifficulty(current.getDifficulty(), config);
       final int amount = jumper.isLite() ? tokens.getLite() : tokens.getNormal();
       jumper.updateJumpPhaseTokenDisplay(amount);
 
       final PluginManager manager = Bukkit.getPluginManager();
       manager.callEvent(new TokensReceiveEvent(jumper, amount));
       manager.callEvent(new CoinsReceiveEvent(jumper, config.getCoinsPerUnit()));
+      manager.callEvent(new RankingPointsReceiveEvent(jumper, config.getRankingPointsPerUnit()));
 
       this.handleNext(jumper, clicked.getLocation(), next);
       jumper.setCurrentUnit(next);
