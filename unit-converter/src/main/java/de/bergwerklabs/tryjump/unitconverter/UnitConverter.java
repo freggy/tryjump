@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 /**
  * Created by Yannic Rieger on 08.05.2018.
  *
- * <p>
+ * <p>Converts a {@link JsonObject} representing the legacy unit format into a Schematic file.
  *
  * @author Yannic Rieger
  */
 public class UnitConverter {
 
+  /** Class containing block data found in the JSON array. */
   private class BlockData {
     private int x, y, z, id;
     private byte data;
@@ -50,6 +51,12 @@ public class UnitConverter {
   private final ListTag<CompoundTag> EMPTY_TILE_ENTITIES =
       new ListTag<>("Entities", CompoundTag.class, new ArrayList<>());
 
+  /**
+   * Creates {@link CompoundTag} compliant with the Schematic format.
+   *
+   * @param object JSON file with the legacy unit format.
+   * @return {@link CompoundTag} compliant with the Schematic format.
+   */
   public CompoundTag createSchematic(JsonObject object) {
     final CompoundMap compoundMap = new CompoundMap();
 
@@ -66,7 +73,7 @@ public class UnitConverter {
     final int size = height * width * length;
 
     final ByteArrayTag blocks = this.createBlocksTag(blockData, width, length, size);
-    final ByteArrayTag data = this.createBlocksTag(blockData, width, length, size);
+    final ByteArrayTag data = this.createDataTag(blockData, width, length, size);
     final StringTag materials = new StringTag("Materials", "ALPHA");
 
     compoundMap.put(blocks);
@@ -77,6 +84,15 @@ public class UnitConverter {
     return new CompoundTag("Schematic", compoundMap);
   }
 
+  /**
+   * Creates a {@link ByteArrayTag} containing additional data about the block.
+   *
+   * @param blockData the {@link BlockData}.
+   * @param width width of the schematic.
+   * @param length length of the schematic.
+   * @param size size of the schematic.
+   * @return a {@link ByteArrayTag} containing additional data about the block.
+   */
   private ByteArrayTag createDataTag(Set<BlockData> blockData, int width, int length, int size) {
     final byte[] array = new byte[size];
     for (BlockData data : blockData) {
@@ -86,6 +102,15 @@ public class UnitConverter {
     return new ByteArrayTag("Data", array);
   }
 
+  /**
+   * Creates a {@link ByteArrayTag} containing the block id See {@link Material}.
+   *
+   * @param blockData the {@link BlockData}.
+   * @param width width of the schematic.
+   * @param length length of the schematic.
+   * @param size size of the schematic.
+   * @return a {@link ByteArrayTag} containing additional data about the block.
+   */
   private ByteArrayTag createBlocksTag(Set<BlockData> blockData, int width, int length, int size) {
     final byte[] array = new byte[size];
     for (BlockData data : blockData) {
@@ -95,6 +120,12 @@ public class UnitConverter {
     return new ByteArrayTag("Blocks", array);
   }
 
+  /**
+   * Creates a {@link Set} of {@link BlockData} from a {@link JsonArray}.
+   *
+   * @param blockList {@link JsonArray} containing a {@link BlockData} object.
+   * @return a {@link Set} of {@link BlockData} from a {@link JsonArray}.
+   */
   private Set<BlockData> retrieveBlockData(JsonArray blockList) {
     final Set<BlockData> data = new HashSet<>();
 
