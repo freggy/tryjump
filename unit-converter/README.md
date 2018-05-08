@@ -31,7 +31,7 @@ Legacy Unit Format
 
 ```JSON
 {
-    blockList: [
+    "blockList": [
         {
             "x": 0,
             "y": 0,
