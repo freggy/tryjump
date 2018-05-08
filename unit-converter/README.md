@@ -45,7 +45,7 @@ Legacy Unit Format
     "startLocZ": 0,
     "endLocX": 3,
     "endLocY": 2,
-    "endLocZ": 3
+    "endLocZ": 3,
     "difficulty": 3
 }
 ```
