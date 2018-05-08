@@ -64,6 +64,7 @@ public class ConfigDeserializer implements JsonDeserializer<Config> {
         medium,
         hard,
         extreme,
-        isTeamSession);
+        isTeamSession,
+        lobbySpawn);
   }
 }

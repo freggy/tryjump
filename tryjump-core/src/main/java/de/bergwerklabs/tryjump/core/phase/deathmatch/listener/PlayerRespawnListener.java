@@ -43,7 +43,7 @@ class PlayerRespawnListener extends DeathmachtListener {
               player.addPotionEffect(
                   new PotionEffect(
                       PotionEffectType.INVISIBILITY,
-                      20 * this.session.getTryJumpConfig().getInvulerableDuration(),
+                      20 * this.session.getTryJumpConfig().getInvulnerabilityDuration(),
                       100,
                       false,
                       false));

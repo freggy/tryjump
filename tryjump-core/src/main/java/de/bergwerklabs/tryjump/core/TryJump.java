@@ -72,17 +72,8 @@ public class TryJump extends LabsGame<Jumper> {
 
     players.forEach(
         jumper -> {
-
-          // TODO: remove this nonsense
-          Queue<TryJumpUnit> units = new LinkedList<>();
-
-          TryJumpSession.getInstance()
-              .getPlacer()
-              .getSelectedUnits()
-              .forEach(
-                  blub -> {
-                    units.add(blub.clone());
-                  });
+          Queue<TryJumpUnit> units =
+              new LinkedList<>(TryJumpSession.getInstance().getPlacer().getSelectedUnits());
 
           jumper.setUnits(units);
           final Location playerSpawn = spawn.clone().add(count[0] + 0.5, 0, 0.5);

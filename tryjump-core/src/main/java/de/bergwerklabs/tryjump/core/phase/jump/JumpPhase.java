@@ -110,14 +110,14 @@ public class JumpPhase extends Phase {
         new LabsTimer(
             5,
             timeLeft -> {
-              // TODO: ausgabe
               jumpers.forEach(
                   jumper -> {
                     final Player player = jumper.getPlayer();
                     player.getInventory().clear();
                     this.tryJump
                         .getMessenger()
-                        .message("§7Server startet in §b" + timeLeft + " Sekunden §7neu.", player);
+                        .message(
+                            "§7Jump-Phase endet in §b" + timeLeft + " Sekunden §7neu.", player);
                   });
             });
 

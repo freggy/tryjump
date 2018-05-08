@@ -5,6 +5,7 @@ import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimer;
 import de.bergwerklabs.framework.commons.spigot.general.timer.LabsTimerStopCause;
 import de.bergwerklabs.framework.commons.spigot.title.ActionbarTitle;
 import de.bergwerklabs.tryjump.core.Jumper;
+import de.bergwerklabs.tryjump.core.TryJump;
 import de.bergwerklabs.tryjump.core.TryJumpSession;
 import java.util.Collection;
 import java.util.Comparator;
@@ -52,10 +53,11 @@ public class UpdatePlayerInfoTask extends TryJumpTask {
                     }
                   });
             });
-    this.timer.addStopListener(event -> {
-      if (event.getCause() != LabsTimerStopCause.TIMES_UP) return;
-      // TODO: init buy phase
-    });
+    this.timer.addStopListener(
+        event -> {
+          if (event.getCause() != LabsTimerStopCause.TIMES_UP) return;
+          ((TryJump) this.session.getGame()).getJumpPhase().stop();
+        });
   }
 
   @Override

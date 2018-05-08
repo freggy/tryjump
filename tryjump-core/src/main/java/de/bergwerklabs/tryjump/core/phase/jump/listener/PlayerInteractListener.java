@@ -110,13 +110,10 @@ public class PlayerInteractListener extends JumpPhaseListener {
     jumper.updateJumpPhaseTokenDisplay(amount);
 
     if (jumper.getFailsInSession() == 0) {
-      // TODO: token boost message
-      jumper.updateJumpPhaseTokenDisplay(this.session.getTryJumpConfig().getZeroFailsTokenBoost());
-
       final List<String> messages = config.getZeroFailsMessages();
       final String message = messages.get(new Random().nextInt(messages.size() - 1));
+      jumper.updateJumpPhaseTokenDisplay(this.session.getTryJumpConfig().getZeroFailsTokenBoost());
       boost = config.getZeroFailsTokenBoost();
-
       messenger.message("§b" + message + " §d§l(+" + boost + " Tokens)", spigotPlayer);
     }
 

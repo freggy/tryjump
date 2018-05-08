@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +53,8 @@ public class Config {
   }
 
   /** Gets the duration in seconds of the invulnerability effect. */
-  public int getInvulerableDuration() {
-    return this.invulerableDuration;
+  public int getInvulnerabilityDuration() {
+    return this.invulnerabilityDuration;
   }
 
   /** Gets the ranking points a player will receive when winning the game. */
@@ -117,6 +118,11 @@ public class Config {
     return this.isTeamSession;
   }
 
+  /** Get the spawn location in the lobby world. */
+  public Location getLobbySpawn() {
+    return lobbySpawn;
+  }
+
   private int rankingPointsPerUnit;
   private int coinsPerUnit;
   private int jumpPhaseDuration;
@@ -124,7 +130,7 @@ public class Config {
   private int buyPhaseDuration;
   private int zeroFailsTokenBoost;
   private int regenerationDuration;
-  private int invulerableDuration;
+  private int invulnerabilityDuration;
   private int coinsForWinning;
   private int rankingPointsForWinning;
   private int stopAfter;
@@ -135,6 +141,7 @@ public class Config {
   private UnitTokens hard;
   private UnitTokens extreme;
   private boolean isTeamSession;
+  private Location lobbySpawn;
 
   Config(
       int rankingPointsPerUnit,
@@ -144,7 +151,7 @@ public class Config {
       int buyPhaseDuration,
       int zeroFailsTokenBoost,
       int regenerationDuration,
-      int invulerableDuration, // TODO fix typo
+      int invulnerabilityDuration,
       int coinsForWinning,
       int rankingPointsForWinning,
       int stopAfter,
@@ -154,7 +161,8 @@ public class Config {
       @NotNull UnitTokens medium,
       @NotNull UnitTokens hard,
       @NotNull UnitTokens extreme,
-      boolean isTeamSession) {
+      boolean isTeamSession,
+      @NotNull Location lobbySpawn) {
     this.rankingPointsPerUnit = rankingPointsPerUnit;
     this.coinsPerUnit = coinsPerUnit;
     this.jumpPhaseDuration = jumpPhaseDuration;
@@ -164,7 +172,7 @@ public class Config {
     this.coinsForWinning = coinsForWinning;
     this.rankingPointsForWinning = rankingPointsForWinning;
     this.stopAfter = stopAfter;
-    this.invulerableDuration = invulerableDuration;
+    this.invulnerabilityDuration = invulnerabilityDuration;
     this.regenerationDuration = regenerationDuration;
     this.selectionStrategy = SelectionStrategy.valueOf(selectionStrategy);
     this.zeroFailsMessages = zeroFailsMessages;
@@ -173,6 +181,7 @@ public class Config {
     this.hard = hard;
     this.extreme = extreme;
     this.isTeamSession = isTeamSession;
+    this.lobbySpawn = lobbySpawn;
   }
 
   /**
