@@ -33,6 +33,7 @@
     <module>tryjump-core</module>
     <module>tryjump-api</module>
     <module>arena-creator</module>
+    <module>unit-converter</module>
   </modules>
 
   <properties>
