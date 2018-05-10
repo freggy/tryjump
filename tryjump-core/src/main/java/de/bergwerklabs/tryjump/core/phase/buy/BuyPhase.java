@@ -13,7 +13,9 @@ import de.bergwerklabs.tryjump.core.util.Scoreboards;
 import java.util.Collection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by Yannic Rieger on 22.04.2018.
@@ -40,9 +42,11 @@ public class BuyPhase extends Phase {
     location.setYaw(-50);
 
     jumpers.forEach(
-        player -> {
-          player.getPlayer().teleport(location);
-          player.setScoreboard(this.createTokenScoreboard(this.jumpers, duration));
+        jumper -> {
+          final Player player = jumper.getPlayer();
+          player.teleport(location);
+          player.getInventory().setItem(4, new ItemStack(Material.CHEST));
+          jumper.setScoreboard(this.createTokenScoreboard(this.jumpers, duration));
         });
 
     this.timer =
@@ -72,6 +76,12 @@ public class BuyPhase extends Phase {
     this.tryJump.getDeathmatchPhase().start();
   }
 
+  /**
+   *
+   * @param jumpers
+   * @param duration
+   * @return
+   */
   private LabsScoreboard createTokenScoreboard(Collection<Jumper> jumpers, int duration) {
     final String timeString = String.format("§b%02d:%02d", duration / 60, duration % 60);
     final String prefix = this.tryJump.getMessenger().getPrefix();

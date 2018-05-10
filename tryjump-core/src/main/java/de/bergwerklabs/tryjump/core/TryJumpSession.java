@@ -5,12 +5,16 @@ import de.bergwerklabs.atlantis.columbia.packages.gameserver.spigot.gamestate.Ga
 import de.bergwerklabs.framework.bedrock.api.LabsGame;
 import de.bergwerklabs.framework.bedrock.api.event.session.SessionDonePreparationEvent;
 import de.bergwerklabs.framework.bedrock.api.session.MinigameSession;
+import de.bergwerklabs.framework.commons.spigot.inventorymenu.InventoryMenu;
+import de.bergwerklabs.framework.commons.spigot.inventorymenu.InventoryMenuFactory;
 import de.bergwerklabs.tryjump.api.DeathmatchArena;
 import de.bergwerklabs.tryjump.core.config.Config;
 import de.bergwerklabs.tryjump.core.listener.PlayerJoinListener;
 import de.bergwerklabs.tryjump.core.listener.PlayerQuitListener;
 import de.bergwerklabs.tryjump.core.unit.UnitPlacer;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -35,6 +39,7 @@ public class TryJumpSession extends MinigameSession {
   private Config config;
   private TryJump tryJump = new TryJump();
   private MapManager mapManager;
+  private Map<String, InventoryMenu> menus;
 
   public static TryJumpSession getInstance() {
     return instance;
@@ -48,6 +53,10 @@ public class TryJumpSession extends MinigameSession {
     return config;
   }
 
+  public Map<String, InventoryMenu> getMenus() {
+    return menus;
+  }
+
   @Override
   public LabsGame getGame() {
     return this.tryJump;
@@ -56,6 +65,7 @@ public class TryJumpSession extends MinigameSession {
   @Override
   public void prepare() {
     instance = this;
+    this.menus = new HashMap<>();
     Optional<Config> optional = Config.read(new File(this.getDataFolder() + "/config.json"));
 
     if (optional.isPresent()) {
@@ -97,6 +107,8 @@ public class TryJumpSession extends MinigameSession {
             this.config.getSelectionStrategy());
 
     this.createAndPrepareJumpWorld();
+    InventoryMenuFactory.readMenus(
+        new File(this.getDataFolder().getAbsolutePath() + "/menus"), this.menus);
 
     Optional<DeathmatchArena> arenaOptional = this.mapManager.chooseArenaRandomlyAndLoad();
 
