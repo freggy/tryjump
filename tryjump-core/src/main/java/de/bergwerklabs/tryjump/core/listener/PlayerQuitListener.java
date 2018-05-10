@@ -39,7 +39,6 @@ public class PlayerQuitListener implements Listener {
           });
     }
 
-    // TODO: use rank color
     event.setQuitMessage(
         "§6>> §eTryJump §e❘ §a" + player.getDisplayName() + " §7hat das Spiel verlassen.");
   }

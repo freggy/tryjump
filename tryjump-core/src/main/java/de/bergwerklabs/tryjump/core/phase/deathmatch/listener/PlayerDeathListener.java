@@ -53,8 +53,10 @@ class PlayerDeathListener extends DeathmachtListener {
                 .display(jumper.getPlayer());
           });
 
-      // TODO: specify amount for winning
-      Bukkit.getPluginManager().callEvent(new RankingPointsReceiveEvent(killingJumper, 0));
+      Bukkit.getPluginManager()
+          .callEvent(
+              new RankingPointsReceiveEvent(
+                  killingJumper, this.session.getTryJumpConfig().getRankingPointsForWinning()));
       this.phase.stop();
     }
 

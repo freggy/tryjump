@@ -12,7 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by Yannic Rieger on 20.04.2018.
@@ -62,7 +61,6 @@ public class SkipCommand implements CommandExecutor {
     final PluginManager manager = Bukkit.getPluginManager();
     this.alreadySkipped.add(player);
 
-    // TODO: use rank color
     this.messenger.messageAll(
         "§a"
             + player.getDisplayName()

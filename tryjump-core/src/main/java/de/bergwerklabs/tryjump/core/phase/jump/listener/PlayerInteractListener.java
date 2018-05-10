@@ -123,7 +123,6 @@ public class PlayerInteractListener extends JumpPhaseListener {
         player -> {
           final Player p = player.getPlayer();
           p.playSound(p.getEyeLocation(), Sound.WITHER_SPAWN, 10, 1);
-          // TODO: use rank color
           new Title("§a" + spigotPlayer.getDisplayName(), "§7hat das Ziel erreicht", 40, 40, 40)
               .display(p);
         });
