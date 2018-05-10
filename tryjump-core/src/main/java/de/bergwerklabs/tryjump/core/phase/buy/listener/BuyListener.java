@@ -40,5 +40,7 @@ public class BuyListener extends PhaseListener<BuyPhase> {
   public static void registerListeners(TryJumpSession session, BuyPhase phase) {
     final PluginManager manager = Bukkit.getPluginManager();
     manager.registerEvents(new SkipSuccessfulListener(phase, session), session);
+    manager.registerEvents(new PlayerInteractListener(phase, session), session);
+    manager.registerEvents(new CancelListener(phase, session), session);
   }
 }

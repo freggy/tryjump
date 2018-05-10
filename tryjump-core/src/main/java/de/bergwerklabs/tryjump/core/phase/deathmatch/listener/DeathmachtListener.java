@@ -42,5 +42,6 @@ public class DeathmachtListener extends PhaseListener<DeathmatchPhase> {
     manager.registerEvents(new PlayerDamageListener(phase, session), session);
     manager.registerEvents(new PlayerRespawnListener(phase, session), session);
     manager.registerEvents(new PlayerDeathListener(phase, session), session);
+    manager.registerEvents(new BlockPlaceListener(phase, session), session);
   }
 }
