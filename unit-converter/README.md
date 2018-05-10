@@ -1,5 +1,5 @@
-TryJump
-=======
+TryJump Unit Converter
+======================
 
 This converter can be used to convert TryJump units from the legacy JSON format into Schematic files.
 
@@ -31,24 +31,21 @@ Legacy Unit Format
 
 ```JSON
 {
-    blockList: [
+    "blockList": [
         {
             "x": 0,
             "y": 0,
             "z": 1,
             "material": "STONE",
             "data": 0
-        },
-        .
-        .
-        .
+        }
     ],
     "startLocX": 0,
     "startLocY": 0,
     "startLocZ": 0,
     "endLocX": 3,
     "endLocY": 2,
-    "endLocZ": 3
+    "endLocZ": 3,
     "difficulty": 3
 }
 ```
